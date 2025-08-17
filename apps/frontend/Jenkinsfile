@@ -94,7 +94,7 @@ pipeline {
 					export NEXT_PUBLIC_API_URL="${NEXT_PUBLIC_API_URL}"
 
                     docker compose -f /home/chs/app/portfolio/docker-compose.yml pull frontend
-                    docker compose -f /home/chs/app/portfolio/docker-compose.yml restart -d frontend nginx
+                    docker compose -f /home/chs/app/portfolio/docker-compose.yml restart frontend nginx
                 """
             }
         }
