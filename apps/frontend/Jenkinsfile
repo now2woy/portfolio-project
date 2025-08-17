@@ -1,0 +1,99 @@
+pipeline {
+    agent any
+
+    environment {
+        REGISTRY = "localhost:5000"
+        IMAGE_NAME = "now2woy/portfolio-front"
+        IMAGE_TAG = "latest"
+        NODE_VERSION = 'NodeJS22'
+        REGISTRY_USER = credentials('DOCKER_REGISTRY_USER')
+        REGISTRY_PASS = credentials('DOCKER_REGISTRY_PASS')
+        NEXT_PUBLIC_API_URL = credentials('NEXT_PUBLIC_API_URL')
+        JENKINS_WORKSPACE = credentials('JENKINS_WORKSPACE')
+        NGINX_STATIC_DIR = credentials('NGINX_STATIC_DIR')
+    }
+
+    tools {
+        nodejs NODE_VERSION
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+				git branch: 'main',
+				url: 'https://github.com/now2woy/portfolio-project.git',
+				credentialsId: 'GIT-HUB-NOW2WOY'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('apps/frontend') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                sh """
+                    echo "${REGISTRY_PASS}" | docker login ${REGISTRY} -u "${REGISTRY_USER}" --password-stdin
+                """
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('apps/frontend') {
+                    sh """
+                        npm ci
+                        NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} npm run build
+                        docker build \
+                        --build-arg NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} \
+                        -t ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .
+                    """
+                }
+            }
+        }
+        
+        stage('Copy Static Files') {
+            steps {
+                dir('apps/frontend') {
+                    sh """
+                        set -e
+
+                        # 타겟 디렉토리 준비
+                        rm -rf "${NGINX_STATIC_DIR}/*"
+                        mkdir -p "${NGINX_STATIC_DIR}/_next/static"
+                        mkdir -p "${NGINX_STATIC_DIR}/public"
+                        
+                        # 빌드 결과물 복사
+                        cp -r "${JENKINS_WORKSPACE}/.next/static" "${NGINX_STATIC_DIR}/_next/"
+                        cp -r "${JENKINS_WORKSPACE}/public/"* "${NGINX_STATIC_DIR}/public/" || true
+                        
+                        echo "Static files synced to ${NGINX_STATIC_DIR}"
+                    """
+                }
+            }
+        }
+    
+        stage('Push to Local Registry') {
+            steps {
+                dir('apps/frontend') {
+                    sh """
+                        docker push ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+                    """
+                }
+            }
+        }
+
+        stage('Deploy & Restart') {
+            steps {
+                sh """
+                    docker compose -f /home/chs/app/portfolio/docker-compose.yml pull nginx frontend
+                    docker compose -f /home/chs/app/portfolio/docker-compose.yml up -d nginx frontend
+                """
+            }
+        }
+    }
+}
