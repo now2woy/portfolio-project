@@ -82,7 +82,7 @@ pipeline {
 					export JWT_SECRET_KEY="${PORTFOLIO_JWT_KEY}"
 					
 					docker compose -f /home/chs/app/portfolio/docker-compose.yml pull backend
-					docker compose -f /home/chs/app/portfolio/docker-compose.yml up -d backend
+					docker compose -f /home/chs/app/portfolio/docker-compose.yml restart backend
 				"""
 			}
 		}
