@@ -1,0 +1,89 @@
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { postKeys, fetchListPost } from '@/service/PostService';
+import { fatchOneBoard } from '@/service/BoardService';
+import { getAuthenticationToken } from '@/utils/CookiesUtils';
+import { ISearchData, ISearchField } from "@/types/SearchType";
+import { List } from "@/app/posts/[brdId]/client";
+
+/**
+ * 게시글 목록 props 정의
+ */
+export interface PostListProps {
+    params : {
+        brdId : number
+    };
+    searchParams : {
+        postTtl? : string,
+        postCtt? : string,
+        writerId? : string,
+    };
+}
+
+/**
+ * 게시글 검색 조건 입력 방식 정의
+ */
+const fields : ISearchField[] = [
+    { label : '제목', value : 'postTtl', type : 'text' as const },
+    { label : '내용', value : 'postCtt', type : 'text' as const },
+    { label : '작성자ID', value : 'writerId', type : 'text' as const },
+];
+
+/**
+ * 메타 정보 생성
+ * @param param
+ * @returns 
+ */
+export async function generateMetadata( { params } : { params : { brdId : number } } ) {
+    const { brdId } = await Promise.resolve( params );
+    const authentication = await getAuthenticationToken();
+    const board = await fatchOneBoard( { authentication, brdId } );
+  
+    return {
+        title: `${ board.brdNm } 목록 - now2woy\'s Portfolio`,
+        description: `${ board.brdNm } 목록을 조회하는 페이지입니다.`,
+    };
+}
+
+/**
+ * 게시글 목록 서버 컴포넌트
+ * @param param
+ * @returns 
+ */
+export default async function PostList( { params, searchParams } : PostListProps ) {
+    const queryClient = new QueryClient();
+    const { brdId } = await Promise.resolve( params );
+    const { postTtl, postCtt, writerId } = await Promise.resolve( searchParams );
+    const authentication = await getAuthenticationToken();
+    
+    // 검색 조건을 query 파라미터로 생성
+    const query : string = new URLSearchParams( {
+        postTtl : postTtl ?? '',
+        postCtt : postCtt ?? '',
+        writerId : writerId ?? '',
+    } ).toString();
+
+    // 게시글 검색 조건 초기 데이터 생성
+    const initialData: ISearchData = {
+        postTtl : postTtl ?? '',
+        postCtt : postCtt ?? '',
+        writerId : writerId ?? '',
+    };
+
+    // prefetch
+    await queryClient.prefetchQuery( {
+        queryKey: postKeys.lists( authentication, brdId, query )
+        , queryFn: fetchListPost
+    } );
+
+    // 게시판 명 조회하여 제목 및 meta 생성 필요
+    const board = await fatchOneBoard( { authentication, brdId } );
+
+    return (
+        <HydrationBoundary state={ dehydrate( queryClient ) }>
+            <div className="flex flex-1 flex-col gap-2 p-4">
+                <h1 className="text-2xl font-bold mb-4">{board.brdNm} 목록</h1>
+                <List authentication={ authentication } brdId={ brdId } initialData={ initialData } fields={ fields } />
+            </div>
+        </HydrationBoundary>
+    );
+}
