@@ -75,6 +75,12 @@ pipeline {
 		stage('Deploy & Restart') {
 			steps {
 				sh """
+					# 쉘 환경 변수 설정
+					export DB_URL="${PORTFOLIO_DB_URL}"
+					export DB_USERNAME="${PORTFOLIO_DB_ID}"
+					export DB_PASSWORD="${PORTFOLIO_DB_PW}"
+					export JWT_SECRET_KEY="${PORTFOLIO_JWT_KEY}"
+					
 					docker compose -f /home/chs/app/portfolio/docker-compose.yml pull backend
 					docker compose -f /home/chs/app/portfolio/docker-compose.yml up -d backend
 				"""
