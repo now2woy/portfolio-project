@@ -17,7 +17,7 @@ pipeline {
 	stages {
 		stage('Checkout') {
 			steps {
-				git branch: 'MAIN',
+				git branch: 'main',
 				url: 'https://github.com/now2woy/portfolio-project.git',
 				credentialsId: 'GIT-HUB-NOW2WOY'
 			}
