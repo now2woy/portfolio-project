@@ -1,5 +1,19 @@
 # 1단계: 빌드
 FROM gradle:8.5-jdk21 AS builder
+
+# 빌드 시 인자로 받을 변수
+ARG DB_URL
+ARG DB_USERNAME
+ARG DB_PASSWORD
+ARG JWT_SECRET_KEY
+
+# ARG로 받은 값을 ENV로 설정하여 런타임에 사용할 수 있도록 함
+ENV DB_URL=${DB_URL}
+ENV DB_USERNAME=${DB_USERNAME}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV JWT_SECRET_KEY=${JWT_SECRET_KEY}
+
+
 WORKDIR /app
 COPY . .
 RUN gradle clean build -x test
