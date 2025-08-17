@@ -1,0 +1,13 @@
+# Ignore File
+/.classpath
+/.project
+/.gitattributes
+/gradlew.bat
+
+
+# Ignore Directory
+.gradle
+build
+.settings
+bin
+build

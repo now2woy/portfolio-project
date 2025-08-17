@@ -1,0 +1,58 @@
+server:
+  port: 7201
+  shutdown: graceful
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: jineddy-master-service
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    show-sql: true
+
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
+
+info:
+  app:
+    name: jineddy master service
+    description: jineddy 포트폴리오를 위한 백앤드 프로젝트입니다.
+
+# mybatis 설정
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:/mapper/**/*.xml
+
+logging:
+  level:
+# JPA SQL 로그
+    org.springframework.data.jpa.repository.query: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+# MyBatis SQL 실행 로그
+    com.mybatis: DEBUG
+    org.apache.ibatis: DEBUG
+    org.mybatis: DEBUG
+# MyBatis 바인딩 파라미터 로그
+    org.apache.ibatis.logging.stdout.StdOutImpl: DEBUG
+# 트랙젝션 관련 로그
+    org.springframework.transaction.interceptor: trace
+    org.springframework.transaction: DEBUG
+    org.hibernate.resource.transaction: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.springframework.data.jpa.repository.support: DEBUG

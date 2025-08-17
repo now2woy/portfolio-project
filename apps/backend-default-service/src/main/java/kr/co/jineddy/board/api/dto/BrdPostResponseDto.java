@@ -1,0 +1,67 @@
+package kr.co.jineddy.board.api.dto;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import lombok.Builder;
+import lombok.Data;
+
+/**
+ * 게시글 Response DTO
+ */
+@Data
+@Builder
+public class BrdPostResponseDto implements Serializable {
+	/**
+	 * 시리얼 버전 ID
+	 */
+	private static final long serialVersionUID = -1866966473388458005L;
+	/**
+	 * 게시글 ID
+	 */
+	private int postId;
+	/**
+	 * 게시판 ID
+	 */
+	private int brdId;
+	/**
+	 * 게시글 제목
+	 */
+	private String postTtl;
+	/**
+	 * 게시글 내용
+	 */
+	private String postCtt;
+	/**
+	 * 작성자 ID
+	 */
+	private String writerId;
+	/**
+	 * 조회 건수
+	 */
+	private int viewCnt;
+	/**
+	 * 삭제 여부
+	 */
+	private String delYn;
+	/**
+	 * 삭제 일시
+	 */
+	private LocalDateTime delDt;
+	/**
+	 * 입력 일시
+	 */
+	private LocalDateTime insDt;
+	/**
+	 * 입력 ID
+	 */
+	private String insId;
+	/**
+	 * 수정 일시
+	 */
+	private LocalDateTime updDt;
+	/**
+	 * 수정 ID
+	 */
+	private String updId;
+}
