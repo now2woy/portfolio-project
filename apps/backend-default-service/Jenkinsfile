@@ -1,0 +1,94 @@
+pipeline {
+	agent any
+	
+	environment {
+		REGISTRY = "localhost:5000"
+		IMAGE_NAME = "now2woy/portfolio-default-service"
+		IMAGE_TAG = "latest"
+		DOCKER_HOST = "unix:///var/run/docker.sock"
+		REGISTRY_USER = credentials('DOCKER_REGISTRY_USER')
+		REGISTRY_PASS = credentials('DOCKER_REGISTRY_PASS')
+		PORTFOLIO_DB_URL = credentials('PORTFOLIO_DB_URL')
+		PORTFOLIO_DB_ID = credentials('PORTFOLIO_DB_ID')
+		PORTFOLIO_DB_PW = credentials('PORTFOLIO_DB_PW')
+		PORTFOLIO_JWT_KEY = credentials('PORTFOLIO_JWT_KEY')
+	}
+	
+	stages {
+		stage('Checkout') {
+			steps {
+				git branch: 'MAIN',
+				url: 'https://github.com/now2woy/portfolio-project.git',
+				credentialsId: 'GIT-HUB-NOW2WOY'
+			}
+		}
+		
+		stage('Prepare') {
+			steps {
+				dir('apps/backend-default-service') {
+					sh 'chmod +x gradlew'
+				}
+			}
+		}
+
+		stage('Build JAR') {
+			steps {
+				dir('apps/backend-default-service') {
+					sh './gradlew clean build -x test'
+				}
+			}
+		}
+		
+		stage('Docker Login') {
+			steps {
+				sh """
+					echo "${REGISTRY_PASS}" | docker login ${REGISTRY} -u "${REGISTRY_USER}" --password-stdin
+				"""
+			}
+		}
+		
+		stage('Build Docker Image') {
+			steps {
+				dir('apps/backend-default-service') {
+					sh """
+						docker build \
+							--build-arg DB_URL=${PORTFOLIO_DB_URL} \
+							--build-arg DB_USERNAME=${PORTFOLIO_DB_ID} \
+							--build-arg DB_PASSWORD=${PORTFOLIO_DB_PW} \
+							--build-arg JWT_SECRET_KEY=${PORTFOLIO_JWT_KEY} \
+							-t ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .
+					"""
+				}
+			}
+		}
+		
+		stage('Push to Local Registry') {
+			steps {
+				dir('apps/backend-default-service') {
+					sh """
+						docker push ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+					"""
+				}
+			}
+		}
+		
+		stage('Deploy & Restart') {
+			steps {
+				sh """
+					docker compose -f /home/chs/app/portfolio/docker-compose.yml pull backend
+					docker compose -f /home/chs/app/portfolio/docker-compose.yml up -d backend
+				"""
+			}
+		}
+	}
+	
+	post {
+		success {
+			echo '✅ 배포 성공!'
+		}
+		
+		failure {
+			echo '❌ 빌드/배포 실패!'
+		}
+	}
+}
