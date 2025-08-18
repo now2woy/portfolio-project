@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers';
+import { authenticationProps } from '@/types/CommonType';
 
 export async function getAuthenticationToken(){
     const cookieStore = await cookies();
-    const accessToken = cookieStore.get('accessToken')?.value || '';
-    const refreshToken = cookieStore.get('refreshToken')?.value || '';
+    const authentication : authenticationProps = { accessToken : cookieStore.get('accessToken')?.value || '', refreshToken : cookieStore.get('refreshToken')?.value || '' };
 
-    return {accessToken, refreshToken};
+    return authentication;
 }

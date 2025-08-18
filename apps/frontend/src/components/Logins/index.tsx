@@ -2,46 +2,38 @@
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 
-import axios from "axios";
-
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { authenticationProps } from '@/types/CommonType';
+import { ILoginProps } from "@/types/LoginType";
+import { fetchLogin } from '@/service/LoginService';
+import { MutationButton } from '@/components/Buttons';
 
-export const LoginForm = () => {
-    const [formData, setFormData] = useState({ 
-        userId: '',
-        pwd: ''
-    });
+/**
+ * 로그인 폼 컴포넌트
+ * @param param
+ * @returns 
+ */
+export const LoginForm = ( { authentication } : { authentication : authenticationProps } ) => {
+    const [formData, setFormData] = useState<ILoginProps>( { userId: '', pwd: '' });
     const router = useRouter();
-
-    // 폼 제출 이벤트 핸들러
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        // 이 코드(preventDefault)는 브라우저의 기본 폼 제출 동작을 막습니다.
-        // required 속성으로 인해 필수가 아닌 경우 alert가 뜨지 않고 이 코드가 동작함
-        event.preventDefault(); 
-
-        // 여기에 폼 데이터를 처리하는 로직을 추가합니다.
-        axios.post(`/api/system/v1/auths/login`, formData, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-            , withCredentials: true
-        })
-        .then(response => {
-            // 로그인 성공 시 쿠키에 값이 담겨 있기 때문에 별도 행동 없음
-            // 로그인 성공 후 메인 페이지로 이동
-            router.push('/');
-
-        })
-        .catch(error => {  
-            console.error(error);
-            alert('로그인에 실패했습니다. ID와 비밀번호를 확인해주세요.');
-        });
+    
+    // 로그인 성공 처리 함수
+    const handleSuccessCallback = () => {
+        console.log('로그인 성공');
+        // 로그인 성공 시 쿠키에 값이 담겨 있기 때문에 별도 행동 없음
+        // 로그인 성공 후 메인 페이지로 이동
+        router.push('/');
+    }
+    
+    // 로그인 실패 처리 함수
+    const handleErrorCallback = <TError,>( error: TError ) => {
+        console.error(error);
+        alert('로그인에 실패했습니다. ID와 비밀번호를 확인해주세요.');
     }
 
     return (
-        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-6">
             <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Login to your account</h1>
                 <p className="text-muted-foreground text-sm text-balance">
@@ -61,7 +53,17 @@ export const LoginForm = () => {
                     </div>
                     <Input id="password" type="password" required value={formData.pwd} onChange={(e) => setFormData({ ...formData, pwd: e.target.value })} />
                 </div>
-                <Button type="submit" className="w-full text-white">Login</Button>
+                    <MutationButton
+                        className="w-full text-white cursor-pointer"
+                        mutationFn={ fetchLogin }
+                        variables={{ authentication, data : formData }}
+                        queryKeyToInvalidate={ [ ] }
+                        onSuccessCallback={ handleSuccessCallback }
+                        onErrorCallback={ handleErrorCallback }
+                        isSubmit={ true }
+                    >
+                        Login
+                    </MutationButton>
                 {/*
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                     <span className="bg-background text-muted-foreground relative z-10 px-2">
