@@ -40,6 +40,7 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     disabled={!editor.can().chain().focus().toggleBold().run()}
                     variant={editor.isActive('bold') ? 'secondary' : 'ghost'}
                     size="sm"
+                    type="button"
                 >
                     <Bold className="w-4 h-4" />
                 </Button>
@@ -48,6 +49,7 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     disabled={!editor.can().chain().focus().toggleItalic().run()}
                     variant={editor.isActive('italic') ? 'secondary' : 'ghost'}
                     size="sm"
+                    type="button"
                 >
                     <Italic className="w-4 h-4" />
                 </Button>
@@ -56,6 +58,7 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     disabled={!editor.can().chain().focus().toggleStrike().run()}
                     variant={editor.isActive('strike') ? 'secondary' : 'ghost'}
                     size="sm"
+                    type="button"
                 >
                     <Strikethrough className="w-4 h-4" />
                 </Button>
@@ -64,6 +67,7 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     disabled={!editor.can().chain().focus().toggleCodeBlock().run()}
                     variant={editor.isActive('codeBlock') ? 'secondary' : 'ghost'}
                     size="sm"
+                    type="button"
                 >
                     <Code className="w-4 h-4" />
                 </Button>
@@ -72,6 +76,7 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     disabled={!editor.can().chain().focus().toggleBulletList().run()}
                     variant={editor.isActive('bulletList') ? 'secondary' : 'ghost'}
                     size="sm"
+                    type="button"
                 >
                     <List className="w-4 h-4" />
                 </Button>
@@ -80,6 +85,7 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     disabled={!editor.can().chain().focus().toggleOrderedList().run()}
                     variant={editor.isActive('orderedList') ? 'secondary' : 'ghost'}
                     size="sm"
+                    type="button"
                 >
                     <ListOrdered className="w-4 h-4" />
                 </Button>
