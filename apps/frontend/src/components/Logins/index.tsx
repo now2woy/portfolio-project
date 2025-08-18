@@ -23,7 +23,7 @@ export const LoginForm = ( { authentication } : { authentication : authenticatio
         console.log('로그인 성공');
         // 로그인 성공 시 쿠키에 값이 담겨 있기 때문에 별도 행동 없음
         // 로그인 성공 후 메인 페이지로 이동
-        router.push('/');
+        router.refresh();
     }
     
     // 로그인 실패 처리 함수
