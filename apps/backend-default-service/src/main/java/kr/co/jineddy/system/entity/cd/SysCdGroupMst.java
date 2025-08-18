@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SysCdGroupMst implements Serializable {
 	/**
-	 * 
+	 * 시리얼 버전 ID
 	 */
 	private static final long serialVersionUID = 3338657299151818735L;
 	/**
