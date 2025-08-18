@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 
-import { createApi } from '@/lib/api';
-
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { authenticationProps } from '@/types/CommonType';
