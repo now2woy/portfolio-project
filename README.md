@@ -3,7 +3,7 @@
 ## 🚀 프로젝트 개요
 이 프로젝트는 개인 포트폴리오 웹 애플리케이션으로, React, Next, SpringBoot, CI/CCD 연습을 목표로 합니다.
 
-- **배포 링크** : [now2woy's Portfolio](https://now2woy.duckdns.org/)
+- **배포 링크** : <a href="https://now2woy.duckdns.org" target="_blank">now2woy's Portfolio</a>
 - **ID / PW** : guest001 / guest001
 
 <br />
