@@ -2,18 +2,19 @@ package kr.co.jineddy.system.api.cd.dto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Data;
 
 /**
- * 시스템 코드 그룹 요청 DTO
+ * 코드그룹과 코드 요청 DTO
  */
 @Data
-public class CdGroupReqeustDto implements Serializable {
+public class CdGroupUpdateRequestDto implements Serializable {
 	/**
 	 * 시리얼 버전 ID
 	 */
-	private static final long serialVersionUID = 8803141753575801990L;
+	private static final long serialVersionUID = 7506143504155413558L;
 	/**
 	 * 코드 그룹 ID
 	 */
@@ -67,11 +68,7 @@ public class CdGroupReqeustDto implements Serializable {
 	 */
 	private String updId;
 	/**
-	 * 현재 페이지
+	 * 코드 목록
 	 */
-	private long offset;
-	/**
-	 * 페이지 크기
-	 */
-	private int pageSize;
+	private List<CdRequestDto> cds;
 }
