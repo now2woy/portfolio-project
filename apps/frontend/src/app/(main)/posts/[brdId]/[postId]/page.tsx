@@ -2,9 +2,9 @@ import React from "react"
 import { getAuthenticationToken } from '@/utils/CookiesUtils';
 import { fatchOnePost } from '@/service/PostService';
 import { fatchOneBoard } from '@/service/BoardService';
-import { LinkButton } from "@/components/Buttons";
 import { View } from "@/app/posts/[brdId]/client";
 import { formatDate } from '@/utils/DateUtils';
+import { TiptapViewer } from '@/components/TipTaps';
 
 /**
  * 메타 정보 생성
@@ -50,7 +50,7 @@ export default async function PostDetail( { params }: { params : { brdId : numbe
 
                     <div className="border-t px-4 pb-2 pt-4 sm:col-span-6 sm:px-0">
                     <dt className="text-sm leading-6 font-semibold">내용</dt>
-                    <dd className="mt-1 text-sm leading-6 text-muted-foreground mt-2">{ data.postCtt }</dd>
+                    <dd className="mt-1 text-sm leading-6 text-muted-foreground mt-2"><TiptapViewer content={ data.postCtt || '' } /></dd>
                     </div>
 
                     <div className="border-t px-4 pb-2 pt-4 sm:col-span-3 sm:px-0">

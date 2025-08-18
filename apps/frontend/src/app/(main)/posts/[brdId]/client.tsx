@@ -2,19 +2,27 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
 import { postKeys, fetchListPost, fetchInsPost, fetchUpdPost, fetchDelPost } from '@/service/PostService';
 import { ISearchData, ISearchField } from "@/types/SearchType";
 import { IColumnConfig } from "@/types/ColumnDefType";
 import { authenticationProps } from '@/types/CommonType';
 import { IPostProps } from "@/types/PostType";
-import { DefaultSearch } from "@/components/Searchs"
+import { DefaultSearch } from "@/components/Searchs";
 import { Grid } from "@/components/Grids";
 import { LinkButton, MutationButton } from '@/components/Buttons';
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input";
 import { formatDate } from '@/utils/DateUtils';
+
+/**
+ * TiptapEditor를 클라이언트 측에서 다이나믹 로드
+ */
+const TiptapEditor = dynamic(() => import('@/components/TipTaps').then(mod => mod.TiptapEditor), {
+    ssr: false, // 서버 측 렌더링을 비활성화
+    loading: () => null, // 로딩 중 보여줄 컴포넌트
+});
 
 /**
  * 게시글 목록 클라이언트 컴포넌트
@@ -94,6 +102,11 @@ export const Edit = ( { authentication, brdId, postId, data }  : { authenticatio
             router.push(`/posts/${ brdId }/${ postId }?${ query }`);
         }
     }
+    
+    // 에디터 내용이 업데이트될 때 호출되는 핸들러
+    const handleEditorUpdate = (content: string) => {
+        setModifyData({ ...modifyData, postCtt: content });
+    };
 
     return (
         <>
@@ -107,9 +120,9 @@ export const Edit = ( { authentication, brdId, postId, data }  : { authenticatio
                     </div>
 
                     <div className="border-t pb-2 pt-4 px-4 sm:px-0 sm:col-span-2">
-                        <dt><Label className="text-sm leading-6 font-semibold" htmlFor="postCtt">내용</Label></dt>
+                        <dt className="text-sm leading-6 font-semibold">내용</dt>
                         <dd className="mt-1 text-sm leading-6 text-muted-foreground mt-2">
-                            <Textarea id="postCtt" name="postCtt" required value={ modifyData.postCtt } onChange={(e) => setModifyData({ ...modifyData, postCtt: e.target.value })} />
+                            <TiptapEditor content={modifyData.postCtt || ''}  onUpdate={ handleEditorUpdate } />
                         </dd>
                     </div>
 
