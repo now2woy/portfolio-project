@@ -142,11 +142,11 @@ export const Edit = ( { authentication, brdId, postId, data }  : { authenticatio
 
             <div className="grid grid-cols-2 py-4">
                 <div className="flex items-center space-x-2">
-                    <LinkButton name="목록" variant="outline" className="cursor-pointer" url={`/posts/${ brdId }?${query}`} />
+                    <LinkButton name="목록" variant="outline" url={`/posts/${ brdId }?${query}`} />
                 </div>
                 <div className="flex items-center justify-end space-x-2">
                     {isNew && <MutationButton
-                        className="text-white cursor-pointer"
+                        className="text-white"
                         mutationFn={ fetchInsPost }
                         variables={{ authentication, brdId, data : modifyData }}
                         queryKeyToInvalidate={ [ "posts" ] }
@@ -156,7 +156,7 @@ export const Edit = ( { authentication, brdId, postId, data }  : { authenticatio
                         저장
                     </MutationButton>}
                     {!isNew && <MutationButton
-                        className="text-white cursor-pointer"
+                        className="text-white"
                         mutationFn={ fetchUpdPost }
                         variables={{ authentication, brdId, postId, data : modifyData }}
                         queryKeyToInvalidate={ [ "posts" ] }
@@ -195,7 +195,7 @@ export const View = ( { authentication, brdId, postId } : { authentication: auth
             <div className="flex items-center justify-end space-x-2">
                 <LinkButton name="수정" className="text-white" url={`/posts/${ brdId }/${ postId }/edit?${query}`} />
                 <MutationButton
-                    className="text-white cursor-pointer"
+                    className="text-white"
                     mutationFn={ fetchDelPost }
                     variables={{ authentication, brdId, postId }}
                     queryKeyToInvalidate={ [ "posts" ] }

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { useRouter } from 'next/navigation';
 import { buttonVariantType } from '@/components/Buttons';
+import { cn } from '@/lib/utils';
 
 /**
  * router.push(url) 처리하는 버튼
@@ -25,5 +26,5 @@ export const LinkButton = ({ name, variant, className, url }: { name:string, var
         }
     }
 
-    return <Button variant={ variant } className={ className } onClick={ handleLink }>{ name }</Button>
+    return <Button variant={ variant } className={ cn( "cursor-pointer", className ) } onClick={ handleLink }>{ name }</Button>
 }

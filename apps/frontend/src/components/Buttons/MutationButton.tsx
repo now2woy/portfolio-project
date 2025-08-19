@@ -4,6 +4,7 @@ import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { MutationButtonProps } from '@/components/Buttons';
+import { cn } from '@/lib/utils';
 
 /**
  * 뮤테이션 처리하는 버튼
@@ -70,7 +71,7 @@ export function MutationButton<TData, TError, TVariables>({
         <Button
             type={isSubmit ? 'submit' : 'button'}
             variant={variant}
-            className={className}
+             className={ cn( "cursor-pointer", className ) }
             onClick={ handleClick }
             disabled={isPending}
         >
