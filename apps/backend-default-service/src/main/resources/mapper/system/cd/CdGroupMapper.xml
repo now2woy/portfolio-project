@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.jineddy.system.mapper.cd.CdGroupMapper">
+
+<!-- !!!!! -->
+<!-- 1. 건수 조회 -->
+<!-- !!!!! -->
+<!-- 목록 조회 : props -->
+	<select id="selectCountAll" parameterType="kr.co.jineddy.system.service.cd.dto.SysCdGroupInternalDto" resultType="Long">
+		/* system.mapper.cd.CdGroupMapper.selectCountAll */
+			SELECT
+				COUNT(*) AS CNT
+			FROM sys_cd_group_mst A
+			WHERE 1 = 1
+		<if test='@org.apache.commons.lang3.StringUtils@isNotEmpty( groupId )'>
+			AND A.group_id LIKE CONCAT('%', #{groupId}, '%')
+		</if>
+		<if test='@org.apache.commons.lang3.StringUtils@isNotEmpty( groupNm )'>
+			AND A.group_nm LIKE CONCAT('%', #{groupNm}, '%')
+		</if>
+		<if test='@org.apache.commons.lang3.StringUtils@isNotEmpty( useYn )'>
+			AND A.use_yn = #{useYn}
+		</if>
+	</select>
+	
+	
+	
+<!-- !!!!! -->
+<!-- 2. 목록 조회 -->
+<!-- !!!!! -->
+<!-- 목록 조회 : props -->
+	<select id="selectPageAll" parameterType="kr.co.jineddy.system.service.cd.dto.SysCdGroupInternalDto" resultType="kr.co.jineddy.system.api.cd.dto.CdGroupResponseDto">
+		/* system.mapper.cd.CdGroupMapper.selectPageAll */
+			SELECT
+				A.group_id
+				, A.group_nm
+				, A.dc
+				, A.data_ty_cd
+				, A.lt
+				, A.format
+				, A.unit_cd
+				, A.fixed_lt_yn
+				, A.use_yn
+				, A.ins_dt
+				, A.ins_id
+				, A.upd_dt
+				, A.upd_id
+			FROM sys_cd_group_mst A
+			WHERE 1 = 1
+		<if test='@org.apache.commons.lang3.StringUtils@isNotEmpty( groupId )'>
+			AND A.group_id LIKE CONCAT('%', #{groupId}, '%')
+		</if>
+		<if test='@org.apache.commons.lang3.StringUtils@isNotEmpty( groupNm )'>
+			AND A.group_nm LIKE CONCAT('%', #{groupNm}, '%')
+		</if>
+		<if test='@org.apache.commons.lang3.StringUtils@isNotEmpty( useYn )'>
+			AND A.use_yn = #{useYn}
+		</if>
+			ORDER BY A.upd_dt DESC
+			LIMIT #{pageSize}
+			OFFSET #{offset}
+	</select>
+	
+	
+	
+<!-- !!!!! -->
+<!-- 3. 단건 조회 -->
+<!-- !!!!! -->
+	
+	
+	
+</mapper>

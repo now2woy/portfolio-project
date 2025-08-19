@@ -1,6 +1,9 @@
 package kr.co.jineddy.system.api.cd;
 
 import org.springframework.data.web.SortDefault;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,6 +43,17 @@ public class CdApiController {
 	public Page<CdResponseDto> findPage(CdRequestDto requestDto
 			, @SortDefault.SortDefaults({ @SortDefault(sort = "group_id", direction = Sort.Direction.ASC), @SortDefault(sort = "sort_ordr", direction = Sort.Direction.ASC) }) Pageable pageable) {
 		return cdService.findPageMybatis(requestDto, pageable);
+	}
+	
+	/**
+	 * 시스템 코드 groupId 기준 전체 조회
+	 * @param requestDto
+	 * @param pageable
+	 * @return
+	 */
+	@GetMapping("/{cdGroupId}")
+	public List<CdResponseDto> findByGroupId(@PathVariable(name="cdGroupId") String cdGroupId) {
+		return cdService.findByGroupId(cdGroupId);
 	}
 	
 	/**

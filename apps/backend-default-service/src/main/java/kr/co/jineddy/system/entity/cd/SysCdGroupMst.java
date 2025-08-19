@@ -43,7 +43,7 @@ public class SysCdGroupMst implements Serializable {
 	/**
 	 * 길이
 	 */
-	private int lt;
+	private Integer lt;
 	/**
 	 * 포멧
 	 */

@@ -35,7 +35,7 @@ public class CdGroupResponseDto implements Serializable {
 	/**
 	 * 길이
 	 */
-	private int lt;
+	private Integer lt;
 	/**
 	 * 포멧
 	 */
