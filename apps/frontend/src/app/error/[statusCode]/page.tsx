@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-const ErrorPage = ({ params }: { params: { statusCode: string } }) => {
-    const { statusCode } = params;
+const ErrorPage = async ({ params }: { params: { statusCode: string } }) => {
+    const { statusCode } = await Promise.resolve( params );
 
     console.log(statusCode);
 

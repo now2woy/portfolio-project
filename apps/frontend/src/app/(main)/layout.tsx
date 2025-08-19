@@ -38,7 +38,6 @@ const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode; }>
 const getNavData = async () => {
     // TODO 데이터 조회 방식으로 변경 필요
     return [
-    /*
         {
             title: "시스템",
             url: "/cds",
@@ -49,12 +48,15 @@ const getNavData = async () => {
                     title: "코드 관리",
                     url: "/cds",
                 },
+    /*
                 {
                     title: "메뉴 관리",
                     url: "/menus",
                 },
+    */
             ],
         },
+    /*
         {
             title: "메타",
             url: "/words",
@@ -91,7 +93,7 @@ const getNavData = async () => {
                     title: "공지사항",
                     url: "/posts/1",
                 },
-{
+                {
                     title: "자유게시판",
                     url: "/posts/3",
                 },

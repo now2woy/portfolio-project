@@ -54,7 +54,7 @@ export const LoginForm = ( { authentication } : { authentication : authenticatio
                     <Input id="password" type="password" required value={formData.pwd} onChange={(e) => setFormData({ ...formData, pwd: e.target.value })} />
                 </div>
                     <MutationButton
-                        className="w-full text-white cursor-pointer"
+                        className="w-full text-white"
                         mutationFn={ fetchLogin }
                         variables={{ authentication, data : formData }}
                         queryKeyToInvalidate={ [ ] }
