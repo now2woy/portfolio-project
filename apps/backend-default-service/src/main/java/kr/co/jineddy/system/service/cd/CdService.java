@@ -2,6 +2,7 @@ package kr.co.jineddy.system.service.cd;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -70,6 +71,23 @@ public class CdService {
 		}
 		
 		return new PageImpl<>(responseDtoList, pageable, total);
+	}
+	
+	/**
+	 * 시스템 코드 groupId 기준 전체 조회
+	 * @param groupId
+	 * @return
+	 */
+	public List<CdResponseDto> findByGroupId( String groupId ) {
+		List<SysCdMst> list = sysCdMstRepository.findByGroupIdOrderBySortOrdrAsc(groupId);
+		
+		// 조회 결과가 없을 경우
+		if(list.isEmpty()) {
+			// null 리턴
+			return null;
+		}
+		
+		return list.stream().map(this::sysCdMstToResponse).collect(Collectors.toList());
 	}
 	
 	/**

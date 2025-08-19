@@ -19,4 +19,11 @@ public interface SysCdMstRepository extends JpaRepository<SysCdMst, SysCdMstPk>,
 	 * @return
 	 */
 	List<SysCdMst> findByGroupId( String groupId );
+	
+	/**
+	 * 그룹ID에 해당하는 모든 코드를 정렬순서에 맞게 정렬하여 조회한다.
+	 * @param groupId
+	 * @return
+	 */
+	List<SysCdMst> findByGroupIdOrderBySortOrdrAsc( String groupId );
 }

@@ -158,7 +158,7 @@ public class CdGroupService {
 		entity.setUpdDt( LocalDateTime.now() );
 		entity.setUpdId( userId );
 		
-		log.info( "update : {}", entity.toString() );
+		log.info( "update all : {}", entity.toString() );
 		
 		// 데이터 저장
 		sysCdGroupMstRepository.save( entity );

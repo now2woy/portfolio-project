@@ -4,12 +4,16 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 코드그룹과 코드 요청 DTO
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CdGroupUpdateRequestDto implements Serializable {
 	/**
 	 * 시리얼 버전 ID
@@ -34,7 +38,7 @@ public class CdGroupUpdateRequestDto implements Serializable {
 	/**
 	 * 길이
 	 */
-	private int lt;
+	private Integer lt;
 	/**
 	 * 포멧
 	 */

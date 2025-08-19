@@ -1,6 +1,7 @@
 package kr.co.jineddy.system.api.cd.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -18,6 +19,10 @@ public class CdRequestDto implements Serializable {
 	 */
 	private String groupId;
 	/**
+	 * 코드 그룹 명
+	 */
+	private String groupNm;
+	/**
 	 * 코드 ID
 	 */
 	private String cdId;
@@ -28,7 +33,7 @@ public class CdRequestDto implements Serializable {
 	/**
 	 * 정렬 순서
 	 */
-	private int sortOrdr;
+	private Integer sortOrdr;
 	/**
 	 * 사용여부
 	 */
@@ -38,9 +43,17 @@ public class CdRequestDto implements Serializable {
 	 */
 	private String rm;
 	/**
+	 * 입력 일시
+	 */
+	private LocalDateTime insDt;
+	/**
 	 * 입력 ID
 	 */
 	private String insId;
+	/**
+	 * 수정 일시
+	 */
+	private LocalDateTime updDt;
 	/**
 	 * 수정 ID
 	 */

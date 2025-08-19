@@ -60,7 +60,7 @@ public class CdGroupApiController {
 	 * @return
 	 */
 	@PostMapping
-	public ResponseEntity<CdGroupResponseDto> insert( CdGroupReqeustDto requestDto ) {
+	public ResponseEntity<CdGroupResponseDto> insert( @RequestBody CdGroupReqeustDto requestDto ) {
 		return ResponseEntity.ok( cdGroupService.insert( requestDto ) );
 	}
 	
@@ -71,7 +71,7 @@ public class CdGroupApiController {
 	 * @return
 	 */
 	@PutMapping( "/{cdGroupId}" )
-	public ResponseEntity<CdGroupResponseDto> update( @PathVariable( name="cdGroupId" ) String cdGroupId, CdGroupReqeustDto requestDto ) {
+	public ResponseEntity<CdGroupResponseDto> update( @PathVariable( name="cdGroupId" ) String cdGroupId, @RequestBody CdGroupReqeustDto requestDto ) {
 		return ResponseEntity.ok( cdGroupService.update( cdGroupId, requestDto ) );
 	}
 	
