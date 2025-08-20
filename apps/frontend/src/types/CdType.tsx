@@ -69,7 +69,11 @@ export interface ICdGroupProps {
     /**
      * 하위 코드 목록
      */
-    cds? : ICdProps[]
+    cds? : ICdProps[];
+	/**
+	 * 인덱스 시그니처
+	 */
+	[key: string]: unknown;
 }
 
 /**
@@ -116,4 +120,12 @@ export interface ICdProps {
 	 * 수정 ID
 	 */
 	updId? : string;
+	/**
+	 * 행추가 신규 여부
+	 */
+	isNew? : boolean;
+	/**
+	 * 인덱스 시그니처
+	 */
+	[key: string]: unknown;
 }

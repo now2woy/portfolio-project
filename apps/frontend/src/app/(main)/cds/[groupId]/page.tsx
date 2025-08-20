@@ -47,11 +47,11 @@ export default async function DetailViewer( { params }: { params : { groupId : s
         { key: 'groupNm', label: '코드그룹명', colSpan: 3 },
         { key: 'dataTyCd', label: '데이터타입', colSpan: 3 },
         { key: 'lt', label: '최대길이', colSpan: 3 },
-        { key: 'dc', label: '설명', colSpan: 6, hasBorderTop: true, render: (value) => <TiptapViewer content={value || ''} /> },
+        { key: 'dc', label: '설명', colSpan: 6, hasBorderTop: true, render: (value) => <TiptapViewer content={value as string || ''} /> },
         { key: 'useYn', label: '사용여부', colSpan: 3 },
         { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3 },
-        { key: 'insDt', label: '입력일시', colSpan: 3, hasBorderTop: true, render: (value) => formatDate(value)},
-        { key: 'updDt', label: '수정일시', colSpan: 3, hasBorderTop: true,render: (value) => formatDate(value)},
+        { key: 'insDt', label: '입력일시', colSpan: 3, hasBorderTop: true, render: (value) => formatDate(value as string)},
+        { key: 'updDt', label: '수정일시', colSpan: 3, hasBorderTop: true, render: (value) => formatDate(value as string)},
     ];
 
     // 하단 테이블 컬럼 정보 정의
@@ -66,8 +66,8 @@ export default async function DetailViewer( { params }: { params : { groupId : s
     return (
         <div className="flex flex-1 flex-col gap-2 p-4">
             <h1 className="text-2xl font-bold mb-4">코드 그룹 &apos;{ cdGroup.groupNm }&apos; 상세</h1>
-            <StaticDetailViewer data={ cdGroup } fields={ fields }>
-                { cds && <StaticTable data={ cds } columns={ columns } /> }
+            <StaticDetailViewer<ICdGroupProps> data={ cdGroup } fields={ fields }>
+                { cds && <StaticTable<ICdProps> data={ cds } columns={ columns } title="코드 목록" /> }
             </StaticDetailViewer>
             <View authentication={ authentication } groupId={ groupId } />
         </div>

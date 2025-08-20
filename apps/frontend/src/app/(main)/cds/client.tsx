@@ -18,7 +18,7 @@ import { IColumnConfig } from "@/types/ColumnDefType";
 import { authenticationProps } from '@/types/CommonType';
 import { ICdGroupProps, ICdProps } from "@/types/CdType";
 import { IFormFieldProps } from '@/types/components/ViewType';
-import { IDndColumnProps } from '@/types/components/GridType';
+import { IDndColumnProps, IDndTableProps } from '@/types/components/GridType';
 
 /**
  * CD GROUP API 기본 URL
@@ -26,25 +26,19 @@ import { IDndColumnProps } from '@/types/components/GridType';
 const BASE_MENU_URL = '/cds';
 
 /**
- * TiptapEditor를 클라이언트 측에서 다이나믹 로드
+ * TiptapEditor를 클라이언트 측에 다이나믹 로드
  */
 const TiptapEditor = dynamic(() => import('@/components/TipTaps').then(mod => mod.TiptapEditor), {
     ssr: false, // 서버 측 렌더링을 비활성화
     loading: () => null, // 로딩 중 보여줄 컴포넌트
 });
 
-// SSR 비활성화
+/**
+ * 드래그 & 드랍 테이블을 클라이언트 측에 다이나믹 로드
+ */
 export const DndTable = dynamic(() => import('@/components/Grids/DndTable').then(mod => mod.DndTable), {
   ssr: false,
-}) as <T extends Record<string, any>>(props: {
-  data: T[];
-  columns: IDndColumnProps<T>[];
-  onDragEnd: (items: T[]) => void;
-  onUpdate: (id: string, key: keyof T, value: any) => void;
-  onAddRow?: () => void;
-  onRemoveRow?: (id: string) => void;
-  idKey: keyof T;
-}) => JSX.Element;
+}) as <T extends Record<string, unknown>>( props: IDndTableProps<T> ) => JSX.Element;
 
 /**
  * 목록 클라이언트 컴포넌트
@@ -130,7 +124,7 @@ export const Edit = ( { authentication, groupId, data }  : { authentication: aut
     };
 
     // 셀 값 변경 시
-    const handleCellUpdate = (id: string, key: keyof ICdProps, value: any) => {
+    const handleCellUpdate = (id: string, key: keyof ICdProps, value: unknown) => {
         setCds(currentData =>
             currentData?.map(item =>
                 item.cdId === id ? { ...item, [key]: value } : item
@@ -140,14 +134,14 @@ export const Edit = ( { authentication, groupId, data }  : { authentication: aut
   
     // 행 추가 핸들러
     const handleAddRow = () => {
-        const newId = `new-${Date.now()}`;
-        const newRow: ICdProps = {
-        groupId: 'G1', // 기본 그룹 ID
-        cdId: newId,
-        cdNm: '',
-        rm: '',
-        sortOrdr: cds.length + 1,
-        useYn: 'Y',
+        const newRow : ICdProps = {
+            groupId : groupId || '',
+            cdId: '',
+            cdNm: '',
+            rm: '',
+            sortOrdr: cds.length + 1,
+            useYn: 'Y',
+            isNew : true,
         };
         setCds([...cds, newRow]);
     };
@@ -166,8 +160,9 @@ export const Edit = ( { authentication, groupId, data }  : { authentication: aut
 
     return (
         <>
-            <FormViewer data={modifyData} fields={fields} onUpdate={handleFormUpdate} />
-            { cds && <DndTable data={ cds } idKey="cdId" columns={columns} onDragEnd={handleDragEnd} onUpdate={handleCellUpdate} onAddRow={handleAddRow} onRemoveRow={handleRemoveRow} /> }
+            <FormViewer data={modifyData} fields={fields} onUpdate={handleFormUpdate}>
+                { cds && <DndTable data={ cds } columns={columns} idKey="cdId" title="코드 목록" onDragEnd={handleDragEnd} onUpdate={handleCellUpdate} onAddRow={handleAddRow} onRemoveRow={handleRemoveRow} /> }
+            </FormViewer>
             <div className="grid grid-cols-2 py-4">
                 <div className="flex items-center space-x-2">
                     <LinkButton name="목록" variant="outline" url={`${ BASE_MENU_URL }?${query}`} />
@@ -180,6 +175,7 @@ export const Edit = ( { authentication, groupId, data }  : { authentication: aut
                         queryKeyToInvalidate={ [ "cds" ] }
                         onSuccessCallback={ handleCallback }
                         onErrorCallback={ handleCallback }
+                        isSubmit={true}
                     >
                         저장
                     </MutationButton>}
@@ -190,6 +186,7 @@ export const Edit = ( { authentication, groupId, data }  : { authentication: aut
                         queryKeyToInvalidate={ [ "cds" ] }
                         onSuccessCallback={ handleCallback }
                         onErrorCallback={ handleCallback }
+                        isSubmit={true}
                     >
                         수정
                     </MutationButton>}
@@ -250,27 +247,28 @@ const columnsConfig : IColumnConfig[] = [
 
 // 입력 / 수정 필드 레이아웃 정의
 const fields : IFormFieldProps<ICdGroupProps>[] = [
-    { key: 'groupId', label: '코드그룹ID', colSpan: 3, formType: 'text' },
-    { key: 'groupNm', label: '코드그룹명', colSpan: 3, formType: 'text' },
-    { key: 'dataTyCd', label: '데이터타입', colSpan: 3, formType: 'text', hasBorderTop: true },
+    { key: 'groupId', label: '코드그룹ID', colSpan: 3, formType: 'text', required : true },
+    { key: 'groupNm', label: '코드그룹명', colSpan: 3, formType: 'text', required : true },
+    { key: 'dataTyCd', label: '데이터타입', colSpan: 3, formType: 'text', required : true, hasBorderTop: true },
     { key: 'lt', label: '최대길이', colSpan: 3, formType: 'text', hasBorderTop: true },
-    { key: 'dc', label: '설명', colSpan: 6, hasBorderTop: true, 
+    { key: 'dc', label: '설명', colSpan: 6, required : true, hasBorderTop: true, 
         render: (value, item, onFieldChange) => (
-            <TiptapEditor content={value || ''} onUpdate={ (content : string) => onFieldChange?.('dc', content)} />
+            <TiptapEditor content={value as string || ''} onUpdate={ (content : string) => onFieldChange?.('dc', content)} />
         ) 
     },
-    { key: 'useYn', label: '사용여부', colSpan: 3, formType: 'text', hasBorderTop: true },
-    { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3, formType: 'text', hasBorderTop: true },
-    { key: 'insDt', label: '입력일시', colSpan: 3, hasBorderTop: true, render: (value) => formatDate(value) },
-    { key: 'updDt', label: '수정일시', colSpan: 3, hasBorderTop: true,render: (value) => formatDate(value) },
+    { key: 'useYn', label: '사용여부', colSpan: 3, formType: 'text', required : true, hasBorderTop: true },
+    { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3, formType: 'text', required : true, hasBorderTop: true },
+    { key: 'insDt', label: '입력일시', colSpan: 3, hasBorderTop: true, render: (value) => formatDate(value as string) },
+    { key: 'updDt', label: '수정일시', colSpan: 3, hasBorderTop: true,render: (value) => formatDate(value as string) },
 ];
 
 // 입력 / 수정 하위 코드 목록 컬럼 정의
 const columns : IDndColumnProps<ICdProps>[] = [
     { key: 'dndHandler', label: '', className: 'w-[40px]' },
-    { key: 'cdId', label: '코드', className: 'w-[100px]' },
+    { key: 'cdId', label: '코드', className: 'w-[100px]', inputType: 'readonly' },
     { key: 'cdNm', label: '코드명', className: 'w-[200px]', inputType: 'text' },
     { key: 'rm', label: '비고', inputType: 'text' },
     { key: 'sortOrdr', label: '정렬순서', className: 'text-left w-[100px]', isDndColumn: true },
     { key: 'useYn', label: '사용여부', className: 'text-left w-[100px]', inputType: 'select' },
+    { key: 'minusButton', label: '', className: 'w-[40px]' },
 ];

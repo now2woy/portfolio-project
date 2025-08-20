@@ -7,7 +7,7 @@ import { IStaticViewProps } from '@/types/components/ViewType';
  * @param param
  * @returns 
  */
-export function StaticDetailViewer<T extends Record<string, any>>({ data, fields, children }: IStaticViewProps<T>) {
+export function StaticDetailViewer<T extends Record<string, unknown>>({ data, fields, children }: IStaticViewProps<T>) {
     return (
         <div className="border border-gray-250 rounded-lg px-6">
             <dl className="grid grid-cols-1 sm:grid-cols-6 gap-x-4">
@@ -17,17 +17,14 @@ export function StaticDetailViewer<T extends Record<string, any>>({ data, fields
                     >
                         <dt className="text-sm leading-6 font-semibold">{ field.label }</dt>
                         <dd className="mt-1 text-sm leading-6 text-muted-foreground mt-2">
-                            { field.render ? field.render( data[ field.key ], data ) : data[ field.key ] }
+                            { field.render ? field.render( data[ field.key ], data ) : String( data[ field.key ] ?? '') }
                         </dd>
                     </div>
                 ))}
             </dl>
             {children && (
                 <div className="border-t px-4 pb-2 pt-4 sm:col-span-6 sm:px-0">
-                    <dt className="text-sm leading-6 font-semibold">코드</dt>
-                    <dd className="mt-1 text-sm leading-6 text-muted-foreground mt-2">
-                        { children }
-                    </dd>
+                    { children }
                 </div>
             )}
         </div>

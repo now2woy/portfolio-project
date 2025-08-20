@@ -59,19 +59,23 @@ export function MutationButton<TData, TError, TVariables>({
             const form = (e.currentTarget as HTMLButtonElement).form;
             // 브라우저 검증
             if (form && form.checkValidity()) {
+                // 서브밋 이벤트 중단
                 e.preventDefault();
-            }
-        }
 
-        // 처리
-        mutate(variables);
+                // 처리
+                mutate(variables);
+            }
+        } else {
+            // 처리
+            mutate(variables);
+        }
     };
 
     return (
         <Button
             type={isSubmit ? 'submit' : 'button'}
             variant={variant}
-             className={ cn( "cursor-pointer", className ) }
+            className={ cn( "cursor-pointer", className ) }
             onClick={ handleClick }
             disabled={isPending}
         >

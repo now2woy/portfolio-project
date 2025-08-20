@@ -32,11 +32,14 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
     }
 
     return (
-        <div className="border rounded-md">
+        <div className="border rounded-md" onClick={() => editor.commands.focus()} >
             {/* 툴바 컴포넌트 */}
             <div className="flex flex-wrap items-center gap-1 border-b p-2">
                 <Button
-                    onClick={() => editor.chain().focus().toggleBold().run()}
+                    onClick={() => {
+                        editor.chain().focus().toggleBold().run();
+                        onUpdate(editor.getHTML());
+                    } }
                     disabled={!editor.can().chain().focus().toggleBold().run()}
                     variant={editor.isActive('bold') ? 'secondary' : 'ghost'}
                     size="sm"
@@ -45,7 +48,10 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     <Bold className="w-4 h-4" />
                 </Button>
                 <Button
-                    onClick={() => editor.chain().focus().toggleItalic().run()}
+                    onClick={() => {
+                        editor.chain().focus().toggleItalic().run();
+                        onUpdate(editor.getHTML());
+                    }}
                     disabled={!editor.can().chain().focus().toggleItalic().run()}
                     variant={editor.isActive('italic') ? 'secondary' : 'ghost'}
                     size="sm"
@@ -54,7 +60,10 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     <Italic className="w-4 h-4" />
                 </Button>
                 <Button
-                    onClick={() => editor.chain().focus().toggleStrike().run()}
+                    onClick={() => {
+                        editor.chain().focus().toggleStrike().run();
+                        onUpdate(editor.getHTML());
+                    }}
                     disabled={!editor.can().chain().focus().toggleStrike().run()}
                     variant={editor.isActive('strike') ? 'secondary' : 'ghost'}
                     size="sm"
@@ -63,7 +72,10 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     <Strikethrough className="w-4 h-4" />
                 </Button>
                 <Button
-                    onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                    onClick={() => {
+                        editor.chain().focus().toggleCodeBlock().run();
+                        onUpdate(editor.getHTML());
+                    }}
                     disabled={!editor.can().chain().focus().toggleCodeBlock().run()}
                     variant={editor.isActive('codeBlock') ? 'secondary' : 'ghost'}
                     size="sm"
@@ -72,7 +84,10 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     <Code className="w-4 h-4" />
                 </Button>
                 <Button
-                    onClick={() => editor.chain().focus().toggleBulletList().run()}
+                    onClick={() => {
+                        editor.chain().focus().toggleBulletList().run();
+                        onUpdate(editor.getHTML());
+                    }}
                     disabled={!editor.can().chain().focus().toggleBulletList().run()}
                     variant={editor.isActive('bulletList') ? 'secondary' : 'ghost'}
                     size="sm"
@@ -81,7 +96,10 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                     <List className="w-4 h-4" />
                 </Button>
                 <Button
-                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                    onClick={() => {
+                        editor.chain().focus().toggleOrderedList().run();
+                        onUpdate(editor.getHTML());
+                    }}
                     disabled={!editor.can().chain().focus().toggleOrderedList().run()}
                     variant={editor.isActive('orderedList') ? 'secondary' : 'ghost'}
                     size="sm"
