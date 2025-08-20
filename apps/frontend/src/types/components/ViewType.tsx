@@ -1,7 +1,7 @@
 /**
  * 
  */
-export interface IStaticViewProps<T> {
+export interface IStaticViewProps<T,> {
     data: T;
     fields: IStaticFieldProps<T>[];
     children?: React.ReactNode;
@@ -30,7 +30,7 @@ export interface IStaticFieldProps<T> {
     /**
      * 값을 커스텀 렌더링할 함수 (선택 사항)
      */
-    render?: (value: any, item: T) => React.ReactNode;
+    render?: (value : T[ keyof T ], item : T) => React.ReactNode;
 }
 
 /**
@@ -67,7 +67,7 @@ export interface IFormFieldProps<T> {
      * 값을 커스텀 렌더링할 함수 (선택 사항).
      * 폼 입력 컴포넌트를 렌더링하거나, 뷰 전용 필드를 렌더링할 때 사용합니다.
      */
-    render?: (value: any, item: T, onFieldChange?: (key: keyof T, newValue: any) => void) => React.ReactNode;
+    render?: ( value : T[keyof T], item : T, onFieldChange?: ( key : keyof T, newValue : unknown ) => void ) => React.ReactNode;
     /**
      * 폼 필드인지 여부
      */
