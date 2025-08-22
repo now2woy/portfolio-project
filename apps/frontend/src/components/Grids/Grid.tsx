@@ -22,6 +22,7 @@ export function Grid<T>({ data, columnsConfig, newUrl }: { data : IPageResponse<
     const columns: ColumnDef<T>[] = CreateColumns( columnsConfig );
     const searchParams = useSearchParams();
     const router = useRouter();
+    const size = searchParams.get('size') ?? '10';
 
     const table = useReactTable( {
         data : data.content,
@@ -55,7 +56,7 @@ export function Grid<T>({ data, columnsConfig, newUrl }: { data : IPageResponse<
                 </div>
 
                 <div className="space-x-2">
-                    <Select defaultValue="10" onValueChange={ handlePageSizeChange }>
+                    <Select defaultValue={size} onValueChange={ handlePageSizeChange }>
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder="목록 건수" />
                         </SelectTrigger>

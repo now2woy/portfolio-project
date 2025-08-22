@@ -1,7 +1,6 @@
 import React from "react"
-import { getAuthenticationToken } from '@/utils/CookiesUtils';
-import { fatchOnePost } from '@/service/PostService';
-import { fatchOneBoard } from '@/service/BoardService';
+import { getBoard } from '@/services/server/BoardServerService';
+import { getPost } from '@/services/server/PostServerService';
 import { View } from "@/app/posts/[brdId]/client";
 import { formatDate } from '@/utils/DateUtils';
 import { TiptapViewer } from '@/components/TipTaps';
@@ -11,12 +10,11 @@ import { TiptapViewer } from '@/components/TipTaps';
  * @param param
  * @returns 
  */
-export async function generateMetadata( { params } : { params : { brdId : number, postId : number } } ) {
+export async function generateMetadata( { params } : { params : { brdId : string, postId : string } } ) {
     const { brdId, postId } = await Promise.resolve( params );
-    const authentication = await getAuthenticationToken();
     // API 호출
-    const board = await fatchOneBoard( { authentication, brdId } );
-    const post = await fatchOnePost({ authentication, brdId, postId });
+    const board = await getBoard( { brdId } );
+    const post = await getPost({ brdId, postId });
   
     return {
         title: `${ board.brdNm } 상세 - now2woy\'s Portfolio`,
@@ -25,17 +23,16 @@ export async function generateMetadata( { params } : { params : { brdId : number
 }
 
 /**
- * 게시글 상세 컴포넌트
+ * 상세 컴포넌트
  * @param param
  * @returns 
  */
-export default async function PostDetail( { params }: { params : { brdId : number; postId : number } } ) {
+export default async function DetailViewer( { params }: { params : { brdId : string; postId : string } } ) {
     const { brdId, postId } = await Promise.resolve( params );
-    const authentication = await getAuthenticationToken();
 
     // API 호출
-    const board = await fatchOneBoard( { authentication, brdId } );
-    const data = await fatchOnePost({ authentication, brdId, postId });
+    const board = await getBoard( { brdId } );
+    const data = await getPost({ brdId, postId });
     
     return (
         <div className="flex flex-1 flex-col gap-2 p-4">
@@ -65,7 +62,7 @@ export default async function PostDetail( { params }: { params : { brdId : numbe
                 </dl>
             </div>
 
-            <View authentication={ authentication } brdId={ brdId } postId={ postId } />
+            <View brdId={ brdId } postId={ postId } />
         </div>
     );
 }

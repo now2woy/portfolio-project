@@ -4,11 +4,11 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
-import { postKeys, fetchListPost, fetchInsPost, fetchUpdPost, fetchDelPost } from '@/service/PostService';
-import { ISearchData, ISearchField } from "@/types/SearchType";
+import { postKeys, fetchPosts, } from '@/queries/PostQuery';
+import { insertPostViaBff, updatePostViaBff, deletePostViaBff } from '@/services/client/PostClientService';
+import { ISearchData, ISearchField } from "@/types/components/SearchType";
 import { IColumnConfig } from "@/types/ColumnDefType";
-import { authenticationProps } from '@/types/CommonType';
-import { IPostProps } from "@/types/PostType";
+import { IPostProps } from "@/types/apps/PostType";
 import { DefaultSearch } from "@/components/Searchs";
 import { Grid } from "@/components/Grids";
 import { LinkButton, MutationButton } from '@/components/Buttons';
@@ -24,49 +24,42 @@ const TiptapEditor = dynamic(() => import('@/components/TipTaps').then(mod => mo
     loading: () => null, // 로딩 중 보여줄 컴포넌트
 });
 
+
 /**
- * 게시글 목록 클라이언트 컴포넌트
+ * 게시물 메뉴 기본 URL
+ */
+const BASE_MENU_URL = '/posts';
+
+/**
+ * 목록 클라이언트 컴포넌트
  * @param param
  * @returns 
  */
-export const List = ({ authentication, brdId, initialData, fields }: { authentication: authenticationProps, brdId: number, initialData : ISearchData, fields : ISearchField[] }) =>  {
+export const List = ({ brdId, initialData, fields }: { brdId: string, initialData : ISearchData, fields : ISearchField[] }) =>  {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const query = searchParams?.toString() ?? '';
-
-    // 조회 버튼 헨들링
-    const handleSearch = ( filters : ISearchData ) => {
-        const params = new URLSearchParams(searchParams);
-        Object.keys( filters ).forEach( key => {
-            if ( filters[ key ] ) {
-                params.set( key, filters[ key ] );
-            }
-        });
-
-        router.push(`?${ params.toString() }`);
-    }
 
     // 캐싱된 데이터 사용
     const { data, isLoading, isError } = useQuery( {
-        queryKey: postKeys.lists(authentication, brdId, query)
-        , queryFn: fetchListPost
+        queryKey: postKeys.lists(brdId, query)
+        , queryFn: fetchPosts
     });
 
     // 게시글 목록 컬럼 정의
     const columnsConfig : IColumnConfig[] = [
         { key : 'postId', label : '번호', type : 'text', size : 40, align : 'center' },
-        { key : 'postTtl', label : '제목', type : 'link', linkBaseUrl : '/posts', linkKeys : [ 'brdId', 'postId' ] },
+        { key : 'postTtl', label : '제목', type : 'link', linkBaseUrl : BASE_MENU_URL, linkKeys : [ 'brdId', 'postId' ] },
         { key : 'writerId', label : '작성자ID', type : 'text', size : 100 },
         { key : 'delYn', label : '삭제여부', type : 'boolean', size : 70 },
         { key : 'insDt', label : '작성일시', type : 'date', size : 140 },
         { key : 'updDt', label : '수정일시', type : 'date', size : 140 },
-        { type : 'actions', label : 'Actions', linkBaseUrl : '/posts', linkKeys : [ 'brdId', 'postId' ], linkAddUrl : '/edit', menu : [ '수정' ], size : 60 },
+        { type : 'actions', label : 'Actions', linkBaseUrl : BASE_MENU_URL, linkKeys : [ 'brdId', 'postId' ], linkAddUrl : '/edit', menu : [ '수정' ], size : 60 },
     ];
 
     return (
         <>
-            <DefaultSearch initialData={ initialData } fields={ fields } handleSearch={ handleSearch } />
-            {data && <Grid data={ data } columnsConfig={ columnsConfig } newUrl={`/posts/${ brdId }/new?${ query }`} />}
+            <DefaultSearch initialData={ initialData } fields={ fields } />
+            {data && <Grid data={ data } columnsConfig={ columnsConfig } newUrl={`${ BASE_MENU_URL }/${ brdId }/new?${ query }`} />}
         </>
     );
 }
@@ -76,7 +69,7 @@ export const List = ({ authentication, brdId, initialData, fields }: { authentic
  * @param param
  * @returns 
  */
-export const Edit = ( { authentication, brdId, postId, data }  : { authentication: authenticationProps, brdId : number, postId : number, data? : IPostProps }) => {
+export const Edit = ( { brdId, postId, data }  : { brdId : string, postId : string, data? : IPostProps }) => {
     const [modifyData, setModifyData] = useState<IPostProps>(data || {
         brdId: brdId,
         postTtl : '',
@@ -96,10 +89,10 @@ export const Edit = ( { authentication, brdId, postId, data }  : { authenticatio
         // 신규 일 경우
         if(isNew){
             // 목록 화면으로 이동
-            router.push(`/posts/${ brdId }`);
+            router.push(`${ BASE_MENU_URL }/${ brdId }`);
         } else {
             // 상세 화면으로 이동
-            router.push(`/posts/${ brdId }/${ postId }?${ query }`);
+            router.push(`${ BASE_MENU_URL }/${ brdId }/${ postId }?${ query }`);
         }
     }
     
@@ -147,8 +140,8 @@ export const Edit = ( { authentication, brdId, postId, data }  : { authenticatio
                 <div className="flex items-center justify-end space-x-2">
                     {isNew && <MutationButton
                         className="text-white"
-                        mutationFn={ fetchInsPost }
-                        variables={{ authentication, brdId, data : modifyData }}
+                        mutationFn={ insertPostViaBff }
+                        variables={{ brdId, data : modifyData }}
                         queryKeyToInvalidate={ [ "posts" ] }
                         onSuccessCallback={ handleCallback }
                         onErrorCallback={ handleCallback }
@@ -157,8 +150,8 @@ export const Edit = ( { authentication, brdId, postId, data }  : { authenticatio
                     </MutationButton>}
                     {!isNew && <MutationButton
                         className="text-white"
-                        mutationFn={ fetchUpdPost }
-                        variables={{ authentication, brdId, postId, data : modifyData }}
+                        mutationFn={ updatePostViaBff }
+                        variables={{ brdId, postId, data : modifyData }}
                         queryKeyToInvalidate={ [ "posts" ] }
                         onSuccessCallback={ handleCallback }
                         onErrorCallback={ handleCallback }
@@ -176,7 +169,7 @@ export const Edit = ( { authentication, brdId, postId, data }  : { authenticatio
  * @param param
  * @returns 
  */
-export const View = ( { authentication, brdId, postId } : { authentication: authenticationProps, brdId: number, postId: number } ) => {
+export const View = ( { brdId, postId } : { brdId: string, postId: string } ) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const query = new URLSearchParams(searchParams);
@@ -184,7 +177,7 @@ export const View = ( { authentication, brdId, postId } : { authentication: auth
     // 정상, 오류 콜백
     const handleCallback = () => {
         // 목록 화면으로 이동
-        router.push(`/posts/${ brdId }?${ query }`);
+        router.push(`${ BASE_MENU_URL }/${ brdId }?${ query }`);
     }
 
     return (
@@ -193,11 +186,11 @@ export const View = ( { authentication, brdId, postId } : { authentication: auth
                 <LinkButton name="목록" variant="outline" url={`/posts/${ brdId }?${query}`} />
             </div>
             <div className="flex items-center justify-end space-x-2">
-                <LinkButton name="수정" className="text-white" url={`/posts/${ brdId }/${ postId }/edit?${query}`} />
+                <LinkButton name="수정" className="text-white" url={`${ BASE_MENU_URL }/${ brdId }/${ postId }/edit?${query}`} />
                 <MutationButton
                     className="text-white"
-                    mutationFn={ fetchDelPost }
-                    variables={{ authentication, brdId, postId }}
+                    mutationFn={ deletePostViaBff }
+                    variables={{ brdId, postId }}
                     queryKeyToInvalidate={ [ "posts" ] }
                     onSuccessCallback={ handleCallback }
                     onErrorCallback={ handleCallback }

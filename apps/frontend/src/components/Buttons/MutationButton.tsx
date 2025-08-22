@@ -30,7 +30,11 @@ export function MutationButton<TData, TError, TVariables>({
         mutationFn,
         onSuccess: (data) => {
             if (queryKeyToInvalidate) {
-                queryClient.invalidateQueries({ queryKey: queryKeyToInvalidate });
+                if(queryKeyToInvalidate[0] === 'ALL'){
+                    queryClient.invalidateQueries();
+                } else {
+                    queryClient.invalidateQueries({ queryKey: queryKeyToInvalidate });
+                }
             }
 
             if (successMessage) {

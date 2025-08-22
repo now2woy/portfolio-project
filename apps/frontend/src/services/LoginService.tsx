@@ -14,5 +14,17 @@ const BASE_SERVICE_URL = '/api/system/v1/auths';
  */
 export const fetchLogin = async ( { authentication, data } : { authentication: authenticationProps, data: ILoginProps } ) => {
     const api = createApi( authentication );
-    await api.post( `${ BASE_SERVICE_URL }/login`, data );
+    const res = await api.post( `${ BASE_SERVICE_URL }/login`, data );
+    return res.data;
+};
+
+
+/**
+ * 게시글 입력
+ * @param params
+ * @returns 
+ */
+export const fetchLogout = async () => {
+    const api = createApi();
+    await api.post( `${ BASE_SERVICE_URL }/logout` );
 };

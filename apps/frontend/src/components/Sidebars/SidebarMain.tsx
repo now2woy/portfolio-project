@@ -7,12 +7,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 
 import { IconCode, IconAbc, IconNotebook, IconInnerShadowTop } from "@tabler/icons-react"
 
-import { SidebarDynamicUser, ISidebarUserProps } from "@/components/Sidebars";
+import { SidebarDynamicUser } from "@/components/Sidebars";
 import { IMainMenuProps } from "@/types/MenuType";
 
 export const SidebarMain = async ( { menu }: { menu: IMainMenuProps[] } ) => {
-    const user: ISidebarUserProps = await getUserData();
-
     // 아이콘 이름과 컴포넌트를 매핑하는 객체
     const iconMap = {
         Code: IconCode,
@@ -74,18 +72,8 @@ export const SidebarMain = async ( { menu }: { menu: IMainMenuProps[] } ) => {
             </SidebarContent>
 
             <SidebarFooter>
-              <SidebarDynamicUser { ...user } />
+              <SidebarDynamicUser />
             </SidebarFooter>
           </Sidebar>
     );
 }
-
-// 사용자 정보 조회
-const getUserData = async () => {
-    // TODO 데이터 조회 방식으로 변경 필요
-    return {
-        name: "now2woy",
-        email: "now2woy@gmail.com",
-        avatar: "/avatars/shadcn.jpg",
-    };
-};
