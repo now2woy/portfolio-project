@@ -91,7 +91,16 @@ export const middleware = async ( request: NextRequest ) => {
 
 // 미들웨어를 실행할 경로를 설정합니다.
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: [
+    /*
+     * 아래와 같은 경로를 제외한 모든 요청 경로에 미들웨어를 적용합니다.
+     * 1. api 라우트 (`/api/*`)
+     * 2. `_next/static` 및 `_next/image`와 같은 Next.js 내부 파일 (`/_next/`로 시작하는 모든 파일)
+     * 3. `favicon.ico`와 같은 정적 파일 (일반적으로 `.`, `_`, `.`이 포함된 모든 파일)
+     * 4. 봇 관련 파일 (e.g., `robots.txt`)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|[\\w-]+\\.\\w+).*)',
+  ],
 };
 
 /**
