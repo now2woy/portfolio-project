@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -162,6 +163,18 @@ public class AuthService {
 	}
 	
 	/**
+	 * 액세스 토큰 유효성 검증
+	 * @param tokenRequestDto
+	 * @return
+	 */
+	public boolean verify(HttpServletRequest request) {
+		// 액세스 토큰 GET
+		String accessToken = resolveAccessToken(request);
+		
+		return jwtTokenProvider.validateToken(accessToken);
+	}
+	
+	/**
 	 * 토큰 갱신
 	 * @param tokenRequestDto
 	 * @return
@@ -171,6 +184,9 @@ public class AuthService {
 		String accessToken = resolveAccessToken(request);
 		// 리프레시 토큰 GET
 		String refreshToken = resolveRefreshToken(request);
+		
+		log.info("!!!!!!!!!!!!!!!!!!! 토큰갱신 시도 액세스 토큰 : {}", accessToken);
+		log.info("!!!!!!!!!!!!!!!!!!! 토큰갱신 시도 리프레시 토큰 : {}", refreshToken);
 		
 		// Refresh Token 검증
 		if (!jwtTokenProvider.validateToken(refreshToken)) {
@@ -260,6 +276,16 @@ public class AuthService {
 	}
 	
 	/**
+	 * 사용자 정보 조회
+	 * @param userId
+	 * @return
+	 * @throws EntityNotFoundException
+	 */
+	public AuthResponseDto getUserInfo(String userId) throws EntityNotFoundException {
+		return sysUserMstToAuthResponseDto(sysUserMstRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId + "에 해당하는 사용자가 없습니다.")));
+	}
+	
+	/**
 	 * 토큰 응답 DTO로 변환
 	 * @param tokenDto
 	 * @return
@@ -288,6 +314,6 @@ public class AuthService {
 	 * @return
 	 */
 	private AuthResponseDto sysUserMstToAuthResponseDto(SysUserMst sysUserMst) {
-		return AuthResponseDto.builder().userId(sysUserMst.getUserId()).useNm(sysUserMst.getUserNm()).build();
+		return AuthResponseDto.builder().userId(sysUserMst.getUserId()).userNm(sysUserMst.getUserNm()).build();
 	}
 }

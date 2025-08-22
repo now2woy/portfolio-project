@@ -4,8 +4,10 @@ import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,14 +60,32 @@ public class AuthApiController {
 	 * @return
 	 */
 	@PostMapping("/login")
-	public ResponseEntity<?> login(HttpServletResponse response, @RequestBody AuthRequestDto authRequestDto) {
+	public ResponseEntity<AuthResponseDto> login(HttpServletResponse response, @RequestBody AuthRequestDto authRequestDto) {
 		// 로그인 처리 후 토큰 정보(tokenInfo)를 얻는 로직
 		TokenResponseDto tokenResponseDto = authService.login(authRequestDto);
 		
 		// 발행된 토큰정보를 쿠키에 담는다.
-		setAuthCookie(response, tokenResponseDto.getAccessToken(), Duration.ofSeconds(tokenResponseDto.getAccessTokenExpiresIn() / 1000), tokenResponseDto.getRefreshToken(), Duration.ofDays(7));
+		// 쿠키의 유효기간은 리프레시토큰의 유효기간과 동일하게 설정(액세스 토큰이 만료 되도 사용자ID를 뽑아내기 위해서)
+		setAuthCookie(response, tokenResponseDto.getAccessToken(), Duration.ofHours(12), tokenResponseDto.getRefreshToken(), Duration.ofHours(12));
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(authService.getUserInfo(authRequestDto.getUserId()));
+	}
+	
+	/**
+	 * 액세스 토큰 유효성 검증
+	 * @param tokenRequestDto
+	 * @return
+	 */
+	@GetMapping("/verify")
+	public ResponseEntity<?> verify(HttpServletRequest request, HttpServletResponse response) {
+		boolean result = authService.verify(request);
+		
+		if(result) {
+			return ResponseEntity.ok().build();
+			
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
 	}
 	
 	/**
@@ -74,14 +94,15 @@ public class AuthApiController {
 	 * @return
 	 */
 	@PostMapping("/re-issue")
-	public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<TokenResponseDto> reissue(HttpServletRequest request, HttpServletResponse response) {
 		// 토큰을 재발행한다.
 		TokenResponseDto tokenResponseDto = authService.reIssue(request);
 		
 		// 재발행된 토큰정보를 쿠키에 담는다.
-		setAuthCookie(response, tokenResponseDto.getAccessToken(), Duration.ofSeconds(tokenResponseDto.getAccessTokenExpiresIn() / 1000), tokenResponseDto.getRefreshToken(), Duration.ofDays(7));
+		// 쿠키의 유효기간은 리프레시토큰의 유효기간과 동일하게 설정(액세스 토큰이 만료 되도 사용자ID를 뽑아내기 위해서)
+		setAuthCookie(response, tokenResponseDto.getAccessToken(), Duration.ofHours(12), tokenResponseDto.getRefreshToken(), Duration.ofHours(12));
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(tokenResponseDto);
 	}
 	
 	/**

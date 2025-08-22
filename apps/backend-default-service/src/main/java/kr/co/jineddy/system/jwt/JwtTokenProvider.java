@@ -43,13 +43,13 @@ public class JwtTokenProvider {
 	 */
 	private static final String BEARER_TYPE = "Bearer";
 	/**
-	 * 액세스 토큰 유효 시간 : 30분 / 임시로 하루
+	 * 액세스 토큰 유효 시간 : 1분
 	 */
-	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 1440;
+	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 5;
 	/**
-	 * 리프레시 토큰 유효 시간 : 7일
+	 * 리프레시 토큰 유효 시간 : 12시간
 	 */
-	private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 1;
+	private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 12;
 	/**
 	 * 
 	 */
