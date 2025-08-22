@@ -82,7 +82,7 @@
     -   이후 프론트엔드 프로젝트(`apps/frontend`)의 의존성을 설치하고, `npm run build` 명령어로 빌드합니다. 이 과정에서 필요한 환경 변수는 Jenkins Credential을 통해 주입됩니다.
   - **정적 파일 복사** : **Kubernetes(k3s)** 로 변경하면서 nginx를 걷어 냈기 때문에 생략
   - **Docker 이미지 빌드 & 푸시** : 각 프로젝트의 **Dockerfile**을 이용해 Docker 이미지를 생성하고, 로컬 Docker Registry에 푸시합니다.
-  - **배포** : 로컬 Registry에서 최신 이미지를 받아와 **Kubernetes(k3s)**에 롤아웃함으로써 애플리케이션을 자동으로 배포합니다.
+  - **배포** : 로컬 Registry에서 최신 이미지를 받아와 **Kubernetes(k3s)** 에 롤아웃함으로써 애플리케이션을 자동으로 배포합니다.
 
 <br />
 
