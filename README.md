@@ -32,12 +32,12 @@
 - **Language** : Java 21
 - **Deployment** : Jenkins, Docker
 
-### **CI / CD**
-- **OS** : Rocky Linux
-- **Automation Server** : Jenkins
-- **Containerization** : Docker
-- **Container Orchestration** : Kubernetes(k3s(Rancher에서 만든 경량화된 쿠버네티스 배포판))
-- **Pipeline** : Build → Push to Local Registry → Deploy with Kubernetes(k3s)
+### **CI / CD & Infra**
+- **OS** : Rocky Linux  
+- **Automation Server** : Jenkins  
+- **Containerization** : Docker  
+- **Orchestration** : Kubernetes(k3s, Rancher에서 제공하는 경량 배포판)  
+- **Pipeline** : Build → Push(Local Registry) → Deploy(Kubernetes k3s)  
 
 <br />
 
@@ -71,18 +71,25 @@
     -   모든 클라이언트-서버 간 통신은 **RESTful API**를 통해 이루어지도록 설계하여, 각 엔드포인트가 자원(Resource)에 대한 CRUD 연산을 명확히 표현하도록 했습니다.
 
 
-### **CI / CD**
-- **CI/CD 파이프라인**
+### **CI / CD & Deployment**
 
-  이 프로젝트는 **Jenkins**를 활용해 전체 애플리케이션 배포 과정을 자동화했으며, 모든 단계는 **Jenkinsfile**에 정의되어 있습니다. 민감한 정보는 Jenkins의 **Credentials** 기능을 통해 안전하게 관리됩니다.
+#### CI/CD 파이프라인 (Jenkins + Kubernetes)
+- Jenkins를 통해 전체 배포 과정을 자동화했으며, 민감한 정보는 Jenkins Credentials로 안전하게 관리.  
 
-  - **소스코드 Checkout** : Git에 새로운 코드가 푸시되면 5분마다 Jenkins가 이를 감지하여 GitHub 레포지토리에서 최신 소스 코드를 가져옵니다.
-  - **애플리케이션 빌드** :
-    -   먼저 백엔드 프로젝트(`apps/backend-default-service`)를 `./gradlew` 명령어로 빌드해 JAR 파일을 생성합니다.
-    -   이후 프론트엔드 프로젝트(`apps/frontend`)의 의존성을 설치하고, `npm run build` 명령어로 빌드합니다. 이 과정에서 필요한 환경 변수는 Jenkins Credential을 통해 주입됩니다.
-  - **정적 파일 복사** : **Kubernetes(k3s)** 로 변경하면서 nginx를 걷어 냈기 때문에 생략
-  - **Docker 이미지 빌드 & 푸시** : 각 프로젝트의 **Dockerfile**을 이용해 Docker 이미지를 생성하고, 로컬 Docker Registry에 푸시합니다.
-  - **배포** : 로컬 Registry에서 최신 이미지를 받아와 **Kubernetes(k3s)** 에 롤아웃함으로써 애플리케이션을 자동으로 배포합니다.
+**주요 단계**
+1. **소스코드 Checkout**  
+   - GitHub에 새로운 코드가 푸시되면 Jenkins가 주기적으로 감지 후 최신 코드 가져오기.  
+2. **빌드**  
+   - 백엔드(`apps/backend-default-service`) → `./gradlew build`로 JAR 생성.  
+   - 프론트엔드(`apps/frontend`) → `npm run build` 실행. (환경 변수는 Jenkins Credential 주입)  
+3. **Docker 이미지 빌드 & 푸시**  
+   - 각 프로젝트의 Dockerfile 기반으로 이미지 빌드 후 로컬 Registry에 푸시.  
+4. **배포(Kubernetes k3s)**  
+   - 기존에는 Nginx를 설치하고 빌드된 정적 파일을 Nginx가 서비스하는 디렉토리로 복사했지만, 현재는 **프론트엔드가 직접 정적 파일을 처리**하도록 변경했습니다.  
+   - 기존에는 Nginx를 통해 SSL과 리버스 프록시를 처리했지만, 현재는 **Traefik**을 사용하여 SSL 적용과 라우팅 기능을 담당하도록 구성했습니다. 
+   - 기존 도커 컴포즈에서 컨테이너를 재기동하던 방식은 **Kubernetes(k3s)의 롤링 업데이트** 방식으로 대체하여, 무중단 배포가 가능하도록 구현했습니다.
+
+
 
 <br />
 
