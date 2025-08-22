@@ -3,11 +3,11 @@ export interface IPostProps {
 	/**
 	 * 게시판 ID
 	 */
-	brdId: number;
+	brdId: string;
 	/**
 	 * 게시글 ID
 	 */
-	postId?: number;
+	postId?: string;
 	/**
 	 * 게시글 제목
 	 */

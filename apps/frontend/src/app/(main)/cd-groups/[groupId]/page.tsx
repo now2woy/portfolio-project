@@ -1,14 +1,13 @@
 import React from "react"
-import { getAuthenticationToken } from '@/utils/CookiesUtils';
 
-import { fatchCdGroupOne, fatchCdList } from '@/service/CdService';
-import { View } from "@/app/cds/client";
+import { getCdGroup, fetchCds } from '@/services/server/CdGroupServerService';
+import { View } from "@/app/cd-groups/client";
 import { formatDate } from '@/utils/DateUtils';
 import { TiptapViewer } from '@/components/TipTaps';
 import { StaticDetailViewer } from '@/components/Viewers/StaticDetailViewer';
 import { StaticTable } from '@/components/Grids/StaticTable';
 import { IStaticColumnProps } from '@/types/components/GridType';
-import { ICdGroupProps, ICdProps } from "@/types/CdType";
+import { ICdGroupProps, ICdProps } from "@/types/apps/CdGroupType";
 import { IStaticFieldProps } from '@/types/components/ViewType';
 
 /**
@@ -18,9 +17,8 @@ import { IStaticFieldProps } from '@/types/components/ViewType';
  */
 export async function generateMetadata( { params } : { params : { groupId : string } } ) {
     const { groupId } = await Promise.resolve( params );
-    const authentication = await getAuthenticationToken();
     // API 호출
-    const cdGroup = await fatchCdGroupOne( { authentication, groupId } );
+    const cdGroup = await getCdGroup( { groupId } );
   
     return {
         title: `코드 그룹 (${ cdGroup.groupNm }) 상세 - now2woy\'s Portfolio`,
@@ -35,11 +33,10 @@ export async function generateMetadata( { params } : { params : { groupId : stri
  */
 export default async function DetailViewer( { params }: { params : { groupId : string } } ) {
     const { groupId } = await Promise.resolve( params );
-    const authentication = await getAuthenticationToken();
 
     // API 호출
-    const cdGroup = await fatchCdGroupOne( { authentication, groupId } );
-    const cds = await fatchCdList({ authentication, groupId });
+    const cdGroup = await getCdGroup( { groupId } );
+    const cds = await fetchCds({ groupId });
     
     // 필드 레이아웃 정의
     const fields: IStaticFieldProps<ICdGroupProps>[] = [
@@ -69,7 +66,7 @@ export default async function DetailViewer( { params }: { params : { groupId : s
             <StaticDetailViewer<ICdGroupProps> data={ cdGroup } fields={ fields }>
                 { cds && <StaticTable<ICdProps> data={ cds } columns={ columns } title="코드 목록" /> }
             </StaticDetailViewer>
-            <View authentication={ authentication } groupId={ groupId } />
+            <View groupId={ groupId } />
         </div>
     );
 }

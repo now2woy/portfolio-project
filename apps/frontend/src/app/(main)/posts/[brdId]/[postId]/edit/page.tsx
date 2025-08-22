@@ -1,7 +1,6 @@
 import React from "react"
-import { getAuthenticationToken } from '@/utils/CookiesUtils';
-import { fatchOneBoard } from '@/service/BoardService';
-import { fatchOnePost } from '@/service/PostService';
+import { getBoard } from '@/services/server/BoardServerService';
+import { getPost } from '@/services/server/PostServerService';
 import { Edit } from "@/app/posts/[brdId]/client"; 
 
 /**
@@ -9,12 +8,12 @@ import { Edit } from "@/app/posts/[brdId]/client";
  * @param param
  * @returns 
  */
-export async function generateMetadata( { params } : { params : { brdId : number, postId : number } } ) {
+export async function generateMetadata( { params } : { params : { brdId : string, postId : string } } ) {
     const { brdId, postId } = await Promise.resolve( params );
-    const authentication = await getAuthenticationToken();
+
     // API 호출
-    const board = await fatchOneBoard( { authentication, brdId } );
-    const post = await fatchOnePost({ authentication, brdId, postId });
+    const board = await getBoard( { brdId } );
+    const post = await getPost({ brdId, postId });
   
     return {
         title: `${ board.brdNm } 수정 - now2woy\'s Portfolio`,
@@ -23,23 +22,22 @@ export async function generateMetadata( { params } : { params : { brdId : number
 }
 
 /**
- * 게시글 수정 컴포넌트
+ * 수정 컴포넌트
  * @param param
  * @returns 
  */
-export default async function PostEdit ( { params }: { params : { brdId : number; postId : number } } ) {
+export default async function EditViewer ( { params }: { params : { brdId : string; postId : string } } ) {
     const { brdId, postId } = await Promise.resolve( params );
-    const authentication = await getAuthenticationToken();
 
     // API 호출
-    const board = await fatchOneBoard( { authentication, brdId } );
-    const data = await fatchOnePost({ authentication, brdId, postId });
+    const board = await getBoard( { brdId } );
+    const data = await getPost({ brdId, postId });
 
     return (
         <form>
             <div className="flex flex-1 flex-col gap-2 p-4">
                 <h1 className="text-2xl font-bold mb-4">{board.brdNm} 수정</h1>
-                <Edit authentication={ authentication } brdId={ brdId } postId={ postId } data={ data } />
+                <Edit brdId={ brdId } postId={ postId } data={ data } />
             </div>
         </form>
     );

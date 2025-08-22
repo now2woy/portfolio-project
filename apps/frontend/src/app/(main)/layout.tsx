@@ -46,7 +46,7 @@ const getNavData = async () => {
             items: [
                 {
                     title: "코드 관리",
-                    url: "/cds",
+                    url: "/cd-groups",
                 },
     /*
                 {

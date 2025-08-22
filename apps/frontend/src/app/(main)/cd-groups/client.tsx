@@ -5,7 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
 
-import { postKeys, fetchCdGroupList, fetchCdGroupIns, fetchCdGroupAndCdsUpd, fetchCdGroupAndCdsDel } from '@/service/CdService';
+import { postKeys, fetchCdGroups } from '@/queries/CdGroupQuery';
+import { insertCdGroupViaBff, updateCdGroupAndCdsViaBff, deleteCdGroupAndCdsViaBff } from '@/services/client/CdGroupClientService'
 import { FormViewer } from '@/components/Viewers/FormViewer';
 
 import { LinkButton, MutationButton } from '@/components/Buttons';
@@ -13,17 +14,16 @@ import { DefaultSearch } from "@/components/Searchs";
 import { Grid } from "@/components/Grids";
 import { formatDate } from '@/utils/DateUtils';
 
-import { ISearchData, ISearchField } from "@/types/SearchType";
+import { ISearchData, ISearchField } from "@/types/components/SearchType";
 import { IColumnConfig } from "@/types/ColumnDefType";
-import { authenticationProps } from '@/types/CommonType';
-import { ICdGroupProps, ICdProps } from "@/types/CdType";
+import { ICdGroupProps, ICdProps } from "@/types/apps/CdGroupType";
 import { IFormFieldProps } from '@/types/components/ViewType';
 import { IDndColumnProps, IDndTableProps } from '@/types/components/GridType';
 
 /**
  * CD GROUP API 기본 URL
  */
-const BASE_MENU_URL = '/cds';
+const BASE_MENU_URL = '/cd-groups';
 
 /**
  * TiptapEditor를 클라이언트 측에 다이나믹 로드
@@ -45,43 +45,70 @@ export const DndTable = dynamic(() => import('@/components/Grids/DndTable').then
  * @param param
  * @returns 
  */
-export const List = ({ authentication, initialData, fields }: { authentication: authenticationProps, initialData : ISearchData, fields : ISearchField[] }) =>  {
+export const List = ({ initialData, fields }: { initialData : ISearchData, fields : ISearchField[] }) =>  {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const query = searchParams?.toString() ?? '';
 
-    // 조회 버튼 헨들링
-    const handleSearch = ( filters : ISearchData ) => {
-        const params = new URLSearchParams(searchParams);
-        Object.keys( filters ).forEach( key => {
-            if ( filters[ key ] ) {
-                params.set( key, filters[ key ] );
-            }
-        });
-
-        router.push(`?${ params.toString() }`);
-    }
 
     // 캐싱된 데이터 사용
-    const { data, isLoading, isError } = useQuery( {
-        queryKey: postKeys.lists(authentication, query)
-        , queryFn: fetchCdGroupList
+    const { data, isLoading, isError, error } = useQuery( {
+        queryKey: postKeys.lists( query )
+        , queryFn: fetchCdGroups
     });
 
     return (
         <>
-            <DefaultSearch initialData={ initialData } fields={ fields } handleSearch={ handleSearch } />
+            <DefaultSearch initialData={ initialData } fields={ fields } />
             {data && <Grid data={ data } columnsConfig={ columnsConfig } newUrl={`${ BASE_MENU_URL }/new?${ query }`} />}
         </>
     );
 }
 
 /**
+ * 상세 클라이언트 컴포넌트
+ * @param param
+ * @returns 
+ */
+export const View = ( { groupId } : { groupId : string } ) => {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const query = new URLSearchParams(searchParams);
+
+    // 정상, 오류 콜백
+    const handleCallback = () => {
+        // 목록 화면으로 이동
+        router.push(`${ BASE_MENU_URL }/${ groupId }?${ query }`);
+    }
+
+    return (
+        <div className="grid grid-cols-2 py-4">
+            <div className="flex items-center space-x-2">
+                <LinkButton name="목록" variant="outline" url={`${ BASE_MENU_URL }?${ query }`} />
+            </div>
+            <div className="flex items-center justify-end space-x-2">
+                <LinkButton name="수정" className="text-white" url={`${ BASE_MENU_URL }/${ groupId }/edit?${ query }`} />
+                <MutationButton
+                    className="text-white"
+                    mutationFn={ deleteCdGroupAndCdsViaBff }
+                    variables={{ groupId }}
+                    queryKeyToInvalidate={ [ "posts" ] }
+                    onSuccessCallback={ handleCallback }
+                    onErrorCallback={ handleCallback }
+                >
+                    삭제
+                </MutationButton>
+            </div>
+        </div>
+    )
+}
+
+
+/**
  * 신규/수정 클라이언트 컴포넌트
  * @param param
  * @returns 
  */
-export const Edit = ( { authentication, groupId, data }  : { authentication: authenticationProps, groupId? : string, data? : ICdGroupProps }) => {
+export const Edit = ( { groupId, data }  : { groupId? : string, data? : ICdGroupProps }) => {
     const [ modifyData, setModifyData ] = useState<ICdGroupProps>( data || { groupId : groupId || '', groupNm : '', useYn : 'Y' } );
     const [cds, setCds] = useState<ICdProps[]>(modifyData.cds || []);
     const searchParams = useSearchParams();
@@ -117,8 +144,8 @@ export const Edit = ( { authentication, groupId, data }  : { authentication: aut
     // 드래그 변경 시
     const handleDragEnd = (newItems: ICdProps[]) => {
         const updatedItems = newItems.map((item, index) => ({
-        ...item,
-        sortOrdr: index + 1,
+            ...item,
+            sortOrdr: index + 1,
         }));
         setCds(updatedItems);
     };
@@ -170,8 +197,8 @@ export const Edit = ( { authentication, groupId, data }  : { authentication: aut
                 <div className="flex items-center justify-end space-x-2">
                     {isNew && <MutationButton
                         className="text-white"
-                        mutationFn={ fetchCdGroupIns }
-                        variables={{ authentication, data : modifyData }}
+                        mutationFn={ insertCdGroupViaBff }
+                        variables={{ data : modifyData }}
                         queryKeyToInvalidate={ [ "cds" ] }
                         onSuccessCallback={ handleCallback }
                         onErrorCallback={ handleCallback }
@@ -181,8 +208,8 @@ export const Edit = ( { authentication, groupId, data }  : { authentication: aut
                     </MutationButton>}
                     {!isNew && <MutationButton
                         className="text-white"
-                        mutationFn={ fetchCdGroupAndCdsUpd }
-                        variables={{ authentication, groupId : groupId ?? '', data : modifyData }}
+                        mutationFn={ updateCdGroupAndCdsViaBff }
+                        variables={{ groupId : groupId ?? '', data : modifyData }}
                         queryKeyToInvalidate={ [ "cds" ] }
                         onSuccessCallback={ handleCallback }
                         onErrorCallback={ handleCallback }
@@ -196,44 +223,6 @@ export const Edit = ( { authentication, groupId, data }  : { authentication: aut
     );
 }
 
-/**
- * 상세 클라이언트 컴포넌트
- * @param param
- * @returns 
- */
-export const View = ( { authentication, groupId } : { authentication : authenticationProps, groupId : string } ) => {
-    const searchParams = useSearchParams();
-    const router = useRouter();
-    const query = new URLSearchParams(searchParams);
-
-    // 정상, 오류 콜백
-    const handleCallback = () => {
-        // 목록 화면으로 이동
-        router.push(`/cds/${ groupId }?${ query }`);
-    }
-
-    return (
-        <div className="grid grid-cols-2 py-4">
-            <div className="flex items-center space-x-2">
-                <LinkButton name="목록" variant="outline" url={`/cds?${ query }`} />
-            </div>
-            <div className="flex items-center justify-end space-x-2">
-                <LinkButton name="수정" className="text-white" url={`/cds/${ groupId }/edit?${ query }`} />
-                <MutationButton
-                    className="text-white"
-                    mutationFn={ fetchCdGroupAndCdsDel }
-                    variables={{ authentication, groupId }}
-                    queryKeyToInvalidate={ [ "posts" ] }
-                    onSuccessCallback={ handleCallback }
-                    onErrorCallback={ handleCallback }
-                >
-                    삭제
-                </MutationButton>
-            </div>
-        </div>
-    )
-}
-
 // 목록 컬럼 정의
 const columnsConfig : IColumnConfig[] = [
     { key : 'groupId', label : '코드그룹ID', type : 'text', size : 100 },
@@ -242,7 +231,7 @@ const columnsConfig : IColumnConfig[] = [
     { key : 'useYn', label : '사용여부', type : 'boolean', size : 70 },
     { key : 'fixedLtYn', label : '고정길이여부', type : 'boolean', size : 140 },
     { key : 'updDt', label : '수정일시', type : 'date', size : 140 },
-    { type : 'actions', label : 'Actions', linkBaseUrl : '/posts', linkKeys : [ 'brdId', 'postId' ], linkAddUrl : '/edit', menu : [ '수정' ], size : 60 },
+    { type : 'actions', label : 'Actions', linkBaseUrl : BASE_MENU_URL, linkKeys : [ 'groupId' ], linkAddUrl : '/edit', menu : [ '수정' ], size : 60 },
 ];
 
 // 입력 / 수정 필드 레이아웃 정의

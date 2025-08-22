@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { authenticationProps } from '@/types/CommonType';
 import { ILoginProps } from "@/types/LoginType";
-import { fetchLogin } from '@/service/LoginService';
+import { fetchLogin } from '@/services/LoginService';
 import { MutationButton } from '@/components/Buttons';
+import { useAuthStore } from '@/stores';
 
 /**
  * 로그인 폼 컴포넌트
@@ -19,10 +20,13 @@ export const LoginForm = ( { authentication } : { authentication : authenticatio
     const router = useRouter();
     
     // 로그인 성공 처리 함수
-    const handleSuccessCallback = () => {
-        console.log('로그인 성공');
-        // 로그인 성공 시 쿠키에 값이 담겨 있기 때문에 별도 행동 없음
-        // 로그인 성공 후 메인 페이지로 이동
+    const handleSuccessCallback = ( data: { userId : string, userNm : string } ) => {
+        // useAuthStore의 setUserInfo 함수를 가져옵니다.
+        const { setUserInfo } = useAuthStore.getState();
+
+        // 가져온 데이터를 스토어에 저장합니다.
+        setUserInfo(data.userId, data.userNm);
+
         router.refresh();
     }
     
@@ -57,7 +61,7 @@ export const LoginForm = ( { authentication } : { authentication : authenticatio
                         className="w-full text-white"
                         mutationFn={ fetchLogin }
                         variables={{ authentication, data : formData }}
-                        queryKeyToInvalidate={ [ ] }
+                        queryKeyToInvalidate={ [ 'ALL' ] }
                         onSuccessCallback={ handleSuccessCallback }
                         onErrorCallback={ handleErrorCallback }
                         isSubmit={ true }

@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { getAuthenticationToken } from '@/utils/CookiesUtils';
 
-import { postKeys, fetchCdGroupList } from '@/service/CdService';
-import { ISearchData, ISearchField } from "@/types/SearchType";
-import { ICdListProps } from '@/types/CdType';
-import { List } from "@/app/cds/client";
+import { postKeys, fetchCdGroups } from '@/queries/CdGroupQuery';
+import { ISearchData, ISearchField } from "@/types/components/SearchType";
+import { ICdListProps } from '@/types/apps/CdGroupType';
+import { List } from "@/app/cd-groups/client";
 
 /**
  * 게시글 검색 조건 입력 방식 정의
  */
 const fields : ISearchField[] = [
-    { label : '코드그룹ID', value : 'groupId', type : 'text' as const },
-    { label : '코드그룹명', value : 'groupNm', type : 'text' as const },
-    { label : '사용여부', value : 'useYn', type : 'text' as const },
+    { label : '코드그룹ID', value : 'groupId', type : 'text' },
+    { label : '코드그룹명', value : 'groupNm', type : 'text' },
+    { label : '사용여부', value : 'useYn', type : 'select', options : [ { value : 'Y', label : '예' }, { value : 'N', label : '아니오' } ] },
 ];
 
 /**
@@ -32,7 +31,6 @@ export const metadata : Metadata = {
 export default async function ListViewer( { searchParams } : ICdListProps ) {
     const queryClient = new QueryClient();
     const { groupId, groupNm, useYn } = await Promise.resolve( searchParams );
-    const authentication = await getAuthenticationToken();
     
     // 검색 조건을 query 파라미터로 생성
     const query : string = new URLSearchParams( {
@@ -50,15 +48,15 @@ export default async function ListViewer( { searchParams } : ICdListProps ) {
 
     // prefetch
     await queryClient.prefetchQuery( {
-        queryKey: postKeys.lists( authentication, query )
-        , queryFn: fetchCdGroupList
+        queryKey: postKeys.lists( query )
+        , queryFn: fetchCdGroups
     } );
-
+    
     return (
         <HydrationBoundary state={ dehydrate( queryClient ) }>
             <div className="flex flex-1 flex-col gap-2 p-4">
                 <h1 className="text-2xl font-bold mb-4">코드 목록</h1>
-                <List authentication={ authentication } initialData={ initialData } fields={ fields } />
+                <List initialData={ initialData } fields={ fields } />
             </div>
         </HydrationBoundary>
     );
