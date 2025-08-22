@@ -2,7 +2,6 @@ package kr.co.jineddy.system.api.auth.dto;
 
 import java.io.Serializable;
 
-import kr.co.jineddy.system.entity.user.SysUserMst;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,5 +22,5 @@ public class AuthResponseDto implements Serializable {
 	/**
 	 * 사용자 명
 	 */
-	private String useNm;
+	private String userNm;
 }

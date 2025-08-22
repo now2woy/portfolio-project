@@ -3,12 +3,16 @@ package kr.co.jineddy.system.api.cd.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 시스템 코드 그룹 요청 DTO
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CdGroupReqeustDto implements Serializable {
 	/**
 	 * 시리얼 버전 ID
