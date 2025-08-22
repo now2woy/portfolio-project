@@ -54,7 +54,7 @@ export async function apiFetch<T>( path: string, { method = 'GET', headers = {},
         return fetch(url, fetchOptions);
     }
 
-    let res = await doFetch(accessToken);
+    const res = await doFetch(accessToken);
 
     clearTimeout(t);
 
