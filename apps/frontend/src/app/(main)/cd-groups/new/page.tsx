@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Suspense }  from "react"
 import { Metadata } from "next";
 import { Edit } from "@/app/cd-groups/client"; 
 
@@ -20,7 +20,9 @@ export default async function NewViewer( ) {
         <form>
             <div className="flex flex-1 flex-col gap-2 p-4">
                 <h1 className="text-2xl font-bold mb-4">코드 신규</h1>
-                <Edit />
+                <Suspense fallback={<div>로딩 중...</div>}>
+                    <Edit />
+                </Suspense>
             </div>
         </form>
     );
