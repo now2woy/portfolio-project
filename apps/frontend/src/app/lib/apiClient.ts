@@ -9,7 +9,7 @@ const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3011';
 type ApiOptions = {
     method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
     headers?: Record<string, string>;
-    body?: any;
+    body?: unknown;
     next?: { revalidate?: number; tags?: string[] };
     cache?: RequestCache;
     timeoutMs?: number;
