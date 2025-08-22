@@ -1,8 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { postKeys, fetchListPost } from '@/service/PostService';
-import { fatchOneBoard } from '@/service/BoardService';
-import { getAuthenticationToken } from '@/utils/CookiesUtils';
-import { ISearchData, ISearchField } from "@/types/SearchType";
+import { postKeys, fetchPosts } from '@/queries/PostQuery';
+import { getBoard } from '@/services/server/BoardServerService';
+import { ISearchData, ISearchField } from "@/types/components/SearchType";
 import { List } from "@/app/posts/[brdId]/client";
 
 /**
@@ -10,7 +9,7 @@ import { List } from "@/app/posts/[brdId]/client";
  */
 export interface PostListProps {
     params : {
-        brdId : number
+        brdId : string
     };
     searchParams : {
         postTtl? : string,
@@ -23,9 +22,9 @@ export interface PostListProps {
  * 게시글 검색 조건 입력 방식 정의
  */
 const fields : ISearchField[] = [
-    { label : '제목', value : 'postTtl', type : 'text' as const },
-    { label : '내용', value : 'postCtt', type : 'text' as const },
-    { label : '작성자ID', value : 'writerId', type : 'text' as const },
+    { label : '제목', value : 'postTtl', type : 'text' },
+    { label : '내용', value : 'postCtt', type : 'text' },
+    { label : '작성자ID', value : 'writerId', type : 'text' },
 ];
 
 /**
@@ -33,10 +32,9 @@ const fields : ISearchField[] = [
  * @param param
  * @returns 
  */
-export async function generateMetadata( { params } : { params : { brdId : number } } ) {
+export async function generateMetadata( { params } : { params : { brdId : string } } ) {
     const { brdId } = await Promise.resolve( params );
-    const authentication = await getAuthenticationToken();
-    const board = await fatchOneBoard( { authentication, brdId } );
+    const board = await getBoard( { brdId } );
   
     return {
         title: `${ board.brdNm } 목록 - now2woy\'s Portfolio`,
@@ -49,11 +47,10 @@ export async function generateMetadata( { params } : { params : { brdId : number
  * @param param
  * @returns 
  */
-export default async function PostList( { params, searchParams } : PostListProps ) {
+export default async function ListViewer( { params, searchParams } : PostListProps ) {
     const queryClient = new QueryClient();
     const { brdId } = await Promise.resolve( params );
     const { postTtl, postCtt, writerId } = await Promise.resolve( searchParams );
-    const authentication = await getAuthenticationToken();
     
     // 검색 조건을 query 파라미터로 생성
     const query : string = new URLSearchParams( {
@@ -71,18 +68,18 @@ export default async function PostList( { params, searchParams } : PostListProps
 
     // prefetch
     await queryClient.prefetchQuery( {
-        queryKey: postKeys.lists( authentication, brdId, query )
-        , queryFn: fetchListPost
+        queryKey: postKeys.lists( brdId, query )
+        , queryFn: fetchPosts
     } );
 
     // 게시판 명 조회하여 제목 및 meta 생성 필요
-    const board = await fatchOneBoard( { authentication, brdId } );
+    const board = await getBoard( { brdId } );
 
     return (
         <HydrationBoundary state={ dehydrate( queryClient ) }>
             <div className="flex flex-1 flex-col gap-2 p-4">
                 <h1 className="text-2xl font-bold mb-4">{board.brdNm} 목록</h1>
-                <List authentication={ authentication } brdId={ brdId } initialData={ initialData } fields={ fields } />
+                <List brdId={ brdId } initialData={ initialData } fields={ fields } />
             </div>
         </HydrationBoundary>
     );

@@ -20,6 +20,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
+      , "@/app/bff/*": ["./src/app/bff/*"]
+      , "@/app/lib/*": ["./src/app/lib/*"]
       , "@/app/*": ["./src/app/(main)/*"]
     }
   },

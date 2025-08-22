@@ -1,6 +1,5 @@
 import React from "react"
-import { getAuthenticationToken } from '@/utils/CookiesUtils';
-import { fatchOneBoard } from '@/service/BoardService';
+import { getBoard } from '@/services/server/BoardServerService';
 import { Edit } from "@/app/posts/[brdId]/client"; 
 
 /**
@@ -8,11 +7,11 @@ import { Edit } from "@/app/posts/[brdId]/client";
  * @param param
  * @returns 
  */
-export async function generateMetadata( { params } : { params : { brdId : number } } ) {
+export async function generateMetadata( { params } : { params : { brdId : string } } ) {
     const { brdId } = await Promise.resolve( params );
-    const authentication = await getAuthenticationToken();
+
     // API 호출
-    const board = await fatchOneBoard( { authentication, brdId } );
+    const board = await getBoard( { brdId } );
   
     return {
         title: `${ board.brdNm } 신규 - now2woy\'s Portfolio`,
@@ -21,22 +20,21 @@ export async function generateMetadata( { params } : { params : { brdId : number
 }
 
 /**
- * 게시글 입력 컴포넌트
+ * 신규 입력 컴포넌트
  * @param param
  * @returns 
  */
-export default async function PostNew( { params }: { params : { brdId : number; postId : number } } ) {
-    const { brdId, postId } = await Promise.resolve( params );
-    const authentication = await getAuthenticationToken();
+export default async function NewViewer( { params }: { params : { brdId : string; } } ) {
+    const { brdId } = await Promise.resolve( params );
 
     // API 호출
-    const board = await fatchOneBoard( { authentication, brdId } );
+    const board = await getBoard( { brdId } );
 
     return (
         <form>
             <div className="flex flex-1 flex-col gap-2 p-4">
                 <h1 className="text-2xl font-bold mb-4">{board.brdNm} 신규</h1>
-                <Edit authentication={ authentication } brdId={ brdId } postId={ postId } />
+                <Edit brdId={ brdId } postId="" />
             </div>
         </form>
     );
