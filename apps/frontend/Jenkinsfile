@@ -11,6 +11,8 @@ pipeline {
         NEXT_PUBLIC_API_URL = credentials('NEXT_PUBLIC_API_URL')
         JENKINS_WORKSPACE = credentials('JENKINS_WORKSPACE')
         NGINX_STATIC_DIR = credentials('NGINX_STATIC_DIR')
+		K8S_NAMESPACE = "portfolio"
+		K8S_DEPLOYMENT = "frontend"
     }
 
     tools {
@@ -87,16 +89,14 @@ pipeline {
             }
         }
 
-        stage('Deploy & Restart') {
-            steps {
-                sh """
-                    # 쉘 환경 변수 설정
-					export NEXT_PUBLIC_API_URL="${NEXT_PUBLIC_API_URL}"
-
-                    docker compose -f /home/chs/app/portfolio/docker-compose.yml pull frontend
-                    docker compose -f /home/chs/app/portfolio/docker-compose.yml up -d frontend nginx
-                """
-            }
-        }
+		stage('Deploy to Kubernetes') {
+			steps {
+				sh """
+					kubectl set image deployment/${K8S_DEPLOYMENT} ${K8S_DEPLOYMENT}=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} -n ${K8S_NAMESPACE}
+					
+					kubectl rollout status deployment/${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE}
+				"""
+			}
+		}
     }
 }
