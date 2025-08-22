@@ -57,27 +57,6 @@ pipeline {
                 }
             }
         }
-        
-        stage('Copy Static Files') {
-            steps {
-                dir('apps/frontend') {
-                    sh """
-                        set -e
-
-                        # 타겟 디렉토리 준비
-                        rm -rf "${NGINX_STATIC_DIR}/*"
-                        mkdir -p "${NGINX_STATIC_DIR}/_next/static"
-                        mkdir -p "${NGINX_STATIC_DIR}/public"
-                        
-                        # 빌드 결과물 복사
-                        cp -r "${JENKINS_WORKSPACE}/.next/static" "${NGINX_STATIC_DIR}/_next/"
-                        cp -r "${JENKINS_WORKSPACE}/public/"* "${NGINX_STATIC_DIR}/public/" || true
-                        
-                        echo "Static files synced to ${NGINX_STATIC_DIR}"
-                    """
-                }
-            }
-        }
     
         stage('Push to Local Registry') {
             steps {
