@@ -12,6 +12,8 @@ pipeline {
 		PORTFOLIO_DB_ID = credentials('PORTFOLIO_DB_ID')
 		PORTFOLIO_DB_PW = credentials('PORTFOLIO_DB_PW')
 		PORTFOLIO_JWT_KEY = credentials('PORTFOLIO_JWT_KEY')
+		K8S_NAMESPACE = "portfolio"
+		K8S_DEPLOYMENT = "backend-default-service"
 	}
 	
 	stages {
@@ -72,17 +74,13 @@ pipeline {
 			}
 		}
 		
-		stage('Deploy & Restart') {
+		stage('Deploy to Kubernetes') {
 			steps {
+				// Deployment YAML 업데이트 후 적용
 				sh """
-					# 쉘 환경 변수 설정
-					export DB_URL="${PORTFOLIO_DB_URL}"
-					export DB_USERNAME="${PORTFOLIO_DB_ID}"
-					export DB_PASSWORD="${PORTFOLIO_DB_PW}"
-					export JWT_SECRET_KEY="${PORTFOLIO_JWT_KEY}"
+					kubectl set image deployment/${K8S_DEPLOYMENT} ${K8S_DEPLOYMENT}=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} -n ${K8S_NAMESPACE}
 					
-					docker compose -f /home/chs/app/portfolio/docker-compose.yml pull backend
-					docker compose -f /home/chs/app/portfolio/docker-compose.yml up -d backend
+					kubectl rollout status deployment/${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE}
 				"""
 			}
 		}
