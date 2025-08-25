@@ -4,7 +4,7 @@ pipeline {
     environment {
         REGISTRY = "localhost:5000"
         IMAGE_NAME = "now2woy/portfolio-front"
-        IMAGE_TAG = "latest"
+        IMAGE_TAG = "${GIT_COMMIT}"
         NODE_VERSION = 'NodeJS22'
         REGISTRY_USER = credentials('DOCKER_REGISTRY_USER')
         REGISTRY_PASS = credentials('DOCKER_REGISTRY_PASS')
@@ -44,25 +44,19 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build & Push Image') {
             steps {
                 dir('apps/frontend') {
                     sh """
-                        npm ci
-                        NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} npm run build
-                        docker build \
-                        --build-arg NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} \
-                        -t ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .
-                    """
-                }
-            }
-        }
-    
-        stage('Push to Local Registry') {
-            steps {
-                dir('apps/frontend') {
-                    sh """
+                        # 빌드 (commit hash 태그로)
+                        docker build -t ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .
+
+                        # latest 태그도 추가
+                        docker tag ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ${REGISTRY}/${IMAGE_NAME}:latest
+
+                        # 두 개 다 푸시
                         docker push ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+                        docker push ${REGISTRY}/${IMAGE_NAME}:latest
                     """
                 }
             }
@@ -71,6 +65,7 @@ pipeline {
 		stage('Deploy to Kubernetes') {
 			steps {
 				sh """
+                    # 커밋 해시 태그 기준으로 배포 (히스토리 추적용)
 					kubectl set image deployment/${K8S_DEPLOYMENT} ${K8S_DEPLOYMENT}=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} -n ${K8S_NAMESPACE}
 					
 					kubectl rollout status deployment/${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE}
