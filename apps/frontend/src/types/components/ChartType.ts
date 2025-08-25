@@ -6,7 +6,7 @@ import { ChartConfig } from "@/components/ui/chart";
 export interface IAreaChartProps {
     title : string;
     description : string;
-    chartData : any[];
+    chartData : unknown[];
     chartConfig : ChartConfig;
     xDataKey : string;
     yDataKey? : string;
@@ -17,12 +17,12 @@ export interface IAreaChartProps {
 /**
  * 파이 차트 Props 정의
  */
-export interface IPieChartProps {
+export interface IPieChartProps<T> {
     title: string;
     description: string;
-    chartData: any[];
-    dataKey: string;
-    nameKey: string;
+    chartData: T[];
+    dataKey: keyof T;
+    nameKey: keyof T;
     label?: string; 
     subLabel?: string; 
     footerDescription? : string

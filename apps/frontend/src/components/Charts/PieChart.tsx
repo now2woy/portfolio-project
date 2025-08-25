@@ -4,7 +4,7 @@ import * as React from "react"
 import { Label, Pie, PieChart } from "recharts"
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { IPieChartProps } from '@/types/components/ChartType';
 
 /**
@@ -12,27 +12,28 @@ import { IPieChartProps } from '@/types/components/ChartType';
  * @param param0 
  * @returns 
  */
-export function PieChartCustom( { title, description, chartData, dataKey, nameKey, label, footerDescription } : IPieChartProps ) {
+export function PieChartCustom<T>( { title, description, chartData, dataKey, nameKey, label, footerDescription } : IPieChartProps<T> ) {
     const totalValue = React.useMemo( () => {
-        return chartData.reduce( ( acc, curr ) => acc + curr[ dataKey ], 0 )
+        return chartData.reduce( ( acc, curr ) => acc + (curr[ dataKey ] as number), 0 )
     }, [ chartData, dataKey ] );
 
     // 동적으로 색상 팔레트 생성
     const colors = getDynamicColorPalette( chartData.length );
 
-    // fill 값과 chartConfig를 동적으로 생성
+    // fill 값과 chartConfig를 동적으로 생성npm ru
     const processedChartData = chartData.map( ( item, index ) => ( {
         ...item,
         fill: colors[ index ],
     } ) );
 
     const chartConfig = processedChartData.reduce( ( acc, curr ) => {
-        acc[ curr[ nameKey ] ] = {
-            label: curr[ nameKey ],
-            color: curr.fill,
+        const key = String(curr[nameKey]);
+        acc[ key ] = {
+            label : curr[ nameKey ] as string,
+            color : curr[ 'fill' as keyof T ] as string,
         };
         return acc;
-    }, {} );
+    }, {} as ChartConfig); // `as ChartConfig`를 추가하여 초기값의 타입을 명시
 
     return (
         <Card className="flex flex-col">
@@ -44,7 +45,7 @@ export function PieChartCustom( { title, description, chartData, dataKey, nameKe
                 <ChartContainer config={ chartConfig } className="mx-auto aspect-square max-h-[250px]" >
                     <PieChart>
                         <ChartTooltip cursor={ false } content={ <ChartTooltipContent hideLabel /> } />
-                        <Pie data={ processedChartData } dataKey={ dataKey } nameKey={ nameKey } innerRadius={ 60 } strokeWidth={ 5 } >
+                        <Pie data={ processedChartData } dataKey={ dataKey as string } nameKey={ nameKey as string } innerRadius={ 60 } strokeWidth={ 5 } >
                             <Label
                                 content={ ( { viewBox } ) => {
                                     if ( viewBox && "cx" in viewBox && "cy" in viewBox ) {
@@ -79,7 +80,7 @@ export function PieChartCustom( { title, description, chartData, dataKey, nameKe
  * @param count 
  * @returns 
  */
-const getDynamicColorPalette = ( count: number ): string[] => {
+const getDynamicColorPalette = ( count : number ): string[] => {
     const baseValue = 500;
     let startOffset = 0;
     
@@ -98,7 +99,7 @@ const getDynamicColorPalette = ( count: number ): string[] => {
 
     for ( let i = 0; i < count; i++ ) {
         const colorCode = startColorCode + ( i * 100 );
-        colors.push( `var(--color-blue-${ colorCode })` );
+        colors.push( `var(--colors-blue-${ colorCode })` );
     }
 
     return colors;

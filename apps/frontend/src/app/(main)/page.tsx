@@ -6,6 +6,7 @@ import { BarChartCustom, BarChartHorizontalCustom } from '@/components/Charts/Ba
 import { PieChartCustom } from '@/components/Charts/PieChart';
 import { ChartConfig } from "@/components/ui/chart";
 import { IChartSeriesProps } from '@/types/components/ChartType';
+import { IUserChartProps } from '@/types/apps/UserType';
 
 /**
  * 정적 메타 정보 생성
@@ -72,7 +73,7 @@ const Home = async () => {
                     yDataKey="issuedDe"
                     chartSeries={ chartSeries }
                 />
-                <PieChartCustom
+                <PieChartCustom<IUserChartProps>
                     title="일별 토큰 발행 수"
                     description="지난 7일간의 액세스 토큰 발행 수"
                     chartData={ data }
