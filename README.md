@@ -4,7 +4,7 @@
 이 프로젝트는 개인 포트폴리오 웹 애플리케이션으로, React, Next, SpringBoot, CI/CCD 연습을 목표로 합니다.
 
 - **배포 링크** : <a href="https://now2woy.duckdns.org" target="_blank">now2woy's Portfolio</a>
-- **ID / PW** : guest001 / guest001
+- **ID / PW** : guest001@gmail.com / guest001
 
 <br />
 
@@ -100,6 +100,73 @@
 
 ## 📸 주요 화면
 
+### [로그인 화면]
+![로그인 화면](screencapture/login.png)
+- 사이트 링크 : <a href="https://now2woy.duckdns.org" target="_blank">now2woy's Portfolio</a>
+- ID : guest001@gmail.com
+- PW : guest001
+<br />
+<br />
+
+### [메인 화면]
+![메인 화면](screencapture/main.png)
+- 선 차트, 바 차트, 파이 차트 적용
+<br />
+<br />
+
+### [메인 화면 다크 모드]
+![메인 화면 다크 모드](screencapture/main_dark.png)
+- 우측 상단 버튼을 클릭하면 라이트 / 다크 모드 토글이 가능
+<br />
+<br />
+
+### [목록 화면]
+![목록 화면](screencapture/list.png)
+<br />
+<br />
+
+### [입력 / 수정 화면]
+![입력 / 수정 화면](screencapture/edit.png)
+- Tiptap 에디터 적용
+<br />
+<br />
+
+### [행추가, 행삭제 입력 / 수정 화면]
+![행추가, 행삭제 입력 / 수정 화면](screencapture/edit_row_add.png)
+- 하단 테이블 행추가, 행삭제 가능
+- 하단 테이블 앞 부분 단추를 드래그 & 드랍하여 행 순서 변경 가능
+<br />
+<br />
+
+### [젠킨스 프론트엔드 빌드 결과 화면]
+![젠킨스 프론트엔드 빌드 결과 화면](screencapture/jenkins_front.png)
+- 빌드 시 git의 커밋 값을 이용해 이미지를 태그하고 latest도 태그하여 이미지 저장
+- 마지막 이미지를 이용하여 무중단 재기동
+<br />
+<br />
+
+### [젠킨스 백엔드 빌드 결과 화면]
+![젠킨스 백엔드 빌드 결과 화면](screencapture/jenkins_back.png)
+- 빌드 시 git의 커밋 값을 이용해 이미지를 태그하고 latest도 태그하여 이미지 저장
+- 마지막 이미지를 이용하여 무중단 재기동
+<br />
+<br />
+
+### [Kubernetes k3s pod 확인 화면]
+![Kubernetes k3s pod 확인 화면](screencapture/k3s_pod_get.png)
+- 현재 구동 중인 pod의 구동시간을 확인하여 정상적으로 디플로이 됐는지 확인
+<br />
+<br />
+
+### [Kubernetes k3s 프론트엔드 설정 파일]
+![Kubernetes k3s 프론트엔드 설정 파일](screencapture/k3s_front_config.png)
+- 프론트엔드의 디플로이 설정 파일
+<br />
+<br />
+
+### [Kubernetes k3s 백엔드 설정 파일]
+![Kubernetes k3s 백엔드 설정 파일](screencapture/k3s_back_config.png)
+- 백엔드의 디플로이 설정 파일
 <br />
 
 ---
