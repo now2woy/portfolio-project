@@ -58,6 +58,8 @@
         -   **`useQuery` & `Prefetching`**: 목록 형태의 데이터를 조회할 때 `useQuery`를 사용하고, 사용자 경험 개선을 위해 목록 페이지에 진입하기 전에 다음 페이지 데이터를 미리 가져오는 **프리패칭(Prefetching)**을 적용했습니다.
         -   **`useMutation`**: 저장, 수정, 삭제와 같은 데이터 변경 로직에 `useMutation`을 사용하여 서버 데이터 업데이트를 간편하게 처리하고, 성공 시 관련 쿼리 데이터를 자동으로 무효화(invalidate)하여 최신 상태를 유지하도록 했습니다.
 
+<br />
+
 ### **Backend**
 -   **데이터베이스 접근 기술 (JPA, MyBatis)**
     -   **JPA**: 대부분의 CRUD(Create, Read, Update, Delete) 작업을 처리하며 엔티티와 테이블 간의 매핑을 자동화하는 데 사용했습니다.
@@ -70,6 +72,7 @@
 -   **API 통신**:
     -   모든 클라이언트-서버 간 통신은 **RESTful API**를 통해 이루어지도록 설계하여, 각 엔드포인트가 자원(Resource)에 대한 CRUD 연산을 명확히 표현하도록 했습니다.
 
+<br />
 
 ### **CI / CD & Deployment**
 
