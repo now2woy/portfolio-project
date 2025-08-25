@@ -4,7 +4,7 @@ pipeline {
 	environment {
 		REGISTRY = "localhost:5000"
 		IMAGE_NAME = "now2woy/portfolio-default-service"
-		IMAGE_TAG = "latest"
+		IMAGE_TAG = "${GIT_COMMIT}"
 		DOCKER_HOST = "unix:///var/run/docker.sock"
 		REGISTRY_USER = credentials('DOCKER_REGISTRY_USER')
 		REGISTRY_PASS = credentials('DOCKER_REGISTRY_PASS')
@@ -49,26 +49,24 @@ pipeline {
 			}
 		}
 		
-		stage('Build Docker Image') {
+		stage('Build & Push Image') {
 			steps {
 				dir('apps/backend-default-service') {
 					sh """
+						# 빌드 (commit hash 태그로)
 						docker build \
 							--build-arg DB_URL=${PORTFOLIO_DB_URL} \
 							--build-arg DB_USERNAME=${PORTFOLIO_DB_ID} \
 							--build-arg DB_PASSWORD=${PORTFOLIO_DB_PW} \
 							--build-arg JWT_SECRET_KEY=${PORTFOLIO_JWT_KEY} \
 							-t ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .
-					"""
-				}
-			}
-		}
-		
-		stage('Push to Local Registry') {
-			steps {
-				dir('apps/backend-default-service') {
-					sh """
+						
+						# latest 태그도 추가
+						docker tag ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ${REGISTRY}/${IMAGE_NAME}:latest
+						
+						# 두 개 다 푸시
 						docker push ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+						docker push ${REGISTRY}/${IMAGE_NAME}:latest
 					"""
 				}
 			}
@@ -76,8 +74,8 @@ pipeline {
 		
 		stage('Deploy to Kubernetes') {
 			steps {
-				// Deployment YAML 업데이트 후 적용
 				sh """
+					# 커밋 해시 태그 기준으로 배포 (히스토리 추적용)
 					kubectl set image deployment/${K8S_DEPLOYMENT} ${K8S_DEPLOYMENT}=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} -n ${K8S_NAMESPACE}
 					
 					kubectl rollout status deployment/${K8S_DEPLOYMENT} -n ${K8S_NAMESPACE}
