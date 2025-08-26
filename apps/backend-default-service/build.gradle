@@ -56,6 +56,9 @@ dependencies {
 	implementation("org.apache.commons:commons-lang3:3.18.0")
 	implementation("com.google.guava:guava:33.4.8-jre")
 	
+	// 문서화
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.11'
+	
 	// PostgreSQL 드라이버
 	runtimeOnly 'org.postgresql:postgresql:42.7.3'
 	
