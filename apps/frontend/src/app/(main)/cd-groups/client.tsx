@@ -51,7 +51,7 @@ export const List = ({ initialData, fields }: { initialData : ISearchData, field
 
 
     // 캐싱된 데이터 사용
-    const { data, isLoading, isError, error } = useQuery( {
+    const { data } = useQuery( {
         queryKey: postKeys.lists( query )
         , queryFn: fetchCdGroups
     });

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
+import { getAccessToken } from '@/lib/tokenRefresher';
 
 /**
  * 기본 접속 URL
@@ -25,6 +26,8 @@ export const middleware = async ( request: NextRequest ) => {
 
     console.log("pathname : ", pathname, accessToken, isTokenExpired( { token : accessToken || '' } ) );
 
+    const newResponse = NextResponse.next();
+
     // 토큰이 없는데 보호된 페이지에 접근하려는 경우 로그인 페이지로 리디렉션
     if (!accessToken && !refreshToken && !isAuthPage) {
         return NextResponse.redirect(new URL('/login', request.url));
@@ -37,42 +40,50 @@ export const middleware = async ( request: NextRequest ) => {
 
     // 토큰 유효하지 않을 경우
     if (isTokenExpired( { token : accessToken || '' } )) {
-        // 리프레시 토큰으로 새로운 액세스 토큰 발급 시도
-        const refreshResponse = await fetch(`${ BASE }/api/system/v1/auths/re-issue`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
-                'Cookie': `refreshToken=${refreshToken}`,
-            },
+
+        const newAccessToken = await getAccessToken(async () => {
+            let newAccessToken = '';
+            // 리프레시 토큰으로 새로운 액세스 토큰 발급 시도
+            const refreshResponse = await fetch(`${ BASE }/api/system/v1/auths/re-issue`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Cookie': `refreshToken=${refreshToken}`,
+                },
+            });
+            
+            if (refreshResponse.ok) {
+                let sameSite : sameSiteType = 'lax';
+                // 운영일 경우
+                if(BASE === process.env.NEXT_PUBLIC_API_URL) {
+                    sameSite = 'none';
+                }
+                // 갱신 성공 시, 새 토큰을 쿠키에 담아 응답
+                const token = await refreshResponse.json();
+                newResponse.cookies.set("accessToken", token.accessToken, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: sameSite,
+                    path: "/",
+                    maxAge: 60 * 60 * 12,
+                });
+                newResponse.cookies.set("refreshToken", token.refreshToken, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: sameSite,
+                    path: "/",
+                    maxAge: 60 * 60 * 12,
+                });
+
+                newAccessToken = token.accessToken;
+            }
+
+            return newAccessToken;
         });
 
-        if (refreshResponse.ok) {
-            let sameSite : sameSiteType = 'lax';
-            // 운영일 경우
-            if(BASE === process.env.NEXT_PUBLIC_API_URL) {
-                sameSite = 'none';
-            }
-            // 갱신 성공 시, 새 토큰을 쿠키에 담아 응답
-            const token = await refreshResponse.json();
-            const newResponse = NextResponse.next();
-            newResponse.cookies.set("accessToken", token.accessToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: sameSite,
-                path: "/",
-                maxAge: 60 * 60 * 12,
-            });
-            newResponse.cookies.set("refreshToken", token.refreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: sameSite,
-                path: "/",
-                maxAge: 60 * 60 * 12,
-            });
-
-            return newResponse;
-        } else {
+        // 액세스 토큰이 없을 경우 갱신 실패
+        if(newAccessToken === ''){
             // 갱신 실패 시 쿠키 초기화 후 로그인 페이지로 리디렉션
             const newResponse = NextResponse.redirect(new URL('/login', request.url));
             newResponse.cookies.delete("accessToken");
@@ -86,7 +97,7 @@ export const middleware = async ( request: NextRequest ) => {
         return NextResponse.redirect(new URL('/', request.url));
     }
 
-    return NextResponse.next();
+    return newResponse;
 }
 
 // 미들웨어를 실행할 경로를 설정합니다.
