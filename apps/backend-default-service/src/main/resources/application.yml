@@ -39,6 +39,15 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath:/mapper/**/*.xml
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /docs
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
+
 logging:
   level:
 # JPA SQL 로그
