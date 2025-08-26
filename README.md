@@ -141,6 +141,13 @@
 <br />
 <br />
 
+### [서비스 중인 API 문서화 화면]
+![서비스 중인 API 문서화 화면](screencapture/swagger_back.png)
+- 상단의 셀렉트 박스 이용하여 그룹핑 된 API 조회
+- authorize 항목에 액세스 토큰값을 입력하고 API 동작 확인 가능
+<br />
+<br />
+
 ### [젠킨스 프론트엔드 빌드 결과 화면]
 ![젠킨스 프론트엔드 빌드 결과 화면](screencapture/jenkins_front.png)
 - 빌드 시 git의 커밋 값을 이용해 이미지를 태그하고 latest도 태그하여 이미지 저장
