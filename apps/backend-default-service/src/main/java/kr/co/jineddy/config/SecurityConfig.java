@@ -83,12 +83,9 @@ public class SecurityConfig {
 				// 권한 없이 접속 가능 URL
 				.requestMatchers(
 						"/"
-						, "/docs/**"
 						, "/api/system/v1/auths/**"
-						, "/v3/api-docs/**"
-						, "/swagger-ui/**"
-						, "/swagger-ui.html"
-						, "/api-docs/**").permitAll()
+						, "/api/docs/v0/**"
+				).permitAll()
 				// 나머지 전체는 인증된 사용자만 접속 가능 URL
 				.anyRequest().authenticated())
 			
