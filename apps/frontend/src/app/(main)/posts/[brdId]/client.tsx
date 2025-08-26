@@ -40,7 +40,7 @@ export const List = ({ brdId, initialData, fields }: { brdId: string, initialDat
     const query = searchParams?.toString() ?? '';
 
     // 캐싱된 데이터 사용
-    const { data, isLoading, isError } = useQuery( {
+    const { data } = useQuery( {
         queryKey: postKeys.lists(brdId, query)
         , queryFn: fetchPosts
     });
