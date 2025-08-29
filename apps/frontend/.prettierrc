@@ -3,6 +3,7 @@
   "singleQuote": true,
   "singleAttributePerLine": true,
   "bracketSameLine": true,
+  "bracketSpacing": true,
   "endOfLine": "lf",
   "trailingComma": "none",
   "arrowParens": "avoid",

@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 
-import { IMainMenuProps } from "@/types/MenuType";
+import { IMainMenuProps } from "@/types/components/MenuType";
 
 export const HeaderBreadcrumb = ({ menus }: { menus: IMainMenuProps[] }) => {
     const pathname = usePathname();

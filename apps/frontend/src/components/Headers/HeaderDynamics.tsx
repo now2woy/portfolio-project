@@ -1,7 +1,7 @@
 'use client';
 import dynamic from 'next/dynamic';
 
-import { IMainMenuProps } from "@/types/MenuType";
+import { IMainMenuProps } from "@/types/components/MenuType";
 
 const HeaderTheme = dynamic( () => import( '@/components/Headers' ).then( ( mod ) => mod.HeaderTheme ), {
     ssr: false

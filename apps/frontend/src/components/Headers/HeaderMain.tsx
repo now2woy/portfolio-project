@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator"
 
 import { HeaderThemeDynamic, HeaderBreadcrumbDynamic } from '@/components/Headers'
 
-import { IMainMenuProps } from "@/types/MenuType";
+import { IMainMenuProps } from "@/types/components/MenuType";
 
 export const HeaderMain = ( { menu }: { menu: IMainMenuProps[] } ) => {
   return (

@@ -8,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { IconCode, IconAbc, IconNotebook, IconInnerShadowTop } from "@tabler/icons-react"
 
 import { SidebarDynamicUser } from "@/components/Sidebars";
-import { IMainMenuProps } from "@/types/MenuType";
+import { IMainMenuProps } from "@/types/components/MenuType";
 
 export const SidebarMain = async ( { menu }: { menu: IMainMenuProps[] } ) => {
     // 아이콘 이름과 컴포넌트를 매핑하는 객체
@@ -36,31 +36,31 @@ export const SidebarMain = async ( { menu }: { menu: IMainMenuProps[] } ) => {
             <SidebarContent>
                 <SidebarGroup>
                         <SidebarMenu>
-                            {menu.map(item => {
-                                const Icon = iconMap[item.icon as keyof typeof iconMap] || null;
+                            { menu.map( item => {
+                                const Icon = iconMap[ item.iconCd as keyof typeof iconMap ] || null;
                                 return (
-                                    <Collapsible key={ item.title } asChild defaultOpen={ item.isActive } className="group/collapsible">
+                                    <Collapsible key={ item.menuId } asChild defaultOpen={ true } className="group/collapsible">
                                     <SidebarMenuItem>
 
                                         <CollapsibleTrigger asChild>
-                                        <SidebarMenuButton tooltip={item.title}>
+                                        <SidebarMenuButton tooltip={ item.menuNm }>
                                             <Icon className="mr-2 h-4 w-4" />
-                                            <span>{ item.title }</span>
+                                            <span>{ item.menuNm }</span>
                                             <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                                         </SidebarMenuButton>
                                         </CollapsibleTrigger>
 
                                         <CollapsibleContent>
                                         <SidebarMenuSub>
-                                            {item.items?.map((subItem) => (
-                                            <SidebarMenuSubItem key={subItem.title}>
+                                            { item.children?.map( ( subItem ) => (
+                                            <SidebarMenuSubItem key={ subItem.menuId }>
                                                 <SidebarMenuSubButton asChild>
-                                                    <Link href={subItem.url}>
-                                                        <span>{subItem.title}</span>
+                                                    <Link href={ subItem.linkUrl || '' }>
+                                                        <span>{ subItem.menuNm }</span>
                                                     </Link>
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
-                                            ))}
+                                            ) ) }
                                         </SidebarMenuSub>
                                         </CollapsibleContent>
 
