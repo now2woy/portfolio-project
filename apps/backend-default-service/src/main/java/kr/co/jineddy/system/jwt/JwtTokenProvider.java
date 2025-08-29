@@ -45,7 +45,7 @@ public class JwtTokenProvider {
 	/**
 	 * 액세스 토큰 유효 시간 : 1분
 	 */
-	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 5;
+	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;
 	/**
 	 * 리프레시 토큰 유효 시간 : 12시간
 	 */
