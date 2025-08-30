@@ -236,17 +236,17 @@ const columnsConfig : IColumnConfig[] = [
 
 // 입력 / 수정 필드 레이아웃 정의
 const fields : IFormFieldProps<ICdGroupProps>[] = [
-    { key: 'groupId', label: '코드그룹ID', colSpan: 3, formType: 'text', required : true },
-    { key: 'groupNm', label: '코드그룹명', colSpan: 3, formType: 'text', required : true },
-    { key: 'dataTyCd', label: '데이터타입', colSpan: 3, formType: 'text', required : true, hasBorderTop: true },
-    { key: 'lt', label: '최대길이', colSpan: 3, formType: 'text', hasBorderTop: true },
+    { key: 'groupId', label: '코드그룹ID', colSpan: 3, type : 'text', required : true },
+    { key: 'groupNm', label: '코드그룹명', colSpan: 3, type : 'text', required : true },
+    { key: 'dataTyCd', label: '데이터타입', colSpan: 3, type : 'text', required : true, hasBorderTop: true },
+    { key: 'lt', label: '최대길이', colSpan: 3, type : 'text', hasBorderTop: true },
     { key: 'dc', label: '설명', colSpan: 6, required : true, hasBorderTop: true, 
         render: (value, item, onFieldChange) => (
             <TiptapEditor content={value as string || ''} onUpdate={ (content : string) => onFieldChange?.('dc', content)} />
         ) 
     },
-    { key: 'useYn', label: '사용여부', colSpan: 3, formType: 'text', required : true, hasBorderTop: true },
-    { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3, formType: 'text', required : true, hasBorderTop: true },
+    { key: 'useYn', label: '사용여부', colSpan: 3, type : 'text', required : true, hasBorderTop: true },
+    { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3, type : 'text', required : true, hasBorderTop: true },
     { key: 'insDt', label: '입력일시', colSpan: 3, hasBorderTop: true, render: (value) => formatDate(value as string) },
     { key: 'updDt', label: '수정일시', colSpan: 3, hasBorderTop: true,render: (value) => formatDate(value as string) },
 ];

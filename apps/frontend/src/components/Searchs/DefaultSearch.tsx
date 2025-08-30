@@ -26,10 +26,10 @@ export const DefaultSearch = ( { initialData, fields }: ISearchProps ) => {
         const updated = { ...initialData };
 
         fields.forEach( field => {
-            const paramValue = searchParams?.get( field.value as string );
+            const paramValue = searchParams?.get( field.key as string );
             
             if ( paramValue ) {
-                updated[ field.value as string ] = paramValue;
+                updated[ field.key as string ] = paramValue;
                 hasChange = true;
             }
         });
@@ -62,14 +62,14 @@ export const DefaultSearch = ( { initialData, fields }: ISearchProps ) => {
         <div className="border border-gray-250 rounded-lg p-6">
             <dl className="grid grid-cols-1 sm:grid-cols-6 gap-x-4">
                 { fields.map( ( field ) => (
-                <div key={ field.value as string } className="px-4 sm:col-span-3 sm:px-0">
-                    <dt><Label htmlFor={ field.value as string } className="text-sm leading-6 font-semibold">{ field.label }</Label></dt>
+                <div key={ field.key as string } className="px-4 sm:col-span-3 sm:px-0">
+                    <dt><Label htmlFor={ field.key as string } className="text-sm leading-6 font-semibold">{ field.label }</Label></dt>
                     <dd className="mt-1 text-sm leading-6 text-muted-foreground mt-2">
 
                         {/** 텍스트 필드 일 경우 */
                         field.type === 'text' && (
-                            <Input id={ field.value as string } className="mb-4" value={ filters[ field.value as string ] }
-                                onChange={ ( e ) => setFilters( { ...filters, [field.value as string]: e.target.value } ) }
+                            <Input id={ field.key as string } className="mb-4" value={ filters[ field.key as string ] }
+                                onChange={ ( e ) => setFilters( { ...filters, [field.key as string]: e.target.value } ) }
                                 onKeyDown={ ( e ) => {
                                     if ( e.key === 'Enter' ) {
                                         handleSearch( filters );
@@ -80,8 +80,8 @@ export const DefaultSearch = ( { initialData, fields }: ISearchProps ) => {
 
                         {/** 셀렉트 필드 일 경우 */
                         field.type === 'select' && (
-                            <Select defaultValue={ filters[ field.value as string ] } onValueChange={ ( value ) => setFilters( { ...filters, [field.value as string]: value } ) } >
-                                <SelectTrigger id={ field.value as string } className="w-full">
+                            <Select defaultValue={ filters[ field.key as string ] } onValueChange={ ( value ) => setFilters( { ...filters, [field.key as string]: value } ) } >
+                                <SelectTrigger id={ field.key as string } className="w-full">
                                     <SelectValue placeholder="선택" />
                                 </SelectTrigger>
                                 <SelectContent>

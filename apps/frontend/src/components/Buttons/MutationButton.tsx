@@ -3,7 +3,7 @@
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { MutationButtonProps } from '@/components/Buttons';
+import { MutationButtonProps } from '@/types/components/ButtonType';
 import { cn } from '@/lib/utils';
 
 /**

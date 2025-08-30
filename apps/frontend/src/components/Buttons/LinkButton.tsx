@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { useRouter } from 'next/navigation';
-import { buttonVariantType } from '@/components/Buttons';
+import { buttonVariantType } from '@/types/components/ButtonType';
 import { cn } from '@/lib/utils';
 
 /**
