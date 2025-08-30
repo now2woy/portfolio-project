@@ -26,6 +26,17 @@ public class MenuApiController {
 	private final MenuService menuService;
 	
 	/**
+	 * 모든 메뉴 목록
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@GetMapping("/all-menus")
+	public ResponseEntity<List<MenuResponseDto>> allMenus(HttpServletRequest request, HttpServletResponse response) {
+		return ResponseEntity.ok(menuService.allMenus());
+	}
+	
+	/**
 	 * 사용자가 가지고 있는 메뉴 목록
 	 * @param request
 	 * @param response

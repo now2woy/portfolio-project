@@ -30,6 +30,63 @@
 			OFFSET #{offset}
 	</select>
 	
+<!-- 목록 조회 : 모든 메뉴 목록 -->
+	<select id="selectListByAll" resultType="kr.co.jineddy.system.api.menu.dto.MenuResponseDto">
+		/* system.mapper.menu.MenuMapper.selectListByAll */
+			WITH RECURSIVE menu_hierarchy AS (
+				SELECT
+					m.menu_id
+					, m.up_menu_id
+					, m.menu_nm
+					, m.link_url
+					, m.icon_cd
+					, m.sort_ord
+					, m.use_yn
+					, m.ins_dt
+					, m.ins_id
+					, m.upd_dt
+					, m.upd_id
+				FROM
+					sys_menu_mst m
+				INNER JOIN
+					sys_auth_menu_map am ON m.menu_id = am.menu_id
+				INNER JOIN
+					sys_user_auth_map ua ON am.auth_id = ua.auth_id
+				UNION
+				SELECT
+					pm.menu_id
+					, pm.up_menu_id
+					, pm.menu_nm
+					, pm.link_url
+					, pm.icon_cd
+					, pm.sort_ord
+					, pm.use_yn
+					, pm.ins_dt
+					, pm.ins_id
+					, pm.upd_dt
+					, pm.upd_id
+				FROM
+					sys_menu_mst pm
+				INNER JOIN
+					menu_hierarchy mh ON pm.menu_id = mh.up_menu_id
+			)
+			SELECT DISTINCT
+				menu_id
+				, up_menu_id
+				, menu_nm
+				, link_url
+				, icon_cd
+				, sort_ord
+				, use_yn
+				, ins_dt
+				, ins_id
+				, upd_dt
+				, upd_id
+			FROM
+				menu_hierarchy
+			ORDER BY sort_ord ASC
+	</select>
+	
 <!-- 목록 조회 : 사용자 ID 기준 메뉴 목록 -->
 	<select id="selectListByUserId" parameterType="String" resultType="kr.co.jineddy.system.api.menu.dto.MenuResponseDto">
 		/* system.mapper.menu.MenuMapper.selectListByUserId */

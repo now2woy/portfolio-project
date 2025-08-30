@@ -12,6 +12,11 @@ import kr.co.jineddy.system.api.menu.dto.MenuResponseDto;
 @Mapper
 public interface MenuMapper {
 	/**
+	 * 모든 메뉴 목록
+	 * @return
+	 */
+	List<MenuResponseDto> selectListByAll();
+	/**
 	 * 사용자가 가지고 있는 메뉴 목록
 	 * @param userId
 	 * @return
