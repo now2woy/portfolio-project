@@ -3,9 +3,9 @@ export interface ILoginProps {
     /**
      * ID
      */
-    userId: string,
+    userId: string
     /**
      * PW
      */
-    pwd: string,
+    pwd: string
 }

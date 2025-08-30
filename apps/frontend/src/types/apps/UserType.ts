@@ -5,9 +5,9 @@ export interface IUserChartProps {
     /**
      * 코드 그룹 ID
      */
-    issuedDe : string;
+    issuedDe: string
     /**
      * 코드 그룹 명
      */
-    dailyCount : number;
+    dailyCount: number
 }
