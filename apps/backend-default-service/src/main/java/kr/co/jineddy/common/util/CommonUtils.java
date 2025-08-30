@@ -31,7 +31,7 @@ public class CommonUtils {
 	 * @return 트리 구조 메뉴 리스트
 	 */
 	public static List<MenuResponseDto> buildTree( List<MenuResponseDto> flatMenus ) {
-		Map<Integer, MenuResponseDto> menuMap = new HashMap<>();
+		Map<String, MenuResponseDto> menuMap = new HashMap<>();
 		List<MenuResponseDto> roots = new ArrayList<>();
 		
 		// 1차 맵핑
@@ -76,3 +76,4 @@ public class CommonUtils {
 		}
 	}
 }
+
