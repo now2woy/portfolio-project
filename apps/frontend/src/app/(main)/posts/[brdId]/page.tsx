@@ -22,9 +22,9 @@ export interface PostListProps {
  * 게시글 검색 조건 입력 방식 정의
  */
 const fields : ISearchField[] = [
-    { label : '제목', value : 'postTtl', type : 'text' },
-    { label : '내용', value : 'postCtt', type : 'text' },
-    { label : '작성자ID', value : 'writerId', type : 'text' },
+    { label : '제목', key : 'postTtl', type : 'text' },
+    { label : '내용', key : 'postCtt', type : 'text' },
+    { label : '작성자ID', key : 'writerId', type : 'text' },
 ];
 
 /**

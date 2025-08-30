@@ -5,12 +5,12 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 
 import { IMainMenuProps } from "@/types/components/MenuType";
 
-export const HeaderBreadcrumb = ({ menus }: { menus: IMainMenuProps[] }) => {
+export const HeaderBreadcrumb = ( { menus }: { menus: IMainMenuProps[] } ) => {
     const pathname = usePathname();
-    const breadcrumbItems = getBreadcrumbItems({ menus, pathname });
+    const breadcrumbItems = getBreadcrumbItems( { menus, pathname } );
 
     // 일치하는 메뉴가 없으면 아무것도 렌더링하지 않음
-    if (breadcrumbItems.length === 0) {
+    if ( breadcrumbItems.length === 0 ) {
         return null;
     }
 
@@ -18,34 +18,38 @@ export const HeaderBreadcrumb = ({ menus }: { menus: IMainMenuProps[] }) => {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <BreadcrumbLink href={breadcrumbItems[0].url}>
-                        {breadcrumbItems[0].title}
+                    <BreadcrumbLink href={ breadcrumbItems[0].url } >
+                        { breadcrumbItems[0].title }
                     </BreadcrumbLink>
                 </BreadcrumbItem>
 
                 <BreadcrumbSeparator />
 
                 <BreadcrumbItem>
-                    <BreadcrumbPage>{breadcrumbItems[1].title}</BreadcrumbPage>
+                    <BreadcrumbPage>{ breadcrumbItems[1].title }</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
     );
 }
 
-// 현재 URL에 해당하는 메뉴의 경로를 찾는 함수
-function getBreadcrumbItems({menus, pathname}: {menus: IMainMenuProps[], pathname: string | null}) {
+/**
+ * 현재 URL에 해당하는 메뉴의 경로를 찾는 함수
+ * @param param0 
+ * @returns 
+ */
+function getBreadcrumbItems( { menus, pathname } : { menus : IMainMenuProps[], pathname : string | null } ) {
     // 부모 메뉴와 현재 메뉴를 찾기 위한 루프
-    for (const parentMenu of menus) {
+    for ( const parentMenu of menus ) {
         // 하위 메뉴가 없을 경우 생략
-        if (!parentMenu.items) continue;
+        if ( !parentMenu.children ) continue;
 
         // 현재 URL이 하위 메뉴의 URL과 일치하는지 확인
-        for (const item of parentMenu.items) {
-            if (item.url === pathname) {
+        for ( const item of parentMenu.children ) {
+            if ( item.linkUrl === pathname ) {
                 return [
-                    { title: parentMenu.title, url: parentMenu.url }
-                    , { title: item.title, url: item.url }
+                    { title : parentMenu.menuNm, url : parentMenu.linkUrl }
+                    , { title : item.menuNm, url : item.linkUrl }
                 ];
             }
         }

@@ -10,9 +10,9 @@ import { List } from "@/app/cd-groups/client";
  * 게시글 검색 조건 입력 방식 정의
  */
 const fields : ISearchField[] = [
-    { label : '코드그룹ID', value : 'groupId', type : 'text' },
-    { label : '코드그룹명', value : 'groupNm', type : 'text' },
-    { label : '사용여부', value : 'useYn', type : 'select', options : [ { value : 'Y', label : '예' }, { value : 'N', label : '아니오' } ] },
+    { label : '코드그룹ID', key : 'groupId', type : 'text' },
+    { label : '코드그룹명', key : 'groupNm', type : 'text' },
+    { label : '사용여부', key : 'useYn', type : 'select', options : [ { value : 'Y', label : '예' }, { value : 'N', label : '아니오' } ] },
 ];
 
 /**
