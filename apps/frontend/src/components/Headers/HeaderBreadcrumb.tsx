@@ -1,59 +1,72 @@
-'use client';
+'use client'
 
-import { usePathname } from 'next/navigation';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import { usePathname } from 'next/navigation'
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 
-import { IMainMenuProps } from "@/types/components/MenuType";
+import { IMainMenuProps } from '@/types/components/MenuType'
 
-export const HeaderBreadcrumb = ( { menus }: { menus: IMainMenuProps[] } ) => {
-    const pathname = usePathname();
-    const breadcrumbItems = getBreadcrumbItems( { menus, pathname } );
+export const HeaderBreadcrumb = ({ menus }: { menus: IMainMenuProps[] }) => {
+    const pathname = usePathname()
+    const breadcrumbItems = getBreadcrumbItems({ menus, pathname })
 
     // 일치하는 메뉴가 없으면 아무것도 렌더링하지 않음
-    if ( breadcrumbItems.length === 0 ) {
-        return null;
+    if (breadcrumbItems.length === 0) {
+        return null
     }
 
     return (
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <BreadcrumbLink href={ breadcrumbItems[0].url } >
-                        { breadcrumbItems[0].title }
+                    <BreadcrumbLink href={breadcrumbItems[0].url}>
+                        {breadcrumbItems[0].title}
                     </BreadcrumbLink>
                 </BreadcrumbItem>
 
                 <BreadcrumbSeparator />
 
                 <BreadcrumbItem>
-                    <BreadcrumbPage>{ breadcrumbItems[1].title }</BreadcrumbPage>
+                    <BreadcrumbPage>{breadcrumbItems[1].title}</BreadcrumbPage>
                 </BreadcrumbItem>
             </BreadcrumbList>
         </Breadcrumb>
-    );
+    )
 }
 
 /**
  * 현재 URL에 해당하는 메뉴의 경로를 찾는 함수
- * @param param0 
- * @returns 
+ * @param param0
+ * @returns
  */
-function getBreadcrumbItems( { menus, pathname } : { menus : IMainMenuProps[], pathname : string | null } ) {
+function getBreadcrumbItems({
+    menus,
+    pathname
+}: {
+    menus: IMainMenuProps[]
+    pathname: string | null
+}) {
     // 부모 메뉴와 현재 메뉴를 찾기 위한 루프
-    for ( const parentMenu of menus ) {
+    for (const parentMenu of menus) {
         // 하위 메뉴가 없을 경우 생략
-        if ( !parentMenu.children ) continue;
+        if (!parentMenu.children) continue
 
         // 현재 URL이 하위 메뉴의 URL과 일치하는지 확인
-        for ( const item of parentMenu.children ) {
-            if ( item.linkUrl === pathname ) {
+        for (const item of parentMenu.children) {
+            if (item.linkUrl === pathname) {
                 return [
-                    { title : parentMenu.menuNm, url : parentMenu.linkUrl }
-                    , { title : item.menuNm, url : item.linkUrl }
-                ];
+                    { title: parentMenu.menuNm, url: parentMenu.linkUrl },
+                    { title: item.menuNm, url: item.linkUrl }
+                ]
             }
         }
     }
 
-    return []; // 일치하는 메뉴가 없는 경우 빈 배열 반환
+    return [] // 일치하는 메뉴가 없는 경우 빈 배열 반환
 }

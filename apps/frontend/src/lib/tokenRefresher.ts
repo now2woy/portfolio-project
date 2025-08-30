@@ -1,15 +1,17 @@
-let refreshPromise: Promise<string> | null = null;
+let refreshPromise: Promise<string> | null = null
 
 /**
  * 리프레시 Promise 관리
- * @param refreshFn 
- * @returns 
+ * @param refreshFn
+ * @returns
  */
-export async function getAccessToken(refreshFn: () => Promise<string>): Promise<string> {
+export async function getAccessToken(
+    refreshFn: () => Promise<string>
+): Promise<string> {
     if (!refreshPromise) {
         refreshPromise = refreshFn().finally(() => {
-            refreshPromise = null;
-        });
+            refreshPromise = null
+        })
     }
-    return refreshPromise;
+    return refreshPromise
 }

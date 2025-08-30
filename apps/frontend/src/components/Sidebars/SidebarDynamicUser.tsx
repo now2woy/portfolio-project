@@ -1,13 +1,15 @@
-'use client';
+'use client'
 
-import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic'
 
-const SidebarUser = dynamic( () => import( '@/components/Sidebars' ).then( ( mod ) => mod.SidebarUser ), {
-    ssr: false
-  }
-);
+const SidebarUser = dynamic(
+    () => import('@/components/Sidebars').then(mod => mod.SidebarUser),
+    {
+        ssr: false
+    }
+)
 
 // 하나의 파일 안에서 다이나믹 처리가 안되어 파일 분리
-export const SidebarDynamicUser = ( ) => {
-  return <SidebarUser />;
+export const SidebarDynamicUser = () => {
+    return <SidebarUser />
 }

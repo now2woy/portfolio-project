@@ -1,39 +1,49 @@
-'use client';
-import { useState } from "react";
-import { useRouter } from 'next/navigation';
+'use client'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { authenticationProps } from '@/types/CommonType';
-import { ILoginProps } from "@/types/LoginType";
-import { fetchLogin } from '@/services/LoginService';
-import { MutationButton } from '@/components/Buttons';
-import { useAuthStore } from '@/stores';
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { authenticationProps } from '@/types/CommonType'
+import { ILoginProps } from '@/types/LoginType'
+import { fetchLogin } from '@/services/LoginService'
+import { MutationButton } from '@/components/Buttons'
+import { useAuthStore } from '@/stores'
 
 /**
  * 로그인 폼 컴포넌트
  * @param param
- * @returns 
+ * @returns
  */
-export const LoginForm = ( { authentication } : { authentication : authenticationProps } ) => {
-    const [formData, setFormData] = useState<ILoginProps>( { userId: '', pwd: '' });
-    const router = useRouter();
-    
+export const LoginForm = ({
+    authentication
+}: {
+    authentication: authenticationProps
+}) => {
+    const [formData, setFormData] = useState<ILoginProps>({
+        userId: '',
+        pwd: ''
+    })
+    const router = useRouter()
+
     // 로그인 성공 처리 함수
-    const handleSuccessCallback = ( data: { userId : string, userNm : string } ) => {
+    const handleSuccessCallback = (data: {
+        userId: string
+        userNm: string
+    }) => {
         // useAuthStore의 setUserInfo 함수를 가져옵니다.
-        const { setUserInfo } = useAuthStore.getState();
+        const { setUserInfo } = useAuthStore.getState()
 
         // 가져온 데이터를 스토어에 저장합니다.
-        setUserInfo(data.userId, data.userNm);
+        setUserInfo(data.userId, data.userNm)
 
-        router.refresh();
+        router.refresh()
     }
-    
+
     // 로그인 실패 처리 함수
-    const handleErrorCallback = <TError,>( error: TError ) => {
-        console.error(error);
-        alert('로그인에 실패했습니다. ID와 비밀번호를 확인해주세요.');
+    const handleErrorCallback = <TError,>(error: TError) => {
+        console.error(error)
+        alert('로그인에 실패했습니다. ID와 비밀번호를 확인해주세요.')
     }
 
     return (
@@ -48,26 +58,41 @@ export const LoginForm = ( { authentication } : { authentication : authenticatio
             <div className="grid gap-6">
                 <div className="grid gap-3">
                     <Label htmlFor="email">ID</Label>
-                    <Input id="id" type="text" required value={formData.userId} onChange={(e) => setFormData({ ...formData, userId: e.target.value })} />
+                    <Input
+                        id="id"
+                        type="text"
+                        required
+                        value={formData.userId}
+                        onChange={e =>
+                            setFormData({ ...formData, userId: e.target.value })
+                        }
+                    />
                 </div>
                 <div className="grid gap-3">
                     <div className="flex items-center">
                         <Label htmlFor="password">Password</Label>
                         {/* <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline" >Forgot your password?</a> */}
                     </div>
-                    <Input id="password" type="password" required value={formData.pwd} onChange={(e) => setFormData({ ...formData, pwd: e.target.value })} />
+                    <Input
+                        id="password"
+                        type="password"
+                        required
+                        value={formData.pwd}
+                        onChange={e =>
+                            setFormData({ ...formData, pwd: e.target.value })
+                        }
+                    />
                 </div>
-                    <MutationButton
-                        className="w-full text-white"
-                        mutationFn={ fetchLogin }
-                        variables={{ authentication, data : formData }}
-                        queryKeyToInvalidate={ [ 'ALL' ] }
-                        onSuccessCallback={ handleSuccessCallback }
-                        onErrorCallback={ handleErrorCallback }
-                        isSubmit={ true }
-                    >
-                        Login
-                    </MutationButton>
+                <MutationButton
+                    className="w-full text-white"
+                    mutationFn={fetchLogin}
+                    variables={{ authentication, data: formData }}
+                    queryKeyToInvalidate={['ALL']}
+                    onSuccessCallback={handleSuccessCallback}
+                    onErrorCallback={handleErrorCallback}
+                    isSubmit={true}>
+                    Login
+                </MutationButton>
                 {/*
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                     <span className="bg-background text-muted-foreground relative z-10 px-2">
@@ -86,8 +111,12 @@ export const LoginForm = ( { authentication } : { authentication : authenticatio
                 */}
             </div>
             <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <a href="/signup" className="underline underline-offset-4">Sign up</a>
+                Don&apos;t have an account?{' '}
+                <a
+                    href="/signup"
+                    className="underline underline-offset-4">
+                    Sign up
+                </a>
             </div>
         </form>
     )

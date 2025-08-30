@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { MutationButtonProps } from '@/types/components/ButtonType';
-import { cn } from '@/lib/utils';
+import React from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Button } from '@/components/ui/button'
+import { MutationButtonProps } from '@/types/components/ButtonType'
+import { cn } from '@/lib/utils'
 
 /**
  * 뮤테이션 처리하는 버튼
  * @param param
- * @returns 
+ * @returns
  */
 export function MutationButton<TData, TError, TVariables>({
     children,
@@ -22,68 +22,69 @@ export function MutationButton<TData, TError, TVariables>({
     queryKeyToInvalidate,
     onSuccessCallback,
     onErrorCallback,
-    isSubmit = false,
+    isSubmit = false
 }: MutationButtonProps<TData, TError, TVariables>) {
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
 
     const { mutate, isPending } = useMutation({
         mutationFn,
-        onSuccess: (data) => {
+        onSuccess: data => {
             if (queryKeyToInvalidate) {
-                if(queryKeyToInvalidate[0] === 'ALL'){
-                    queryClient.invalidateQueries();
+                if (queryKeyToInvalidate[0] === 'ALL') {
+                    queryClient.invalidateQueries()
                 } else {
-                    queryClient.invalidateQueries({ queryKey: queryKeyToInvalidate });
+                    queryClient.invalidateQueries({
+                        queryKey: queryKeyToInvalidate
+                    })
                 }
             }
 
             if (successMessage) {
-                alert(successMessage);
+                alert(successMessage)
             }
 
             if (onSuccessCallback) {
-                onSuccessCallback(data);
+                onSuccessCallback(data)
             }
         },
         onError: (error: TError) => {
             if (errorMessage) {
-                alert(errorMessage);
+                alert(errorMessage)
             }
 
             if (onErrorCallback) {
-                onErrorCallback(error);
+                onErrorCallback(error)
             }
-        },
-    });
+        }
+    })
 
     // 버튼 클릭 핸들링
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         // 서브밋일 경우 폼 체크
         if (isSubmit) {
-            const form = (e.currentTarget as HTMLButtonElement).form;
+            const form = (e.currentTarget as HTMLButtonElement).form
             // 브라우저 검증
             if (form && form.checkValidity()) {
                 // 서브밋 이벤트 중단
-                e.preventDefault();
+                e.preventDefault()
 
                 // 처리
-                mutate(variables);
+                mutate(variables)
             }
         } else {
             // 처리
-            mutate(variables);
+            mutate(variables)
         }
-    };
+    }
 
     return (
         <Button
             type={isSubmit ? 'submit' : 'button'}
             variant={variant}
-            className={ cn( "cursor-pointer", className ) }
-            onClick={ handleClick }
-            disabled={isPending}
-        >
+            className={cn('cursor-pointer', className)}
+            onClick={handleClick}
+            disabled={isPending}>
             {isPending ? '처리 중...' : children}
         </Button>
-    );
+    )
 }

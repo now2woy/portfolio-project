@@ -1,1 +1,1 @@
-export * from './DefaultSearch';
+export * from './DefaultSearch'
