@@ -43,33 +43,15 @@ export async function apiFetch<T>(
         withAuth = true
     }: ApiOptions = {}
 ): Promise<T> {
-    const controller = new AbortController()
-    const t = setTimeout(() => controller.abort(), timeoutMs)
-    const url = path.startsWith('http') ? path : `${BASE}${path}`
-
-    const accessToken = await getTokensFromCookies()
-
-    async function doFetch(token: string) {
-        const fetchOptions = {
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-                ...(withAuth && token
-                    ? { Authorization: `Bearer ${token}` }
-                    : {}),
-                ...headers
-            },
-            body: body ? JSON.stringify(body) : undefined,
-            cache,
-            next,
-            signal: controller.signal
-        }
-        return fetch(url, fetchOptions)
-    }
-
-    const res = await doFetch(accessToken)
-
-    clearTimeout(t)
+    const res = await apiFetchResponse(path, {
+        method,
+        headers,
+        body,
+        next,
+        cache,
+        timeoutMs,
+        withAuth
+    })
 
     if (!res.ok) {
         const text = await res.text().catch(() => '')
@@ -87,4 +69,65 @@ export async function apiFetch<T>(
     }
 
     return text as T
+}
+
+/**
+ * API 요청 처리
+ * @param path
+ * @param param1
+ * @returns
+ */
+export async function apiFetchResponse<T>(
+    path: string,
+    {
+        method = 'GET',
+        headers = {},
+        body,
+        next,
+        cache = 'no-store',
+        timeoutMs = 8000,
+        withAuth = true
+    }: ApiOptions = {}
+): Promise<Response> {
+    const controller = new AbortController()
+    const t = setTimeout(() => controller.abort(), timeoutMs)
+    const url = path.startsWith('http') ? path : `${BASE}${path}`
+
+    const accessToken = await getTokensFromCookies()
+
+    async function doFetch(token: string) {
+        let requestBody = body
+        let requestHeaders = { ...headers }
+
+        // body가 FormData 객체인지 확인
+        if (body instanceof FormData) {
+            // FormData인 경우, Content-Type 헤더를 수동으로 설정하지 않음.
+            // fetch가 자동으로 'multipart/form-data'와 boundary를 생성합니다.
+            // JSON.stringify도 사용하지 않습니다.
+        } else if (body !== undefined) {
+            // 그 외의 경우 (주로 JSON), Content-Type을 'application/json'으로 설정하고 본문을 문자열화합니다.
+            requestHeaders['Content-Type'] = 'application/json'
+            requestBody = JSON.stringify(body)
+        }
+
+        // 인증 헤더 추가 (위의 조건문과 독립적으로 처리)
+        if (withAuth && token) {
+            requestHeaders['Authorization'] = `Bearer ${token}`
+        }
+
+        const fetchOptions = {
+            method,
+            headers: requestHeaders,
+            body: requestBody as BodyInit,
+            cache,
+            next,
+            signal: controller.signal
+        }
+
+        return fetch(url, fetchOptions as RequestInit)
+    }
+
+    clearTimeout(t)
+
+    return await doFetch(accessToken)
 }

@@ -1,4 +1,8 @@
-// 코드 데이터 정의
+import { IFileComponentProps } from '@/types/components/FileType'
+
+/**
+ * 게시물 데이터 정의
+ */
 export interface IPostProps {
     /**
      * 게시판 ID
@@ -25,6 +29,10 @@ export interface IPostProps {
      */
     viewCnt?: number
     /**
+     * 첨부 파일 ID
+     */
+    atchFileId?: number
+    /**
      * 삭제 여부
      */
     delYn: 'Y' | 'N'
@@ -48,4 +56,16 @@ export interface IPostProps {
      * 수정 ID
      */
     updId?: string
+    /**
+     * 첨부파일 존재여부
+     */
+    isAttachFiles: boolean
+    /**
+     * 첨부파일 정보
+     */
+    files?: IFileComponentProps
+    /**
+     * 인덱스 시그니처
+     */
+    [key: string]: unknown
 }
