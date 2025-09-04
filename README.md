@@ -131,6 +131,13 @@
 ### [입력 / 수정 화면]
 ![입력 / 수정 화면](screencapture/edit.png)
 - Tiptap 에디터 적용
+- 첨부파일 기능(드래그 & 드랍 방식)
+<br />
+<br />
+
+### [상세 화면]
+![상세 화면](screencapture/view.png)
+- 첨부파일 다운로드
 <br />
 <br />
 
@@ -145,6 +152,12 @@
 ![서비스 중인 API 문서화 화면](screencapture/swagger_back.png)
 - 상단의 셀렉트 박스 이용하여 그룹핑 된 API 조회
 - authorize 항목에 액세스 토큰값을 입력하고 API 동작 확인 가능
+<br />
+<br />
+
+### [MinIO 화면]
+![MinIO 화면](screencapture/minio.png)
+- 첨부파일을 오브젝트 스토리지(MinIO - S3 호환되는 스토리지)에 저장하기 위해 k3s에 추가
 <br />
 <br />
 
