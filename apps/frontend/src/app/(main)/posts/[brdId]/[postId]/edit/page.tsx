@@ -1,6 +1,8 @@
 import React from 'react'
 import { getBoard } from '@/services/server/BoardServerService'
 import { getPost } from '@/services/server/PostServerService'
+import { fetchAtchFile } from '@/services/server/FileServerService'
+
 import { Edit } from '@/app/posts/[brdId]/client'
 
 /**
@@ -8,11 +10,7 @@ import { Edit } from '@/app/posts/[brdId]/client'
  * @param param
  * @returns
  */
-export async function generateMetadata({
-    params
-}: {
-    params: { brdId: string; postId: string }
-}) {
+export async function generateMetadata({ params }: { params: { brdId: string; postId: string } }) {
     const { brdId, postId } = await Promise.resolve(params)
 
     // API 호출
@@ -30,16 +28,19 @@ export async function generateMetadata({
  * @param param
  * @returns
  */
-export default async function EditViewer({
-    params
-}: {
-    params: { brdId: string; postId: string }
-}) {
+export default async function EditViewer({ params }: { params: { brdId: string; postId: string } }) {
     const { brdId, postId } = await Promise.resolve(params)
 
     // API 호출
     const board = await getBoard({ brdId })
     const data = await getPost({ brdId, postId })
+    if (data.atchFileId) {
+        data.files = {
+            atchFileId: data.atchFileId,
+            attchFiles: await fetchAtchFile({ atchFileId: data.atchFileId })
+        }
+    }
+    data.isAttachFiles = data.files?.attchFiles && data.files.attchFiles.length > 0 ? true : false
 
     return (
         <form>

@@ -6,11 +6,7 @@ import dynamic from 'next/dynamic'
 import { useQuery } from '@tanstack/react-query'
 
 import { postKeys, fetchCdGroups } from '@/queries/CdGroupQuery'
-import {
-    insertCdGroupViaBff,
-    updateCdGroupAndCdsViaBff,
-    deleteCdGroupAndCdsViaBff
-} from '@/services/client/CdGroupClientService'
+import { insertCdGroupViaBff, updateCdGroupAndCdsViaBff, deleteCdGroupAndCdsViaBff } from '@/services/client/CdGroupClientService'
 import { FormViewer } from '@/components/Viewers/FormViewer'
 
 import { LinkButton, MutationButton } from '@/components/Buttons'
@@ -32,38 +28,24 @@ const BASE_MENU_URL = '/cd-groups'
 /**
  * TiptapEditor를 클라이언트 측에 다이나믹 로드
  */
-const TiptapEditor = dynamic(
-    () => import('@/components/TipTaps').then(mod => mod.TiptapEditor),
-    {
-        ssr: false, // 서버 측 렌더링을 비활성화
-        loading: () => null // 로딩 중 보여줄 컴포넌트
-    }
-)
+const TiptapEditor = dynamic(() => import('@/components/TipTaps').then(mod => mod.TiptapEditor), {
+    ssr: false, // 서버 측 렌더링을 비활성화
+    loading: () => null // 로딩 중 보여줄 컴포넌트
+})
 
 /**
  * 드래그 & 드랍 테이블을 클라이언트 측에 다이나믹 로드
  */
-export const DndTable = dynamic(
-    () => import('@/components/Grids/DndTable').then(mod => mod.DndTable),
-    {
-        ssr: false
-    }
-) as <T extends Record<string, unknown>>(
-    props: IDndTableProps<T>
-) => JSX.Element
+export const DndTable = dynamic(() => import('@/components/Grids/DndTable').then(mod => mod.DndTable), {
+    ssr: false
+}) as <T extends Record<string, unknown>>(props: IDndTableProps<T>) => JSX.Element
 
 /**
  * 목록 클라이언트 컴포넌트
  * @param param
  * @returns
  */
-export const List = ({
-    initialData,
-    fields
-}: {
-    initialData: ISearchData
-    fields: ISearchField[]
-}) => {
+export const List = ({ initialData, fields }: { initialData: ISearchData; fields: ISearchField[] }) => {
     const searchParams = useSearchParams()
     const query = searchParams?.toString() ?? ''
 
@@ -140,16 +122,8 @@ export const View = ({ groupId }: { groupId: string }) => {
  * @param param
  * @returns
  */
-export const Edit = ({
-    groupId,
-    data
-}: {
-    groupId?: string
-    data?: ICdGroupProps
-}) => {
-    const [modifyData, setModifyData] = useState<ICdGroupProps>(
-        data || { groupId: groupId || '', groupNm: '', useYn: 'Y' }
-    )
+export const Edit = ({ groupId, data }: { groupId?: string; data?: ICdGroupProps }) => {
+    const [modifyData, setModifyData] = useState<ICdGroupProps>(data || { groupId: groupId || '', groupNm: '', useYn: 'Y' })
     const [cds, setCds] = useState<ICdProps[]>(modifyData.cds || [])
     const searchParams = useSearchParams()
     const router = useRouter()
@@ -191,16 +165,8 @@ export const Edit = ({
     }
 
     // 셀 값 변경 시
-    const handleCellUpdate = (
-        id: string,
-        key: keyof ICdProps,
-        value: unknown
-    ) => {
-        setCds(currentData =>
-            currentData?.map(item =>
-                item.cdId === id ? { ...item, [key]: value } : item
-            )
-        )
+    const handleCellUpdate = (id: string, key: keyof ICdProps, value: unknown) => {
+        setCds(currentData => currentData?.map(item => (item.cdId === id ? { ...item, [key]: value } : item)))
     }
 
     // 행 추가 핸들러
@@ -273,10 +239,7 @@ export const Edit = ({
                         <MutationButton
                             className="text-white"
                             mutationFn={updateCdGroupAndCdsViaBff}
-                            variables={{
-                                groupId: groupId ?? '',
-                                data: modifyData
-                            }}
+                            variables={{ groupId: groupId ?? '', data: modifyData }}
                             queryKeyToInvalidate={['cds']}
                             onSuccessCallback={handleCallback}
                             onErrorCallback={handleCallback}
@@ -293,59 +256,20 @@ export const Edit = ({
 // 목록 컬럼 정의
 const columnsConfig: IColumnConfig[] = [
     { key: 'groupId', label: '코드그룹ID', type: 'text', size: 100 },
-    {
-        key: 'groupNm',
-        label: '코드그룹명',
-        type: 'link',
-        linkBaseUrl: BASE_MENU_URL,
-        linkKeys: ['groupId']
-    },
+    { key: 'groupNm', label: '코드그룹명', type: 'link', linkBaseUrl: BASE_MENU_URL, linkKeys: ['groupId'] },
     { key: 'dataTyCd', label: '데이터타입', type: 'text', size: 100 },
     { key: 'useYn', label: '사용여부', type: 'boolean', size: 70 },
     { key: 'fixedLtYn', label: '고정길이여부', type: 'boolean', size: 140 },
     { key: 'updDt', label: '수정일시', type: 'date', size: 140 },
-    {
-        type: 'actions',
-        label: 'Actions',
-        linkBaseUrl: BASE_MENU_URL,
-        linkKeys: ['groupId'],
-        linkAddUrl: '/edit',
-        menu: ['수정'],
-        size: 60
-    }
+    { type: 'actions', label: 'Actions', linkBaseUrl: BASE_MENU_URL, linkKeys: ['groupId'], linkAddUrl: '/edit', menu: ['수정'], size: 60 }
 ]
 
 // 입력 / 수정 필드 레이아웃 정의
 const fields: IFormFieldProps<ICdGroupProps>[] = [
-    {
-        key: 'groupId',
-        label: '코드그룹ID',
-        colSpan: 3,
-        type: 'text',
-        required: true
-    },
-    {
-        key: 'groupNm',
-        label: '코드그룹명',
-        colSpan: 3,
-        type: 'text',
-        required: true
-    },
-    {
-        key: 'dataTyCd',
-        label: '데이터타입',
-        colSpan: 3,
-        type: 'text',
-        required: true,
-        hasBorderTop: true
-    },
-    {
-        key: 'lt',
-        label: '최대길이',
-        colSpan: 3,
-        type: 'text',
-        hasBorderTop: true
-    },
+    { key: 'groupId', label: '코드그룹ID', colSpan: 3, type: 'text', required: true },
+    { key: 'groupNm', label: '코드그룹명', colSpan: 3, type: 'text', required: true },
+    { key: 'dataTyCd', label: '데이터타입', colSpan: 3, type: 'text', required: true, hasBorderTop: true },
+    { key: 'lt', label: '최대길이', colSpan: 3, type: 'text', hasBorderTop: true },
     {
         key: 'dc',
         label: '설명',
@@ -359,60 +283,19 @@ const fields: IFormFieldProps<ICdGroupProps>[] = [
             />
         )
     },
-    {
-        key: 'useYn',
-        label: '사용여부',
-        colSpan: 3,
-        type: 'text',
-        required: true,
-        hasBorderTop: true
-    },
-    {
-        key: 'fixedLtYn',
-        label: '고정길이여부',
-        colSpan: 3,
-        type: 'text',
-        required: true,
-        hasBorderTop: true
-    },
-    {
-        key: 'insDt',
-        label: '입력일시',
-        colSpan: 3,
-        hasBorderTop: true,
-        render: value => formatDate(value as string)
-    },
-    {
-        key: 'updDt',
-        label: '수정일시',
-        colSpan: 3,
-        hasBorderTop: true,
-        render: value => formatDate(value as string)
-    }
+    { key: 'useYn', label: '사용여부', colSpan: 3, type: 'text', required: true, hasBorderTop: true },
+    { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3, type: 'text', required: true, hasBorderTop: true },
+    { key: 'insDt', label: '입력일시', colSpan: 3, hasBorderTop: true, render: value => formatDate(value as string) },
+    { key: 'updDt', label: '수정일시', colSpan: 3, hasBorderTop: true, render: value => formatDate(value as string) }
 ]
 
 // 입력 / 수정 하위 코드 목록 컬럼 정의
 const columns: IDndColumnProps<ICdProps>[] = [
     { key: 'dndHandler', label: '', className: 'w-[40px]' },
-    {
-        key: 'cdId',
-        label: '코드',
-        className: 'w-[100px]',
-        inputType: 'readonly'
-    },
+    { key: 'cdId', label: '코드', className: 'w-[100px]', inputType: 'readonly' },
     { key: 'cdNm', label: '코드명', className: 'w-[200px]', inputType: 'text' },
     { key: 'rm', label: '비고', inputType: 'text' },
-    {
-        key: 'sortOrdr',
-        label: '정렬순서',
-        className: 'text-left w-[100px]',
-        isDndColumn: true
-    },
-    {
-        key: 'useYn',
-        label: '사용여부',
-        className: 'text-left w-[100px]',
-        inputType: 'select'
-    },
+    { key: 'sortOrdr', label: '정렬순서', className: 'text-left w-[100px]', isDndColumn: true },
+    { key: 'useYn', label: '사용여부', className: 'text-left w-[100px]', inputType: 'select' },
     { key: 'minusButton', label: '', className: 'w-[40px]' }
 ]

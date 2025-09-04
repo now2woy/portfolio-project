@@ -1,9 +1,5 @@
 import type { Metadata } from 'next'
-import {
-    dehydrate,
-    HydrationBoundary,
-    QueryClient
-} from '@tanstack/react-query'
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 
 import { postKeys, fetchCdGroups } from '@/queries/CdGroupQuery'
 import { ISearchData, ISearchField } from '@/types/components/SearchType'

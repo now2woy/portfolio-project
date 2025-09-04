@@ -1,20 +1,23 @@
 import React from 'react'
 import { getBoard } from '@/services/server/BoardServerService'
 import { getPost } from '@/services/server/PostServerService'
+import { fetchAtchFile } from '@/services/server/FileServerService'
+
 import { View } from '@/app/posts/[brdId]/client'
 import { formatDate } from '@/utils/DateUtils'
 import { TiptapViewer } from '@/components/TipTaps'
+import { FileViewer } from '@/components/Files/FileViewer'
+import { StaticDetailViewer } from '@/components/Viewers/StaticDetailViewer'
+
+import { IStaticFieldProps } from '@/types/components/ViewType'
+import { IPostProps } from '@/types/apps/PostType'
 
 /**
  * 메타 정보 생성
  * @param param
  * @returns
  */
-export async function generateMetadata({
-    params
-}: {
-    params: { brdId: string; postId: string }
-}) {
+export async function generateMetadata({ params }: { params: { brdId: string; postId: string } }) {
     const { brdId, postId } = await Promise.resolve(params)
     // API 호출
     const board = await getBoard({ brdId })
@@ -31,60 +34,35 @@ export async function generateMetadata({
  * @param param
  * @returns
  */
-export default async function DetailViewer({
-    params
-}: {
-    params: { brdId: string; postId: string }
-}) {
+export default async function DetailViewer({ params }: { params: { brdId: string; postId: string } }) {
     const { brdId, postId } = await Promise.resolve(params)
 
     // API 호출
     const board = await getBoard({ brdId })
     const data = await getPost({ brdId, postId })
+    if (data.atchFileId) {
+        data.files = {
+            atchFileId: data.atchFileId,
+            attchFiles: await fetchAtchFile({ atchFileId: data.atchFileId })
+        }
+    }
+    data.isAttachFiles = data.files?.attchFiles && data.files.attchFiles.length > 0 ? true : false
+
+    // 필드 레이아웃 정의
+    const fields: IStaticFieldProps<IPostProps>[] = [
+        { key: 'postTtl', label: '제목', colSpan: 6 },
+        { key: 'postCtt', label: '내용', colSpan: 6, hasBorderTop: true, render: value => <TiptapViewer content={(value as string) || ''} /> },
+        { key: 'isAttachFiles', label: '첨부파일', colSpan: 6, hasBorderTop: true, render: value => (value ? <FileViewer files={data.files?.attchFiles} /> : <span>첨부된 파일이 없습니다.</span>) },
+        { key: 'insDt', label: '입력일시', colSpan: 3, hasBorderTop: true, render: value => formatDate(value as string) },
+        { key: 'updDt', label: '수정일시', colSpan: 3, hasBorderTop: true, render: value => formatDate(value as string) }
+    ]
 
     return (
         <div className="flex flex-1 flex-col gap-2 p-4">
             <h1 className="mb-4 text-2xl font-bold">{board.brdNm} 상세</h1>
-            <div className="border-gray-250 rounded-lg border px-6">
-                <dl className="grid grid-cols-1 gap-x-4 sm:grid-cols-6">
-                    <div className="px-4 pt-4 pb-2 sm:col-span-3 sm:px-0">
-                        <dt className="text-sm leading-6 font-semibold">
-                            제목
-                        </dt>
-                        <dd className="text-muted-foreground mt-1 mt-2 text-sm leading-6">
-                            {data.postTtl}
-                        </dd>
-                    </div>
-
-                    <div className="border-t px-4 pt-4 pb-2 sm:col-span-6 sm:px-0">
-                        <dt className="text-sm leading-6 font-semibold">
-                            내용
-                        </dt>
-                        <dd className="text-muted-foreground mt-1 mt-2 text-sm leading-6">
-                            <TiptapViewer content={data.postCtt || ''} />
-                        </dd>
-                    </div>
-
-                    <div className="border-t px-4 pt-4 pb-2 sm:col-span-3 sm:px-0">
-                        <dt className="text-sm leading-6 font-semibold">
-                            입력일시
-                        </dt>
-                        <dd className="text-muted-foreground mt-1 mt-2 text-sm leading-6">
-                            {formatDate(data.insDt)}
-                        </dd>
-                    </div>
-
-                    <div className="border-t px-4 pt-4 pb-2 sm:col-span-3 sm:px-0">
-                        <dt className="text-sm leading-6 font-semibold">
-                            수정일시
-                        </dt>
-                        <dd className="text-muted-foreground mt-1 mt-2 text-sm leading-6">
-                            {formatDate(data.updDt)}
-                        </dd>
-                    </div>
-                </dl>
-            </div>
-
+            <StaticDetailViewer<IPostProps>
+                data={data}
+                fields={fields}></StaticDetailViewer>
             <View
                 brdId={brdId}
                 postId={postId}

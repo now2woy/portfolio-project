@@ -69,16 +69,12 @@ export interface IFormFieldProps<T> {
      * 값을 커스텀 렌더링할 함수 (선택 사항).
      * 폼 입력 컴포넌트를 렌더링하거나, 뷰 전용 필드를 렌더링할 때 사용합니다.
      */
-    render?: (
-        value: T[keyof T],
-        item: T,
-        onFieldChange?: (key: keyof T, newValue: unknown) => void
-    ) => React.ReactNode
+    render?: (value: T[keyof T], item: T, onFieldChange?: (key: keyof T, newValue: unknown) => void) => React.ReactNode
     /**
      * 폼 필드의 타입 (예: 'text', 'textarea', 'select', 'viewer' 등)
      * 'viewer'는 뷰 전용 필드를 나타냅니다.
      */
-    type?: 'text' | 'textarea' | 'viewer' | 'select'
+    type?: 'text' | 'textarea' | 'viewer' | 'select' | 'file'
     /**
      * 필드의 필수 여부
      */

@@ -1,8 +1,4 @@
-import {
-    dehydrate,
-    HydrationBoundary,
-    QueryClient
-} from '@tanstack/react-query'
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import { postKeys, fetchPosts } from '@/queries/PostQuery'
 import { getBoard } from '@/services/server/BoardServerService'
 import { ISearchData, ISearchField } from '@/types/components/SearchType'
@@ -36,11 +32,7 @@ const fields: ISearchField[] = [
  * @param param
  * @returns
  */
-export async function generateMetadata({
-    params
-}: {
-    params: { brdId: string }
-}) {
+export async function generateMetadata({ params }: { params: { brdId: string } }) {
     const { brdId } = await Promise.resolve(params)
     const board = await getBoard({ brdId })
 
@@ -55,10 +47,7 @@ export async function generateMetadata({
  * @param param
  * @returns
  */
-export default async function ListViewer({
-    params,
-    searchParams
-}: PostListProps) {
+export default async function ListViewer({ params, searchParams }: PostListProps) {
     const queryClient = new QueryClient()
     const { brdId } = await Promise.resolve(params)
     const { postTtl, postCtt, writerId } = await Promise.resolve(searchParams)

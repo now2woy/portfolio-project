@@ -40,14 +40,19 @@ export async function fetchPostsViaBff({
  */
 export async function insertPostViaBff({
     brdId,
-    data
+    data,
+    atchFileId
 }: {
     brdId: string
     data: IPostProps
+    atchFileId?: number
 }) {
     const res = await fetch(`${BASE_BFF_SERVICE_URL}/${brdId}`, {
         method: 'POST',
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+            ...data,
+            atchFileId
+        })
     })
 
     // 성공인지 확인

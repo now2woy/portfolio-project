@@ -1,32 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import {
-    insertPost,
-    updatePost,
-    deletePost
-} from '@/services/server/PostServerService'
-
-/**
- * POST 방식 처리
- * @param req
- * @returns
- */
-export async function POST(
-    req: NextRequest,
-    { params }: { params: { brdId: string } }
-) {
-    const data = await req.json()
-    const { brdId } = await Promise.resolve(params)
-
-    try {
-        const result = await insertPost({ brdId, data })
-        return NextResponse.json(result)
-    } catch (error) {
-        return NextResponse.json(
-            { ok: false, message: (error as Error).message },
-            { status: 401 }
-        )
-    }
-}
+import { updatePost, deletePost } from '@/services/server/PostServerService'
 
 /**
  * PUT 방식 처리
