@@ -1,4 +1,4 @@
-package kr.co.jineddy.system.entity.cd;
+package kr.co.jineddy.system.entity.atchfile;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,45 +12,57 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 시스템 코드 마스터 Entity
+ * 시스템 첨부 파일 항목 Entity
  */
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(SysCdMstPk.class)
-public class SysCdMst implements Serializable {
+@IdClass(SysAtchFileItmPk.class)
+public class SysAtchFileItm implements Serializable {
 	/**
 	 * 시리얼 버전 ID
 	 */
-	private static final long serialVersionUID = 8527168388333646112L;
+	private static final long serialVersionUID = 2133014358065122750L;
 	/**
-	 * 코드 그룹 ID
+	 * 첨부 파일 ID
 	 */
 	@Id
-	private String groupId;
+	private Long atchFileId;
 	/**
-	 * 코드 ID
+	 * 첨부 파일 순번
 	 */
 	@Id
-	private String cdId;
+	private Long atchFileSeq;
 	/**
-	 * 코드 명
+	 * 첨부 파일 명
 	 */
-	private String cdNm;
+	private String atchFileNm;
 	/**
-	 * 정렬 순서
+	 * 저장 파일 명
 	 */
-	private int sortOrdr;
+	private String saveFileNm;
 	/**
-	 * 사용여부
+	 * 저장 경로
 	 */
-	private String useYn;
+	private String savePath;
 	/**
-	 * 비고
+	 * 확장자
 	 */
-	private String rm;
+	private String ext;
+	/**
+	 * 마임 타입
+	 */
+	private String mimeType;
+	/**
+	 * 파일 크기
+	 */
+	private Long fileSize;
+	/**
+	 * 삭제 여부
+	 */
+	private String delYn;
 	/**
 	 * 입력 일시
 	 */

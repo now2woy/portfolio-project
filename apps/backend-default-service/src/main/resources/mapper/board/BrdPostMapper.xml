@@ -39,6 +39,7 @@
 				, A.post_ctt
 				, A.writer_id
 				, A.view_cnt
+				, A.atch_file_id
 				, A.del_yn
 				, A.del_dt
 				, A.ins_dt

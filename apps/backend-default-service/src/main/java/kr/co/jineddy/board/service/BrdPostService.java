@@ -99,6 +99,7 @@ public class BrdPostService {
 				.postCtt(requestDto.getPostCtt())
 				.writerId(userId)
 				.viewCnt(0)
+				.atchFileId(requestDto.getAtchFileId())
 				.delYn("N")
 				.delDt(null)
 				.insDt(now)
@@ -142,6 +143,7 @@ public class BrdPostService {
 		// 데이터 수정
 		brdPostMst.setPostTtl(requestDto.getPostTtl());
 		brdPostMst.setPostCtt(requestDto.getPostCtt());
+		brdPostMst.setAtchFileId(requestDto.getAtchFileId());
 		brdPostMst.setUpdDt(now);
 		brdPostMst.setUpdId(userId);
 		
@@ -213,6 +215,7 @@ public class BrdPostService {
 				.postCtt(entity.getPostCtt())
 				.writerId(entity.getWriterId())
 				.viewCnt(entity.getViewCnt())
+				.atchFileId(entity.getAtchFileId())
 				.delYn(entity.getDelYn())
 				.delDt(entity.getDelDt())
 				.insDt(entity.getInsDt())

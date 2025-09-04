@@ -23,6 +23,12 @@ spring:
       repositories:
         bootstrap-mode: default
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 jwt:
   secret: ${JWT_SECRET_KEY}
 
@@ -62,6 +68,5 @@ logging:
 # 트랙젝션 관련 로그
     org.springframework.transaction.interceptor: trace
     org.springframework.transaction: DEBUG
-    org.hibernate.resource.transaction: DEBUG
     org.springframework.orm.jpa: DEBUG
     org.springframework.data.jpa.repository.support: DEBUG
