@@ -2,31 +2,10 @@ import { ChevronRight } from 'lucide-react'
 
 import Link from 'next/link'
 
-import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarGroup,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem
-} from '@/components/ui/sidebar'
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger
-} from '@/components/ui/collapsible'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarGroup, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from '@/components/ui/sidebar'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
-import {
-    IconCode,
-    IconAbc,
-    IconNotebook,
-    IconInnerShadowTop
-} from '@tabler/icons-react'
+import { IconCode, IconAbc, IconNotebook, IconInnerShadowTop } from '@tabler/icons-react'
 
 import { SidebarDynamicUser } from '@/components/Sidebars'
 import { IMainMenuProps } from '@/types/components/MenuType'
@@ -51,9 +30,7 @@ export const SidebarMain = async ({ menu }: { menu: IMainMenuProps[] }) => {
                             className="data-[slot=sidebar-menu-button]:!p-1.5">
                             <Link href="/">
                                 <IconInnerShadowTop className="!size-5" />
-                                <span className="text-base font-semibold">
-                                    now2woy&apos;s Potfolio
-                                </span>
+                                <span className="text-base font-semibold">now2woy&apos;s Potfolio</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -64,9 +41,7 @@ export const SidebarMain = async ({ menu }: { menu: IMainMenuProps[] }) => {
                 <SidebarGroup>
                     <SidebarMenu>
                         {menu.map(item => {
-                            const Icon =
-                                iconMap[item.iconCd as keyof typeof iconMap] ||
-                                null
+                            const Icon = iconMap[item.iconCd as keyof typeof iconMap] || null
                             return (
                                 <Collapsible
                                     key={item.menuId}
@@ -75,8 +50,7 @@ export const SidebarMain = async ({ menu }: { menu: IMainMenuProps[] }) => {
                                     className="group/collapsible">
                                     <SidebarMenuItem>
                                         <CollapsibleTrigger asChild>
-                                            <SidebarMenuButton
-                                                tooltip={item.menuNm}>
+                                            <SidebarMenuButton tooltip={item.menuNm}>
                                                 <Icon className="mr-2 h-4 w-4" />
                                                 <span>{item.menuNm}</span>
                                                 <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -86,20 +60,10 @@ export const SidebarMain = async ({ menu }: { menu: IMainMenuProps[] }) => {
                                         <CollapsibleContent>
                                             <SidebarMenuSub>
                                                 {item.children?.map(subItem => (
-                                                    <SidebarMenuSubItem
-                                                        key={subItem.menuId}>
-                                                        <SidebarMenuSubButton
-                                                            asChild>
-                                                            <Link
-                                                                href={
-                                                                    subItem.linkUrl ||
-                                                                    ''
-                                                                }>
-                                                                <span>
-                                                                    {
-                                                                        subItem.menuNm
-                                                                    }
-                                                                </span>
+                                                    <SidebarMenuSubItem key={subItem.menuId}>
+                                                        <SidebarMenuSubButton asChild>
+                                                            <Link href={subItem.linkUrl || ''}>
+                                                                <span>{subItem.menuNm}</span>
                                                             </Link>
                                                         </SidebarMenuSubButton>
                                                     </SidebarMenuSubItem>

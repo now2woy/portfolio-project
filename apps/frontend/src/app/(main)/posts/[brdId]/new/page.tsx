@@ -7,11 +7,7 @@ import { Edit } from '@/app/posts/[brdId]/client'
  * @param param
  * @returns
  */
-export async function generateMetadata({
-    params
-}: {
-    params: { brdId: string }
-}) {
+export async function generateMetadata({ params }: { params: { brdId: string } }) {
     const { brdId } = await Promise.resolve(params)
 
     // API 호출
@@ -28,11 +24,7 @@ export async function generateMetadata({
  * @param param
  * @returns
  */
-export default async function NewViewer({
-    params
-}: {
-    params: { brdId: string }
-}) {
+export default async function NewViewer({ params }: { params: { brdId: string } }) {
     const { brdId } = await Promise.resolve(params)
 
     // API 호출

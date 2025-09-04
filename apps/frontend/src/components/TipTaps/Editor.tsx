@@ -4,14 +4,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { ITipTapEditorProps } from '@/types/TipTapType'
 import { Button } from '@/components/ui/button'
-import {
-    Bold,
-    Italic,
-    Strikethrough,
-    Code,
-    List,
-    ListOrdered
-} from 'lucide-react'
+import { Bold, Italic, Strikethrough, Code, List, ListOrdered } from 'lucide-react'
 
 /**
  * TipTap 에디터
@@ -60,9 +53,7 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                         editor.chain().focus().toggleItalic().run()
                         onUpdate(editor.getHTML())
                     }}
-                    disabled={
-                        !editor.can().chain().focus().toggleItalic().run()
-                    }
+                    disabled={!editor.can().chain().focus().toggleItalic().run()}
                     variant={editor.isActive('italic') ? 'secondary' : 'ghost'}
                     size="sm"
                     type="button">
@@ -73,9 +64,7 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                         editor.chain().focus().toggleStrike().run()
                         onUpdate(editor.getHTML())
                     }}
-                    disabled={
-                        !editor.can().chain().focus().toggleStrike().run()
-                    }
+                    disabled={!editor.can().chain().focus().toggleStrike().run()}
                     variant={editor.isActive('strike') ? 'secondary' : 'ghost'}
                     size="sm"
                     type="button">
@@ -86,12 +75,8 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                         editor.chain().focus().toggleCodeBlock().run()
                         onUpdate(editor.getHTML())
                     }}
-                    disabled={
-                        !editor.can().chain().focus().toggleCodeBlock().run()
-                    }
-                    variant={
-                        editor.isActive('codeBlock') ? 'secondary' : 'ghost'
-                    }
+                    disabled={!editor.can().chain().focus().toggleCodeBlock().run()}
+                    variant={editor.isActive('codeBlock') ? 'secondary' : 'ghost'}
                     size="sm"
                     type="button">
                     <Code className="h-4 w-4" />
@@ -101,12 +86,8 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                         editor.chain().focus().toggleBulletList().run()
                         onUpdate(editor.getHTML())
                     }}
-                    disabled={
-                        !editor.can().chain().focus().toggleBulletList().run()
-                    }
-                    variant={
-                        editor.isActive('bulletList') ? 'secondary' : 'ghost'
-                    }
+                    disabled={!editor.can().chain().focus().toggleBulletList().run()}
+                    variant={editor.isActive('bulletList') ? 'secondary' : 'ghost'}
                     size="sm"
                     type="button">
                     <List className="h-4 w-4" />
@@ -116,12 +97,8 @@ export function TiptapEditor({ content, onUpdate }: ITipTapEditorProps) {
                         editor.chain().focus().toggleOrderedList().run()
                         onUpdate(editor.getHTML())
                     }}
-                    disabled={
-                        !editor.can().chain().focus().toggleOrderedList().run()
-                    }
-                    variant={
-                        editor.isActive('orderedList') ? 'secondary' : 'ghost'
-                    }
+                    disabled={!editor.can().chain().focus().toggleOrderedList().run()}
+                    variant={editor.isActive('orderedList') ? 'secondary' : 'ghost'}
                     size="sm"
                     type="button">
                     <ListOrdered className="h-4 w-4" />

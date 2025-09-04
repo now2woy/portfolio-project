@@ -15,11 +15,7 @@ import { useAuthStore } from '@/stores'
  * @param param
  * @returns
  */
-export const LoginForm = ({
-    authentication
-}: {
-    authentication: authenticationProps
-}) => {
+export const LoginForm = ({ authentication }: { authentication: authenticationProps }) => {
     const [formData, setFormData] = useState<ILoginProps>({
         userId: '',
         pwd: ''
@@ -27,10 +23,7 @@ export const LoginForm = ({
     const router = useRouter()
 
     // 로그인 성공 처리 함수
-    const handleSuccessCallback = (data: {
-        userId: string
-        userNm: string
-    }) => {
+    const handleSuccessCallback = (data: { userId: string; userNm: string }) => {
         // useAuthStore의 setUserInfo 함수를 가져옵니다.
         const { setUserInfo } = useAuthStore.getState()
 
@@ -63,9 +56,7 @@ export const LoginForm = ({
                         type="text"
                         required
                         value={formData.userId}
-                        onChange={e =>
-                            setFormData({ ...formData, userId: e.target.value })
-                        }
+                        onChange={e => setFormData({ ...formData, userId: e.target.value })}
                     />
                 </div>
                 <div className="grid gap-3">
@@ -78,9 +69,7 @@ export const LoginForm = ({
                         type="password"
                         required
                         value={formData.pwd}
-                        onChange={e =>
-                            setFormData({ ...formData, pwd: e.target.value })
-                        }
+                        onChange={e => setFormData({ ...formData, pwd: e.target.value })}
                     />
                 </div>
                 <MutationButton

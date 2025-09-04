@@ -13,9 +13,6 @@ export async function POST(req: NextRequest) {
         const atchFileId = await uploadAtchFile({ data })
         return NextResponse.json(atchFileId)
     } catch (error) {
-        return NextResponse.json(
-            { ok: false, message: (error as Error).message },
-            { status: 401 }
-        )
+        return NextResponse.json({ ok: false, message: (error as Error).message }, { status: 401 })
     }
 }

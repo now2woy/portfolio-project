@@ -1,14 +1,6 @@
 'use client'
 
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious
-} from '@/components/ui/pagination'
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 
 import { IPageResponse } from '@/types/PageType'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -65,19 +57,14 @@ export const GridPagination = <T,>({ data }: { data: IPageResponse<T> }) => {
             <PaginationContent>
                 {showPrevious && (
                     <PaginationItem>
-                        <PaginationPrevious
-                            onClick={() => handlePaginationClick(thisPage - 2)}
-                        />
+                        <PaginationPrevious onClick={() => handlePaginationClick(thisPage - 2)} />
                     </PaginationItem>
                 )}
 
                 {showEllipsisStart && (
                     <>
                         <PaginationItem>
-                            <PaginationLink
-                                onClick={() => handlePaginationClick(1)}>
-                                1
-                            </PaginationLink>
+                            <PaginationLink onClick={() => handlePaginationClick(1)}>1</PaginationLink>
                         </PaginationItem>
                         <PaginationItem>
                             <PaginationEllipsis />
@@ -102,21 +89,14 @@ export const GridPagination = <T,>({ data }: { data: IPageResponse<T> }) => {
                             <PaginationEllipsis />
                         </PaginationItem>
                         <PaginationItem>
-                            <PaginationLink
-                                onClick={() =>
-                                    handlePaginationClick(totalPages)
-                                }>
-                                {totalPages}
-                            </PaginationLink>
+                            <PaginationLink onClick={() => handlePaginationClick(totalPages)}>{totalPages}</PaginationLink>
                         </PaginationItem>
                     </>
                 )}
 
                 {showNext && (
                     <PaginationItem>
-                        <PaginationNext
-                            onClick={() => handlePaginationClick(thisPage)}
-                        />
+                        <PaginationNext onClick={() => handlePaginationClick(thisPage)} />
                     </PaginationItem>
                 )}
             </PaginationContent>

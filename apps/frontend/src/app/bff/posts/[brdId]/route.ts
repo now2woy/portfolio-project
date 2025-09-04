@@ -6,10 +6,7 @@ import { fetchPosts, insertPost } from '@/services/server/PostServerService'
  * @param req
  * @returns
  */
-export async function GET(
-    req: NextRequest,
-    { params }: { params: { brdId: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: { brdId: string } }) {
     const { brdId } = await Promise.resolve(params)
     const query = req.nextUrl.searchParams.toString()
 
@@ -17,10 +14,7 @@ export async function GET(
         const data = await fetchPosts({ brdId, query })
         return NextResponse.json(data)
     } catch (error) {
-        return NextResponse.json(
-            { ok: false, message: (error as Error).message },
-            { status: 401 }
-        )
+        return NextResponse.json({ ok: false, message: (error as Error).message }, { status: 401 })
     }
 }
 
@@ -29,10 +23,7 @@ export async function GET(
  * @param req
  * @returns
  */
-export async function POST(
-    req: NextRequest,
-    { params }: { params: { brdId: string } }
-) {
+export async function POST(req: NextRequest, { params }: { params: { brdId: string } }) {
     const data = await req.json()
     const { brdId } = await Promise.resolve(params)
 
@@ -40,9 +31,6 @@ export async function POST(
         const result = await insertPost({ brdId, data })
         return NextResponse.json(result)
     } catch (error) {
-        return NextResponse.json(
-            { ok: false, message: (error as Error).message },
-            { status: 401 }
-        )
+        return NextResponse.json({ ok: false, message: (error as Error).message }, { status: 401 })
     }
 }

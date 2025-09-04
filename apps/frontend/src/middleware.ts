@@ -22,15 +22,9 @@ export const middleware = async (request: NextRequest) => {
     const accessToken = request.cookies.get('accessToken')?.value
     const refreshToken = request.cookies.get('refreshToken')?.value
     const pathname = request.nextUrl.pathname
-    const isAuthPage =
-        pathname.startsWith('/login') || pathname.startsWith('/signup')
+    const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup')
 
-    console.log(
-        'pathname : ',
-        pathname,
-        accessToken,
-        isTokenExpired({ token: accessToken || '' })
-    )
+    console.log('pathname : ', pathname, accessToken, isTokenExpired({ token: accessToken || '' }))
 
     const newResponse = NextResponse.next()
 
@@ -49,17 +43,14 @@ export const middleware = async (request: NextRequest) => {
         const newAccessToken = await getAccessToken(async () => {
             let newAccessToken = ''
             // 리프레시 토큰으로 새로운 액세스 토큰 발급 시도
-            const refreshResponse = await fetch(
-                `${BASE}/api/system/v1/auths/re-issue`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${accessToken}`,
-                        Cookie: `refreshToken=${refreshToken}`
-                    }
+            const refreshResponse = await fetch(`${BASE}/api/system/v1/auths/re-issue`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                    Cookie: `refreshToken=${refreshToken}`
                 }
-            )
+            })
 
             if (refreshResponse.ok) {
                 let sameSite: sameSiteType = 'lax'
@@ -93,9 +84,7 @@ export const middleware = async (request: NextRequest) => {
         // 액세스 토큰이 없을 경우 갱신 실패
         if (newAccessToken === '') {
             // 갱신 실패 시 쿠키 초기화 후 로그인 페이지로 리디렉션
-            const newResponse = NextResponse.redirect(
-                new URL('/login', request.url)
-            )
+            const newResponse = NextResponse.redirect(new URL('/login', request.url))
             newResponse.cookies.delete('accessToken')
             newResponse.cookies.delete('refreshToken')
             return newResponse

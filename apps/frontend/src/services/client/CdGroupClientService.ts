@@ -56,13 +56,7 @@ export async function insertCdGroupViaBff({ data }: { data: ICdGroupProps }) {
  * @param query
  * @returns
  */
-export async function updateCdGroupAndCdsViaBff({
-    groupId,
-    data
-}: {
-    groupId: string
-    data: ICdGroupProps
-}) {
+export async function updateCdGroupAndCdsViaBff({ groupId, data }: { groupId: string; data: ICdGroupProps }) {
     const res = await fetch(`${BASE_BFF_SERVICE_URL}/${groupId}/cds`, {
         method: 'PUT',
         body: JSON.stringify(data)
@@ -86,11 +80,7 @@ export async function updateCdGroupAndCdsViaBff({
  * @param query
  * @returns
  */
-export async function deleteCdGroupAndCdsViaBff({
-    groupId
-}: {
-    groupId: string
-}) {
+export async function deleteCdGroupAndCdsViaBff({ groupId }: { groupId: string }) {
     const res = await fetch(`${BASE_BFF_SERVICE_URL}/${groupId}`, {
         method: 'DELETE'
     })

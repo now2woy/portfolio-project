@@ -12,13 +12,7 @@ const BASE_SERVICE_URL = '/api/system/v1/auths'
  * @param params
  * @returns
  */
-export const fetchLogin = async ({
-    authentication,
-    data
-}: {
-    authentication: authenticationProps
-    data: ILoginProps
-}) => {
+export const fetchLogin = async ({ authentication, data }: { authentication: authenticationProps; data: ILoginProps }) => {
     const api = createApi(authentication)
     const res = await api.post(`${BASE_SERVICE_URL}/login`, data)
     return res.data

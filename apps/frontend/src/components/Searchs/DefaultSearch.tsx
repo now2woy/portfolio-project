@@ -6,13 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { RotateCcw } from 'lucide-react'
 import { ISearchProps, ISearchData } from '@/types/components/SearchType'
 
@@ -88,8 +82,7 @@ export const DefaultSearch = ({ initialData, fields }: ISearchProps) => {
                                         onChange={e =>
                                             setFilters({
                                                 ...filters,
-                                                [field.key as string]:
-                                                    e.target.value
+                                                [field.key as string]: e.target.value
                                             })
                                         }
                                         onKeyDown={e => {
@@ -105,9 +98,7 @@ export const DefaultSearch = ({ initialData, fields }: ISearchProps) => {
                                 /** 셀렉트 필드 일 경우 */
                                 field.type === 'select' && (
                                     <Select
-                                        defaultValue={
-                                            filters[field.key as string]
-                                        }
+                                        defaultValue={filters[field.key as string]}
                                         onValueChange={value =>
                                             setFilters({
                                                 ...filters,

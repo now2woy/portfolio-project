@@ -9,11 +9,7 @@ import { Edit } from '@/app/cd-groups/client'
  * @param param
  * @returns
  */
-export async function generateMetadata({
-    params
-}: {
-    params: { groupId: string }
-}) {
+export async function generateMetadata({ params }: { params: { groupId: string } }) {
     const { groupId } = await Promise.resolve(params)
     // API 호출
     const cdGroup = await getCdGroup({ groupId })
@@ -29,11 +25,7 @@ export async function generateMetadata({
  * @param param
  * @returns
  */
-export default async function EditViewer({
-    params
-}: {
-    params: { groupId: string }
-}) {
+export default async function EditViewer({ params }: { params: { groupId: string } }) {
     const { groupId } = await Promise.resolve(params)
 
     // API 호출

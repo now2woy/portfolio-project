@@ -1,29 +1,10 @@
 'use client'
 
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow
-} from '@/components/ui/table'
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from '@/components/ui/select'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 
-import {
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
-    ColumnDef
-} from '@tanstack/react-table'
+import { flexRender, getCoreRowModel, useReactTable, ColumnDef } from '@tanstack/react-table'
 import { IPageResponse } from '@/types/PageType'
 import { IColumnConfig } from '@/types/ColumnDefType'
 import { CreateColumns } from './CreateColumnDef'
@@ -36,15 +17,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
  * @param param
  * @returns
  */
-export function Grid<T>({
-    data,
-    columnsConfig,
-    newUrl
-}: {
-    data: IPageResponse<T>
-    columnsConfig: IColumnConfig[]
-    newUrl?: string
-}) {
+export function Grid<T>({ data, columnsConfig, newUrl }: { data: IPageResponse<T>; columnsConfig: IColumnConfig[]; newUrl?: string }) {
     // 컬럼 정의 정보 생성
     const columns: ColumnDef<T>[] = CreateColumns(columnsConfig)
     const searchParams = useSearchParams()
@@ -78,9 +51,7 @@ export function Grid<T>({
     return (
         <div className="w-full">
             <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="text-muted-foreground flex-1 text-sm">
-                    전체 {table.getFilteredRowModel().rows.length}건
-                </div>
+                <div className="text-muted-foreground flex-1 text-sm">전체 {table.getFilteredRowModel().rows.length}건</div>
 
                 <div className="space-x-2">
                     <Select
@@ -113,13 +84,7 @@ export function Grid<T>({
                                             style={{
                                                 minWidth: header.getSize()
                                             }}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                      header.column.columnDef
-                                                          .header,
-                                                      header.getContext()
-                                                  )}
+                                            {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                                         </TableHead>
                                     )
                                 })}
@@ -132,16 +97,9 @@ export function Grid<T>({
                             table.getRowModel().rows.map(row => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={
-                                        row.getIsSelected() && 'selected'
-                                    }>
+                                    data-state={row.getIsSelected() && 'selected'}>
                                     {row.getVisibleCells().map(cell => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
+                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                                     ))}
                                 </TableRow>
                             ))
@@ -166,9 +124,7 @@ export function Grid<T>({
                 <div className="space-x-2">
                     {newUrl && (
                         <Link href={newUrl}>
-                            <Button className="cursor-pointer text-white">
-                                신규
-                            </Button>
+                            <Button className="cursor-pointer text-white">신규</Button>
                         </Link>
                     )}
                 </div>

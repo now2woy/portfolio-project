@@ -1,12 +1,5 @@
 import Link from 'next/link'
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { IStaticTableProps } from '@/types/components/GridType'
 
@@ -15,11 +8,7 @@ import { IStaticTableProps } from '@/types/components/GridType'
  * @param param
  * @returns
  */
-export function StaticTable<T extends Record<string, unknown>>({
-    data,
-    columns,
-    title
-}: IStaticTableProps<T>) {
+export function StaticTable<T extends Record<string, unknown>>({ data, columns, title }: IStaticTableProps<T>) {
     return (
         <>
             <dt className="flex items-center justify-between text-sm leading-6 font-semibold">
@@ -49,18 +38,7 @@ export function StaticTable<T extends Record<string, unknown>>({
                                             <Button
                                                 variant="link"
                                                 className="text-muted-foreground w-fit px-0 text-left">
-                                                <Link
-                                                    href={
-                                                        column.linkUrl +
-                                                        column.linkKeys
-                                                            .map(
-                                                                key =>
-                                                                    `/${item[key]}`
-                                                            )
-                                                            .join('')
-                                                    }>
-                                                    {String(item[column.key])}
-                                                </Link>
+                                                <Link href={column.linkUrl + column.linkKeys.map(key => `/${item[key]}`).join('')}>{String(item[column.key])}</Link>
                                             </Button>
                                         ) : (
                                             String(item[column.key])

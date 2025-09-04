@@ -19,9 +19,7 @@ export const postKeys = {
  * @param context
  * @returns
  */
-export const fetchCdGroups = async (
-    context: QueryFunctionContext<ReturnType<typeof postKeys.lists>>
-): Promise<IPageResponse<ICdGroupProps>> => {
+export const fetchCdGroups = async (context: QueryFunctionContext<ReturnType<typeof postKeys.lists>>): Promise<IPageResponse<ICdGroupProps>> => {
     const [_, __, query] = context.queryKey
     const res = await fetchCdGroupsViaBff(query)
 

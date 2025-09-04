@@ -87,9 +87,7 @@ export function MutationButton<TData, TError, TVariables>({
                     }
                 } catch (e) {
                     // 첨부파일 업로드 실패 시, useMutation의 onError로 오류를 전달
-                    const error = new Error(
-                        '첨부파일 업로드 중 오류가 발생했습니다.'
-                    ) as TError
+                    const error = new Error('첨부파일 업로드 중 오류가 발생했습니다.') as TError
                     throw error
                 }
             }

@@ -10,9 +10,7 @@ const BASE_API_SERVICE_URL = '/api/system/v1/menus'
  */
 export const fetchAllMenus = async () => {
     try {
-        return await apiFetch<IMainMenuProps[]>(
-            `${BASE_API_SERVICE_URL}/all-menus`
-        )
+        return await apiFetch<IMainMenuProps[]>(`${BASE_API_SERVICE_URL}/all-menus`)
     } catch (error) {
         throw error
     }
@@ -25,9 +23,7 @@ export const fetchAllMenus = async () => {
  */
 export const fetchUserMenus = async () => {
     try {
-        return await apiFetch<IMainMenuProps[]>(
-            `${BASE_API_SERVICE_URL}/user-menus`
-        )
+        return await apiFetch<IMainMenuProps[]>(`${BASE_API_SERVICE_URL}/user-menus`)
     } catch (error) {
         throw error
     }

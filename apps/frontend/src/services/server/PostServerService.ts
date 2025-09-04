@@ -12,17 +12,9 @@ const BASE_API_SERVICE_URL = '/api/board/v1/posts'
  * @param query
  * @returns
  */
-export async function fetchPosts({
-    brdId,
-    query
-}: {
-    brdId: string
-    query?: string
-}) {
+export async function fetchPosts({ brdId, query }: { brdId: string; query?: string }) {
     try {
-        return apiFetch<IPageResponse<IPostProps>>(
-            `${BASE_API_SERVICE_URL}/${brdId}?${query}`
-        )
+        return apiFetch<IPageResponse<IPostProps>>(`${BASE_API_SERVICE_URL}/${brdId}?${query}`)
     } catch (error) {
         throw error
     }
@@ -33,17 +25,9 @@ export async function fetchPosts({
  * @param query
  * @returns
  */
-export async function getPost({
-    brdId,
-    postId
-}: {
-    brdId: string
-    postId: string
-}) {
+export async function getPost({ brdId, postId }: { brdId: string; postId: string }) {
     try {
-        return apiFetch<IPostProps>(
-            `${BASE_API_SERVICE_URL}/${brdId}/${postId}`
-        )
+        return apiFetch<IPostProps>(`${BASE_API_SERVICE_URL}/${brdId}/${postId}`)
     } catch (error) {
         throw error
     }
@@ -54,13 +38,7 @@ export async function getPost({
  * @param query
  * @returns
  */
-export async function insertPost({
-    brdId,
-    data
-}: {
-    brdId: string
-    data: IPostProps
-}) {
+export async function insertPost({ brdId, data }: { brdId: string; data: IPostProps }) {
     try {
         return apiFetch<IPostProps>(`${BASE_API_SERVICE_URL}/${brdId}`, {
             method: 'POST',
@@ -76,23 +54,12 @@ export async function insertPost({
  * @param query
  * @returns
  */
-export async function updatePost({
-    brdId,
-    postId,
-    data
-}: {
-    brdId: string
-    postId: string
-    data: IPostProps
-}) {
+export async function updatePost({ brdId, postId, data }: { brdId: string; postId: string; data: IPostProps }) {
     try {
-        return apiFetch<IPostProps>(
-            `${BASE_API_SERVICE_URL}/${brdId}/${postId}`,
-            {
-                method: 'PUT',
-                body: data
-            }
-        )
+        return apiFetch<IPostProps>(`${BASE_API_SERVICE_URL}/${brdId}/${postId}`, {
+            method: 'PUT',
+            body: data
+        })
     } catch (error) {
         throw error
     }
@@ -103,20 +70,11 @@ export async function updatePost({
  * @param query
  * @returns
  */
-export async function deletePost({
-    brdId,
-    postId
-}: {
-    brdId: string
-    postId: string
-}) {
+export async function deletePost({ brdId, postId }: { brdId: string; postId: string }) {
     try {
-        return apiFetch<IPostProps>(
-            `${BASE_API_SERVICE_URL}/${brdId}/${postId}`,
-            {
-                method: 'DELETE'
-            }
-        )
+        return apiFetch<IPostProps>(`${BASE_API_SERVICE_URL}/${brdId}/${postId}`, {
+            method: 'DELETE'
+        })
     } catch (error) {
         throw error
     }

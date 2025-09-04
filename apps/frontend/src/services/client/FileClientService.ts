@@ -10,11 +10,7 @@ const BASE_BFF_SERVICE_URL = '/bff/attch-files'
  * @param query
  * @returns
  */
-export async function fetchAtchFileViaBff({
-    atchFileId
-}: {
-    atchFileId: number
-}) {
+export async function fetchAtchFileViaBff({ atchFileId }: { atchFileId: number }) {
     const res = await fetch(`${BASE_BFF_SERVICE_URL}/${atchFileId}`)
 
     // 성공인지 확인

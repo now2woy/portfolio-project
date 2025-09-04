@@ -2,10 +2,7 @@ import type { Metadata } from 'next'
 
 import { fetchTokenIssuedCounts } from '@/services/server/UserServerService'
 import { AreaChartCostom } from '@/components/Charts/LinerAreaChart'
-import {
-    BarChartCustom,
-    BarChartHorizontalCustom
-} from '@/components/Charts/BarChart'
+import { BarChartCustom, BarChartHorizontalCustom } from '@/components/Charts/BarChart'
 import { PieChartCustom } from '@/components/Charts/PieChart'
 import { ChartConfig } from '@/components/ui/chart'
 import { IChartSeriesProps } from '@/types/components/ChartType'
@@ -49,9 +46,7 @@ const Home = async () => {
 
     return (
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">
-                now2woy&apos;s Portfolio
-            </h1>
+            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">now2woy&apos;s Portfolio</h1>
             <div className="grid auto-rows-min gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <AreaChartCostom
                     title="Access Token 발행 수"

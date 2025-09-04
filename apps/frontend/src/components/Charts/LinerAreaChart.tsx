@@ -2,19 +2,8 @@
 
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle
-} from '@/components/ui/card'
-import {
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent
-} from '@/components/ui/chart'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { IAreaChartProps } from '@/types/components/ChartType'
 
 /**
@@ -22,15 +11,7 @@ import { IAreaChartProps } from '@/types/components/ChartType'
  * @param param
  * @returns
  */
-export function AreaChartCostom({
-    title,
-    description,
-    chartData,
-    chartConfig,
-    xDataKey,
-    chartSeries,
-    footerDescription
-}: IAreaChartProps) {
+export function AreaChartCostom({ title, description, chartData, chartConfig, xDataKey, chartSeries, footerDescription }: IAreaChartProps) {
     return (
         <Card>
             <CardHeader>
@@ -75,9 +56,7 @@ export function AreaChartCostom({
             </CardContent>
             {footerDescription && (
                 <CardFooter className="flex-col items-start gap-2 text-sm">
-                    <div className="text-muted-foreground leading-none">
-                        {footerDescription}
-                    </div>
+                    <div className="text-muted-foreground leading-none">{footerDescription}</div>
                 </CardFooter>
             )}
         </Card>

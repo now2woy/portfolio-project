@@ -13,9 +13,6 @@ export async function PUT(req: NextRequest) {
         const result = await updateAllMenus({ data })
         return NextResponse.json(result)
     } catch (error) {
-        return NextResponse.json(
-            { ok: false, message: (error as Error).message },
-            { status: 401 }
-        )
+        return NextResponse.json({ ok: false, message: (error as Error).message }, { status: 401 })
     }
 }

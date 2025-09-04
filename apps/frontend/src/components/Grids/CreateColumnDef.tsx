@@ -2,12 +2,7 @@ import Link from 'next/link'
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
-import {
-    DropdownMenu,
-    DropdownMenuTrigger,
-    DropdownMenuContent,
-    DropdownMenuItem
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { MoreHorizontal } from 'lucide-react'
 import { IColumnConfig } from '@/types/ColumnDefType'
 import { formatDate } from '@/utils/DateUtils'
@@ -26,23 +21,15 @@ export const CreateColumns = <T,>(config: IColumnConfig[]): ColumnDef<T>[] => {
                     id: 'select',
                     header: ({ table }) => (
                         <Checkbox
-                            checked={
-                                table.getIsAllPageRowsSelected() ||
-                                (table.getIsSomePageRowsSelected() &&
-                                    'indeterminate')
-                            }
-                            onCheckedChange={value =>
-                                table.toggleAllPageRowsSelected(!!value)
-                            }
+                            checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+                            onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
                             aria-label="Select all"
                         />
                     ),
                     cell: ({ row }) => (
                         <Checkbox
                             checked={row.getIsSelected()}
-                            onCheckedChange={value =>
-                                row.toggleSelected(!!value)
-                            }
+                            onCheckedChange={value => row.toggleSelected(!!value)}
                             aria-label="Select row"
                         />
                     ),
@@ -59,51 +46,23 @@ export const CreateColumns = <T,>(config: IColumnConfig[]): ColumnDef<T>[] => {
 
                 return {
                     accessorKey: columnConfig.key,
-                    header: () => (
-                        <div
-                            className={
-                                columnConfig.align
-                                    ? `text-${columnConfig.align}`
-                                    : ''
-                            }>
-                            {columnConfig.label}
-                        </div>
-                    ),
-                    cell: ({ row }) => (
-                        <div
-                            className={
-                                columnConfig.align
-                                    ? `text-${columnConfig.align}`
-                                    : ''
-                            }>
-                            {row.getValue(columnConfig.key!)}
-                        </div>
-                    ),
+                    header: () => <div className={columnConfig.align ? `text-${columnConfig.align}` : ''}>{columnConfig.label}</div>,
+                    cell: ({ row }) => <div className={columnConfig.align ? `text-${columnConfig.align}` : ''}>{row.getValue(columnConfig.key!)}</div>,
                     size: columnConfig.size
                 }
 
             // 링크 타입 처리
             case 'link':
                 // 필수값 체크
-                if (
-                    !columnConfig.key ||
-                    !columnConfig.linkBaseUrl ||
-                    !columnConfig.linkKeys
-                ) {
-                    throw new Error(
-                        "Link type requires 'key', 'linkBaseUrl', and 'linkKeys'"
-                    )
+                if (!columnConfig.key || !columnConfig.linkBaseUrl || !columnConfig.linkKeys) {
+                    throw new Error("Link type requires 'key', 'linkBaseUrl', and 'linkKeys'")
                 }
 
                 return {
                     accessorKey: columnConfig.key,
                     header: columnConfig.label,
                     cell: ({ row }) => {
-                        const linkUrl = columnConfig.linkKeys
-                            ?.map(
-                                k => (row.original as Record<string, string>)[k]
-                            )
-                            .join('/')
+                        const linkUrl = columnConfig.linkKeys?.map(k => (row.original as Record<string, string>)[k]).join('/')
                         const finalUrl = `${columnConfig.linkBaseUrl}/${linkUrl}${query ? '?' + query : ''}`
 
                         return (
@@ -111,9 +70,7 @@ export const CreateColumns = <T,>(config: IColumnConfig[]): ColumnDef<T>[] => {
                                 <Button
                                     variant="link"
                                     className="text-foreground w-fit px-0 text-left">
-                                    <Link href={finalUrl}>
-                                        {row.getValue(columnConfig.key!)}
-                                    </Link>
+                                    <Link href={finalUrl}>{row.getValue(columnConfig.key!)}</Link>
                                 </Button>
                             </div>
                         )
@@ -129,13 +86,7 @@ export const CreateColumns = <T,>(config: IColumnConfig[]): ColumnDef<T>[] => {
                 return {
                     accessorKey: columnConfig.key,
                     header: columnConfig.label,
-                    cell: ({ row }) => (
-                        <div>
-                            {row.getValue(columnConfig.key!) === 'Y'
-                                ? '예'
-                                : '아니오'}
-                        </div>
-                    ),
+                    cell: ({ row }) => <div>{row.getValue(columnConfig.key!) === 'Y' ? '예' : '아니오'}</div>,
                     size: columnConfig.size
                 }
 
@@ -148,25 +99,15 @@ export const CreateColumns = <T,>(config: IColumnConfig[]): ColumnDef<T>[] => {
                     accessorKey: columnConfig.key,
                     header: columnConfig.label,
                     cell: ({ row }) => {
-                        return (
-                            <div>
-                                {formatDate(row.getValue(columnConfig.key!))}
-                            </div>
-                        )
+                        return <div>{formatDate(row.getValue(columnConfig.key!))}</div>
                     },
                     size: columnConfig.size
                 }
 
             // TODO 수정이 아닌 기능은 수정 해야 함 / 액션 타입 처리
             case 'actions':
-                if (
-                    !columnConfig.linkBaseUrl ||
-                    !columnConfig.linkKeys ||
-                    !columnConfig.menu
-                ) {
-                    throw new Error(
-                        "Actions type requires 'linkBaseUrl', 'linkKeys', and 'menu'"
-                    )
+                if (!columnConfig.linkBaseUrl || !columnConfig.linkKeys || !columnConfig.menu) {
+                    throw new Error("Actions type requires 'linkBaseUrl', 'linkKeys', and 'menu'")
                 }
                 return {
                     id: 'actions',
@@ -179,27 +120,14 @@ export const CreateColumns = <T,>(config: IColumnConfig[]): ColumnDef<T>[] => {
                                     <Button
                                         variant="ghost"
                                         className="h-8 w-8 cursor-pointer p-0">
-                                        <span className="sr-only">
-                                            메뉴 열기
-                                        </span>
+                                        <span className="sr-only">메뉴 열기</span>
                                         <MoreHorizontal className="h-4 w-4" />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
                                     {columnConfig.menu!.map(item => {
                                         if (item === '수정') {
-                                            const linkUrl =
-                                                columnConfig.linkKeys
-                                                    ?.map(
-                                                        k =>
-                                                            (
-                                                                row.original as Record<
-                                                                    string,
-                                                                    string
-                                                                >
-                                                            )[k]
-                                                    )
-                                                    .join('/')
+                                            const linkUrl = columnConfig.linkKeys?.map(k => (row.original as Record<string, string>)[k]).join('/')
                                             const finalUrl = `${columnConfig.linkBaseUrl}/${linkUrl}${columnConfig.linkAddUrl ? columnConfig.linkAddUrl : ''}${query ? '?' + query : ''}`
                                             return (
                                                 <DropdownMenuItem
@@ -213,11 +141,7 @@ export const CreateColumns = <T,>(config: IColumnConfig[]): ColumnDef<T>[] => {
                                                 </DropdownMenuItem>
                                             )
                                         } else {
-                                            return (
-                                                <DropdownMenuItem key={item}>
-                                                    {item}
-                                                </DropdownMenuItem>
-                                            )
+                                            return <DropdownMenuItem key={item}>{item}</DropdownMenuItem>
                                         }
                                     })}
                                 </DropdownMenuContent>

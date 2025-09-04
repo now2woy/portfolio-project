@@ -11,13 +11,7 @@ const BASE_BFF_SERVICE_URL = '/bff/posts'
  * @param query
  * @returns
  */
-export async function fetchPostsViaBff({
-    brdId,
-    query
-}: {
-    brdId: string
-    query?: string
-}) {
+export async function fetchPostsViaBff({ brdId, query }: { brdId: string; query?: string }) {
     const res = await fetch(`${BASE_BFF_SERVICE_URL}/${brdId}?${query}`)
 
     // 성공인지 확인
@@ -38,15 +32,7 @@ export async function fetchPostsViaBff({
  * @param query
  * @returns
  */
-export async function insertPostViaBff({
-    brdId,
-    data,
-    atchFileId
-}: {
-    brdId: string
-    data: IPostProps
-    atchFileId?: number
-}) {
+export async function insertPostViaBff({ brdId, data, atchFileId }: { brdId: string; data: IPostProps; atchFileId?: number }) {
     const res = await fetch(`${BASE_BFF_SERVICE_URL}/${brdId}`, {
         method: 'POST',
         body: JSON.stringify({
@@ -73,15 +59,7 @@ export async function insertPostViaBff({
  * @param query
  * @returns
  */
-export async function updatePostViaBff({
-    brdId,
-    postId,
-    data
-}: {
-    brdId: string
-    postId: string
-    data: IPostProps
-}) {
+export async function updatePostViaBff({ brdId, postId, data }: { brdId: string; postId: string; data: IPostProps }) {
     const res = await fetch(`${BASE_BFF_SERVICE_URL}/${brdId}/${postId}`, {
         method: 'PUT',
         body: JSON.stringify(data)
@@ -105,13 +83,7 @@ export async function updatePostViaBff({
  * @param query
  * @returns
  */
-export async function deletePostViaBff({
-    brdId,
-    postId
-}: {
-    brdId: string
-    postId: string
-}) {
+export async function deletePostViaBff({ brdId, postId }: { brdId: string; postId: string }) {
     const res = await fetch(`${BASE_BFF_SERVICE_URL}/${brdId}/${postId}`, {
         method: 'DELETE'
     })

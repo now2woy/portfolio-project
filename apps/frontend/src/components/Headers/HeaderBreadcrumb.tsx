@@ -1,14 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 
 import { IMainMenuProps } from '@/types/components/MenuType'
 
@@ -25,9 +18,7 @@ export const HeaderBreadcrumb = ({ menus }: { menus: IMainMenuProps[] }) => {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <BreadcrumbLink href={breadcrumbItems[0].url}>
-                        {breadcrumbItems[0].title}
-                    </BreadcrumbLink>
+                    <BreadcrumbLink href={breadcrumbItems[0].url}>{breadcrumbItems[0].title}</BreadcrumbLink>
                 </BreadcrumbItem>
 
                 <BreadcrumbSeparator />
@@ -45,13 +36,7 @@ export const HeaderBreadcrumb = ({ menus }: { menus: IMainMenuProps[] }) => {
  * @param param0
  * @returns
  */
-function getBreadcrumbItems({
-    menus,
-    pathname
-}: {
-    menus: IMainMenuProps[]
-    pathname: string | null
-}) {
+function getBreadcrumbItems({ menus, pathname }: { menus: IMainMenuProps[]; pathname: string | null }) {
     // 부모 메뉴와 현재 메뉴를 찾기 위한 루프
     for (const parentMenu of menus) {
         // 하위 메뉴가 없을 경우 생략

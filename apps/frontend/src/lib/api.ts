@@ -15,8 +15,7 @@ export const createApi = (authentication?: authenticationProps) => {
     })
 
     if (authentication?.accessToken) {
-        api.defaults.headers.common['Authorization'] =
-            `Bearer ${authentication?.accessToken}`
+        api.defaults.headers.common['Authorization'] = `Bearer ${authentication?.accessToken}`
     }
 
     return api
@@ -34,8 +33,7 @@ const refreshAccessToken = async (authentication?: authenticationProps) => {
     })
 
     if (authentication?.accessToken) {
-        refreshApi.defaults.headers.common['Authorization'] =
-            `Bearer ${authentication?.accessToken}`
+        refreshApi.defaults.headers.common['Authorization'] = `Bearer ${authentication?.accessToken}`
     }
 
     const res = await refreshApi.post(`/api/system/v1/auths/re-issue`)

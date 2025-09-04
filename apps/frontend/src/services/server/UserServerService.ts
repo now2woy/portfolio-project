@@ -12,7 +12,5 @@ const BASE_API_SERVICE_URL = '/api/system/v1/users'
  * @returns
  */
 export async function fetchTokenIssuedCounts() {
-    return apiFetch<IUserChartProps[]>(
-        `${BASE_API_SERVICE_URL}/token-issued-counts`
-    )
+    return apiFetch<IUserChartProps[]>(`${BASE_API_SERVICE_URL}/token-issued-counts`)
 }

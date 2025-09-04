@@ -5,9 +5,7 @@ let refreshPromise: Promise<string> | null = null
  * @param refreshFn
  * @returns
  */
-export async function getAccessToken(
-    refreshFn: () => Promise<string>
-): Promise<string> {
+export async function getAccessToken(refreshFn: () => Promise<string>): Promise<string> {
     if (!refreshPromise) {
         refreshPromise = refreshFn().finally(() => {
             refreshPromise = null

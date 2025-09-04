@@ -19,13 +19,7 @@ import { IFormFieldProps } from '@/types/components/ViewType'
  * @param param
  * @returns
  */
-export const MenuViewer = ({
-    menuData,
-    fields
-}: {
-    menuData: IMainMenuProps[]
-    fields: IFormFieldProps<IMainMenuProps>[]
-}) => {
+export const MenuViewer = ({ menuData, fields }: { menuData: IMainMenuProps[]; fields: IFormFieldProps<IMainMenuProps>[] }) => {
     const [menuItems, setMenuItems] = useState<IMainMenuProps[]>(menuData)
     const [selectedId, setSelectedId] = useState<string | null>(null)
     const router = useRouter()
@@ -37,9 +31,7 @@ export const MenuViewer = ({
             id: menu.menuId,
             name: menu.menuNm,
             onClick: () => setSelectedId(menu.menuId),
-            children: hasChildren
-                ? menu.children?.map(convertToTreeDataItem)
-                : undefined,
+            children: hasChildren ? menu.children?.map(convertToTreeDataItem) : undefined,
             draggable: true
         }
     }
@@ -80,30 +72,14 @@ export const MenuViewer = ({
                             onDocumentDrag={(sourceItem, targetItem) => {
                                 // 여기서 setMenuItems 사용 가능
                                 setMenuItems(prev => {
-                                    const [moved, removed] = findAndRemove(
-                                        prev,
-                                        sourceItem.id
-                                    )
+                                    const [moved, removed] = findAndRemove(prev, sourceItem.id)
 
                                     if (!moved) {
                                         return prev
                                     }
-                                    const isBack = isSiblingAndInFront(
-                                        sourceItem.id,
-                                        targetItem.id,
-                                        prev
-                                    )
-                                    const isLeaf = hasLinkUrl(
-                                        prev,
-                                        targetItem.id
-                                    )
-                                    const inserted = insertInto(
-                                        removed,
-                                        targetItem.id,
-                                        moved,
-                                        isLeaf,
-                                        isBack
-                                    )
+                                    const isBack = isSiblingAndInFront(sourceItem.id, targetItem.id, prev)
+                                    const isLeaf = hasLinkUrl(prev, targetItem.id)
+                                    const inserted = insertInto(removed, targetItem.id, moved, isLeaf, isBack)
                                     return reassignSortOrd(inserted)
                                 })
                             }}
@@ -149,10 +125,7 @@ export const MenuViewer = ({
  * @param updatedData
  * @returns
  */
-const updateMenuItem = (
-    items: IMainMenuProps[],
-    updatedData: IMainMenuProps
-): IMainMenuProps[] => {
+const updateMenuItem = (items: IMainMenuProps[], updatedData: IMainMenuProps): IMainMenuProps[] => {
     // 배열의 각 항목을 순회하며 새로운 배열을 반환합니다.
     return items.map(item => {
         // 현재 항목의 menuId가 업데이트할 데이터의 menuId와 일치하면
@@ -180,10 +153,7 @@ const updateMenuItem = (
  * @param id
  * @returns [ 삭제된Item, 삭제된 목록 ]
  */
-const findAndRemove = (
-    items: IMainMenuProps[],
-    id: string
-): [IMainMenuProps | null, IMainMenuProps[]] => {
+const findAndRemove = (items: IMainMenuProps[], id: string): [IMainMenuProps | null, IMainMenuProps[]] => {
     for (let i = 0; i < items.length; i++) {
         const item = items[i]
 
@@ -215,13 +185,7 @@ const findAndRemove = (
  * @param isLeaf
  * @returns
  */
-const insertInto = (
-    items: IMainMenuProps[],
-    targetId: string,
-    newItem: IMainMenuProps,
-    isLeaf: boolean,
-    isBack: boolean
-): IMainMenuProps[] => {
+const insertInto = (items: IMainMenuProps[], targetId: string, newItem: IMainMenuProps, isLeaf: boolean, isBack: boolean): IMainMenuProps[] => {
     // 재귀를 위한 내부 함수
     function insertRecursive(currentItems: IMainMenuProps[]): IMainMenuProps[] {
         const newItems: IMainMenuProps[] = []
@@ -245,10 +209,7 @@ const insertInto = (
                     // 최하위 노드가 아닌 경우, 해당 노드의 자식으로 newItem을 추가
                     newItems.push({
                         ...item,
-                        children: [
-                            ...(item.children || []),
-                            { ...newItem, upMenuId: item.menuId }
-                        ]
+                        children: [...(item.children || []), { ...newItem, upMenuId: item.menuId }]
                     })
                 }
             } else {
@@ -289,10 +250,7 @@ const reassignSortOrd = (items: IMainMenuProps[]): IMainMenuProps[] => {
  * @param selectedMenuId
  * @returns
  */
-const findSelectedMenu = (
-    menuData: IMainMenuProps[],
-    selectedMenuId: string
-): IMainMenuProps | null => {
+const findSelectedMenu = (menuData: IMainMenuProps[], selectedMenuId: string): IMainMenuProps | null => {
     for (const menu of menuData) {
         // 현재 메뉴가 찾는 menuId인지 확인합니다.
         if (menu.menuId === selectedMenuId) {
@@ -318,10 +276,7 @@ const findSelectedMenu = (
  * @param selectedMenuId
  * @returns
  */
-const hasLinkUrl = (
-    menuData: IMainMenuProps[],
-    selectedMenuId: string
-): boolean => {
+const hasLinkUrl = (menuData: IMainMenuProps[], selectedMenuId: string): boolean => {
     // menuData 중 selectedMenuId에 해당하는 데이터 조회
     const selectedMenu = findSelectedMenu(menuData, selectedMenuId)
 
@@ -342,23 +297,15 @@ const hasLinkUrl = (
  * @param menuData
  * @returns
  */
-function isSiblingAndInFront(
-    sourceMenuId: string,
-    targetMenuId: string,
-    menuData: IMainMenuProps[]
-): boolean {
+function isSiblingAndInFront(sourceMenuId: string, targetMenuId: string, menuData: IMainMenuProps[]): boolean {
     // 재귀를 위한 내부 함수
     function findAndCompare(items: IMainMenuProps[]): boolean {
         if (!items || items.length === 0) {
             return false
         }
 
-        const sourceIndex = items.findIndex(
-            item => item.menuId === sourceMenuId
-        )
-        const targetIndex = items.findIndex(
-            item => item.menuId === targetMenuId
-        )
+        const sourceIndex = items.findIndex(item => item.menuId === sourceMenuId)
+        const targetIndex = items.findIndex(item => item.menuId === targetMenuId)
 
         // 두 ID가 모두 이 배열에 존재하고, sourceIndex가 targetIndex보다 작으면 true 반환
         if (sourceIndex !== -1 && targetIndex !== -1) {

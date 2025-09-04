@@ -11,17 +11,7 @@ import { cn } from '@/lib/utils'
  * @param param
  * @returns
  */
-export const LinkButton = ({
-    name,
-    variant,
-    className,
-    url
-}: {
-    name: string
-    variant?: buttonVariantType
-    className?: string
-    url?: string
-}) => {
+export const LinkButton = ({ name, variant, className, url }: { name: string; variant?: buttonVariantType; className?: string; url?: string }) => {
     const router = useRouter()
 
     const handleLink = (event: React.MouseEvent<HTMLButtonElement>) => {

@@ -6,10 +6,7 @@ import { updateCdGroupAndCds } from '@/services/server/CdGroupServerService'
  * @param req
  * @returns
  */
-export async function PUT(
-    req: NextRequest,
-    { params }: { params: { groupId: string } }
-) {
+export async function PUT(req: NextRequest, { params }: { params: { groupId: string } }) {
     const data = await req.json()
     const { groupId } = await Promise.resolve(params)
 
@@ -17,9 +14,6 @@ export async function PUT(
         const cds = await updateCdGroupAndCds({ groupId, data })
         return NextResponse.json(cds)
     } catch (error) {
-        return NextResponse.json(
-            { ok: false, message: (error as Error).message },
-            { status: 401 }
-        )
+        return NextResponse.json({ ok: false, message: (error as Error).message }, { status: 401 })
     }
 }

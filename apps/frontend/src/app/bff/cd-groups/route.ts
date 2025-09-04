@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import {
-    fetchCdGroups,
-    insertCdGroup
-} from '@/services/server/CdGroupServerService'
+import { fetchCdGroups, insertCdGroup } from '@/services/server/CdGroupServerService'
 
 /**
  * GET 방식 처리
@@ -16,10 +13,7 @@ export async function GET(req: NextRequest) {
         const cds = await fetchCdGroups({ query })
         return NextResponse.json(cds)
     } catch (error) {
-        return NextResponse.json(
-            { ok: false, message: (error as Error).message },
-            { status: 401 }
-        )
+        return NextResponse.json({ ok: false, message: (error as Error).message }, { status: 401 })
     }
 }
 
@@ -35,9 +29,6 @@ export async function POST(req: NextRequest) {
         const cds = await insertCdGroup({ data })
         return NextResponse.json(cds)
     } catch (error) {
-        return NextResponse.json(
-            { ok: false, message: (error as Error).message },
-            { status: 401 }
-        )
+        return NextResponse.json({ ok: false, message: (error as Error).message }, { status: 401 })
     }
 }

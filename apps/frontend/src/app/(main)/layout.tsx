@@ -8,9 +8,7 @@ import { ThemeProvider } from '@/components/Themes'
 import { IMainMenuProps } from '@/types/components/MenuType'
 import { fetchUserMenus } from '@/services/server/MenuServerService'
 
-const RootLayout = async ({
-    children
-}: Readonly<{ children: React.ReactNode }>) => {
+const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
     const menu: IMainMenuProps[] = await fetchUserMenus()
 
     return (
@@ -35,9 +33,7 @@ const RootLayout = async ({
                             <div className="container">
                                 <HeaderMain menu={menu} />
                                 <div className="flex flex-1 flex-col">
-                                    <div className="@container/main flex flex-1 flex-col gap-2">
-                                        {children}
-                                    </div>
+                                    <div className="@container/main flex flex-1 flex-col gap-2">{children}</div>
                                 </div>
                             </div>
                         </SidebarInset>

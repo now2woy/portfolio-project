@@ -3,20 +3,8 @@
 import * as React from 'react'
 import { Label, Pie, PieChart } from 'recharts'
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle
-} from '@/components/ui/card'
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent
-} from '@/components/ui/chart'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { IPieChartProps } from '@/types/components/ChartType'
 
 /**
@@ -24,20 +12,9 @@ import { IPieChartProps } from '@/types/components/ChartType'
  * @param param0
  * @returns
  */
-export function PieChartCustom<T>({
-    title,
-    description,
-    chartData,
-    dataKey,
-    nameKey,
-    label,
-    footerDescription
-}: IPieChartProps<T>) {
+export function PieChartCustom<T>({ title, description, chartData, dataKey, nameKey, label, footerDescription }: IPieChartProps<T>) {
     const totalValue = React.useMemo(() => {
-        return chartData.reduce(
-            (acc, curr) => acc + (curr[dataKey] as number),
-            0
-        )
+        return chartData.reduce((acc, curr) => acc + (curr[dataKey] as number), 0)
     }, [chartData, dataKey])
 
     // 동적으로 색상 팔레트 생성
@@ -81,11 +58,7 @@ export function PieChartCustom<T>({
                             strokeWidth={5}>
                             <Label
                                 content={({ viewBox }) => {
-                                    if (
-                                        viewBox &&
-                                        'cx' in viewBox &&
-                                        'cy' in viewBox
-                                    ) {
+                                    if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
                                         return (
                                             <text
                                                 x={viewBox.cx}
@@ -115,9 +88,7 @@ export function PieChartCustom<T>({
             </CardContent>
             {footerDescription && (
                 <CardFooter className="flex-col items-start gap-2 text-sm">
-                    <div className="text-muted-foreground leading-none">
-                        {footerDescription}
-                    </div>
+                    <div className="text-muted-foreground leading-none">{footerDescription}</div>
                 </CardFooter>
             )}
         </Card>

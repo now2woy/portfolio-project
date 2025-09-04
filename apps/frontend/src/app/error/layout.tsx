@@ -1,8 +1,6 @@
 import '../globals.css'
 
-const RootLayout = async ({
-    children
-}: Readonly<{ children: React.ReactNode }>) => {
+const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
     return (
         <html
             lang="ko"

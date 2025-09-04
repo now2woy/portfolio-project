@@ -8,15 +8,9 @@ const BASE_API_SERVICE_URL = '/api/system/v1/attch-files'
  * @param param
  * @returns
  */
-export const fetchAtchFile = async ({
-    atchFileId
-}: {
-    atchFileId?: number
-}) => {
+export const fetchAtchFile = async ({ atchFileId }: { atchFileId?: number }) => {
     try {
-        return await apiFetch<IAtchFileProps[]>(
-            `${BASE_API_SERVICE_URL}/${atchFileId}`
-        )
+        return await apiFetch<IAtchFileProps[]>(`${BASE_API_SERVICE_URL}/${atchFileId}`)
     } catch (error) {
         throw error
     }
@@ -27,17 +21,9 @@ export const fetchAtchFile = async ({
  * @param param
  * @returns
  */
-export const download = async ({
-    atchFileId,
-    atchFileSeq
-}: {
-    atchFileId: number
-    atchFileSeq: number
-}) => {
+export const download = async ({ atchFileId, atchFileSeq }: { atchFileId: number; atchFileSeq: number }) => {
     try {
-        return await apiFetchResponse(
-            `${BASE_API_SERVICE_URL}/${atchFileId}/${atchFileSeq}`
-        )
+        return await apiFetchResponse(`${BASE_API_SERVICE_URL}/${atchFileId}/${atchFileSeq}`)
     } catch (error) {
         throw error
     }

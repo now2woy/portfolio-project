@@ -15,11 +15,7 @@ import { IStaticFieldProps } from '@/types/components/ViewType'
  * @param param
  * @returns
  */
-export async function generateMetadata({
-    params
-}: {
-    params: { groupId: string }
-}) {
+export async function generateMetadata({ params }: { params: { groupId: string } }) {
     const { groupId } = await Promise.resolve(params)
     // API 호출
     const cdGroup = await getCdGroup({ groupId })
@@ -35,11 +31,7 @@ export async function generateMetadata({
  * @param param
  * @returns
  */
-export default async function DetailViewer({
-    params
-}: {
-    params: { groupId: string }
-}) {
+export default async function DetailViewer({ params }: { params: { groupId: string } }) {
     const { groupId } = await Promise.resolve(params)
 
     // API 호출
@@ -98,9 +90,7 @@ export default async function DetailViewer({
 
     return (
         <div className="flex flex-1 flex-col gap-2 p-4">
-            <h1 className="mb-4 text-2xl font-bold">
-                코드 그룹 &apos;{cdGroup.groupNm}&apos; 상세
-            </h1>
+            <h1 className="mb-4 text-2xl font-bold">코드 그룹 &apos;{cdGroup.groupNm}&apos; 상세</h1>
             <StaticDetailViewer<ICdGroupProps>
                 data={cdGroup}
                 fields={fields}>

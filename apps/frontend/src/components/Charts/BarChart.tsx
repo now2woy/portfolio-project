@@ -1,19 +1,8 @@
 'use client'
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle
-} from '@/components/ui/card'
-import {
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent
-} from '@/components/ui/chart'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { IAreaChartProps } from '@/types/components/ChartType'
 
 /**
@@ -21,15 +10,7 @@ import { IAreaChartProps } from '@/types/components/ChartType'
  * @param param
  * @returns
  */
-export function BarChartCustom({
-    title,
-    description,
-    chartData,
-    chartConfig,
-    xDataKey,
-    chartSeries,
-    footerDescription
-}: IAreaChartProps) {
+export function BarChartCustom({ title, description, chartData, chartConfig, xDataKey, chartSeries, footerDescription }: IAreaChartProps) {
     return (
         <Card>
             <CardHeader>
@@ -66,9 +47,7 @@ export function BarChartCustom({
             </CardContent>
             {footerDescription && (
                 <CardFooter className="flex-col items-start gap-2 text-sm">
-                    <div className="text-muted-foreground leading-none">
-                        {footerDescription}
-                    </div>
+                    <div className="text-muted-foreground leading-none">{footerDescription}</div>
                 </CardFooter>
             )}
         </Card>
@@ -80,16 +59,7 @@ export function BarChartCustom({
  * @param param
  * @returns
  */
-export function BarChartHorizontalCustom({
-    title,
-    description,
-    chartData,
-    chartConfig,
-    xDataKey,
-    yDataKey,
-    chartSeries,
-    footerDescription
-}: IAreaChartProps) {
+export function BarChartHorizontalCustom({ title, description, chartData, chartConfig, xDataKey, yDataKey, chartSeries, footerDescription }: IAreaChartProps) {
     return (
         <Card>
             <CardHeader>
@@ -133,9 +103,7 @@ export function BarChartHorizontalCustom({
             </CardContent>
             {footerDescription && (
                 <CardFooter className="flex-col items-start gap-2 text-sm">
-                    <div className="text-muted-foreground leading-none">
-                        {footerDescription}
-                    </div>
+                    <div className="text-muted-foreground leading-none">{footerDescription}</div>
                 </CardFooter>
             )}
         </Card>

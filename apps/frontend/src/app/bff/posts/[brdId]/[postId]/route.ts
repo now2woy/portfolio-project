@@ -6,10 +6,7 @@ import { updatePost, deletePost } from '@/services/server/PostServerService'
  * @param req
  * @returns
  */
-export async function PUT(
-    req: NextRequest,
-    { params }: { params: { brdId: string; postId: string } }
-) {
+export async function PUT(req: NextRequest, { params }: { params: { brdId: string; postId: string } }) {
     const data = await req.json()
     const { brdId, postId } = await Promise.resolve(params)
 
@@ -17,10 +14,7 @@ export async function PUT(
         const result = await updatePost({ brdId, postId, data })
         return NextResponse.json(result)
     } catch (error) {
-        return NextResponse.json(
-            { ok: false, message: (error as Error).message },
-            { status: 401 }
-        )
+        return NextResponse.json({ ok: false, message: (error as Error).message }, { status: 401 })
     }
 }
 
@@ -29,19 +23,13 @@ export async function PUT(
  * @param req
  * @returns
  */
-export async function DELETE(
-    req: NextRequest,
-    { params }: { params: { brdId: string; postId: string } }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: { brdId: string; postId: string } }) {
     const { brdId, postId } = await Promise.resolve(params)
 
     try {
         const result = await deletePost({ brdId, postId })
         return NextResponse.json(result)
     } catch (error) {
-        return NextResponse.json(
-            { ok: false, message: (error as Error).message },
-            { status: 401 }
-        )
+        return NextResponse.json({ ok: false, message: (error as Error).message }, { status: 401 })
     }
 }

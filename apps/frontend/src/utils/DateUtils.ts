@@ -4,10 +4,7 @@
  * @param format "YYYY/MM/DD HH:mm:SS" 또는 "YYYY/MM/DD"
  * @returns 포맷된 날짜 문자열, str이 없으면 ""
  */
-export function formatDate(
-    str?: string | null,
-    format: string = 'YYYY/MM/DD HH:mm:SS'
-): string {
+export function formatDate(str?: string | null, format: string = 'YYYY/MM/DD HH:mm:SS'): string {
     if (!str) return '-'
 
     const date = new Date(str)

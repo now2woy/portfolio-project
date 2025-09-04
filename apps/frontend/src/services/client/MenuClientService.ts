@@ -10,11 +10,7 @@ const BASE_BFF_SERVICE_URL = '/bff/menus'
  * @param query
  * @returns
  */
-export async function updateAllMenusViaBff({
-    data
-}: {
-    data: IMainMenuProps[]
-}) {
+export async function updateAllMenusViaBff({ data }: { data: IMainMenuProps[] }) {
     const res = await fetch(`${BASE_BFF_SERVICE_URL}`, {
         method: 'PUT',
         body: JSON.stringify(data)

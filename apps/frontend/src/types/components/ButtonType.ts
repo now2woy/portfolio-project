@@ -6,15 +6,7 @@ import { IFileComponentProps } from '@/types/components/FileType'
 /**
  * 버튼 컴포넌트의 variant 타입 정의
  */
-export type buttonVariantType =
-    | 'link'
-    | 'default'
-    | 'destructive'
-    | 'outline'
-    | 'secondary'
-    | 'ghost'
-    | null
-    | undefined
+export type buttonVariantType = 'link' | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | null | undefined
 
 /**
  * MutationButton이 받을 props의 타입 정의

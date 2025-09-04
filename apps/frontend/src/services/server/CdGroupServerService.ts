@@ -17,9 +17,7 @@ const CD_API_SERVICE_URL = '/api/system/v1/cds'
  * @returns
  */
 export async function fetchCdGroups({ query }: { query?: string }) {
-    return apiFetch<IPageResponse<ICdGroupProps>>(
-        `${BASE_API_SERVICE_URL}?${query}`
-    )
+    return apiFetch<IPageResponse<ICdGroupProps>>(`${BASE_API_SERVICE_URL}?${query}`)
 }
 
 /**
@@ -42,9 +40,7 @@ export const fetchCds = async ({ groupId }: { groupId: string }) => {
  */
 export const getCdGroup = async ({ groupId }: { groupId: string }) => {
     try {
-        return await apiFetch<ICdGroupProps>(
-            `${BASE_API_SERVICE_URL}/${groupId}`
-        )
+        return await apiFetch<ICdGroupProps>(`${BASE_API_SERVICE_URL}/${groupId}`)
     } catch (error) {
         throw error
     }
@@ -71,21 +67,12 @@ export const insertCdGroup = async ({ data }: { data: ICdGroupProps }) => {
  * @param params
  * @returns
  */
-export const updateCdGroup = async ({
-    groupId,
-    data
-}: {
-    groupId: string
-    data: ICdGroupProps
-}) => {
+export const updateCdGroup = async ({ groupId, data }: { groupId: string; data: ICdGroupProps }) => {
     try {
-        return await apiFetch<ICdGroupProps>(
-            `${BASE_API_SERVICE_URL}/${groupId}`,
-            {
-                method: 'PUT',
-                body: data
-            }
-        )
+        return await apiFetch<ICdGroupProps>(`${BASE_API_SERVICE_URL}/${groupId}`, {
+            method: 'PUT',
+            body: data
+        })
     } catch (error) {
         throw error
     }
@@ -96,21 +83,12 @@ export const updateCdGroup = async ({
  * @param params
  * @returns
  */
-export const updateCdGroupAndCds = async ({
-    groupId,
-    data
-}: {
-    groupId: string
-    data: ICdGroupProps
-}) => {
+export const updateCdGroupAndCds = async ({ groupId, data }: { groupId: string; data: ICdGroupProps }) => {
     try {
-        return await apiFetch<ICdGroupProps>(
-            `${BASE_API_SERVICE_URL}/${groupId}/cds`,
-            {
-                method: 'PUT',
-                body: data
-            }
-        )
+        return await apiFetch<ICdGroupProps>(`${BASE_API_SERVICE_URL}/${groupId}/cds`, {
+            method: 'PUT',
+            body: data
+        })
     } catch (error) {
         throw error
     }
