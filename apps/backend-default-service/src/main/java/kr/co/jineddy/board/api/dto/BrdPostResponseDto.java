@@ -19,11 +19,11 @@ public class BrdPostResponseDto implements Serializable {
 	/**
 	 * 게시글 ID
 	 */
-	private int postId;
+	private Integer postId;
 	/**
 	 * 게시판 ID
 	 */
-	private int brdId;
+	private Integer brdId;
 	/**
 	 * 게시글 제목
 	 */
@@ -39,7 +39,11 @@ public class BrdPostResponseDto implements Serializable {
 	/**
 	 * 조회 건수
 	 */
-	private int viewCnt;
+	private Integer viewCnt;
+	/**
+	 * 첨부 파일 ID
+	 */
+	private Integer atchFileId;
 	/**
 	 * 삭제 여부
 	 */

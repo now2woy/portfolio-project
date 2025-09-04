@@ -1,56 +1,40 @@
-package kr.co.jineddy.system.entity.cd;
+package kr.co.jineddy.system.entity.atchfile;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 시스템 코드 마스터 Entity
+ * 시스템 첨부 파일 마스터 Entity
  */
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(SysCdMstPk.class)
-public class SysCdMst implements Serializable {
+public class SysAtchFileMst implements Serializable {
 	/**
 	 * 시리얼 버전 ID
 	 */
-	private static final long serialVersionUID = 8527168388333646112L;
+	private static final long serialVersionUID = 5513999483206891292L;
 	/**
-	 * 코드 그룹 ID
+	 * 첨부 파일 ID
 	 */
 	@Id
-	private String groupId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long atchFileId;
 	/**
-	 * 코드 ID
-	 */
-	@Id
-	private String cdId;
-	/**
-	 * 코드 명
-	 */
-	private String cdNm;
-	/**
-	 * 정렬 순서
-	 */
-	private int sortOrdr;
-	/**
-	 * 사용여부
+	 * 사용 여부
 	 */
 	private String useYn;
-	/**
-	 * 비고
-	 */
-	private String rm;
 	/**
 	 * 입력 일시
 	 */
