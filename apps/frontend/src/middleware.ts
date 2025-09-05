@@ -24,7 +24,7 @@ export const middleware = async (request: NextRequest) => {
     const pathname = request.nextUrl.pathname
     const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup')
 
-    console.log('pathname : ', pathname, accessToken, isTokenExpired({ token: accessToken || '' }))
+    // console.log('pathname : ', pathname, accessToken, isTokenExpired({ token: accessToken || '' }))
 
     const newResponse = NextResponse.next()
 

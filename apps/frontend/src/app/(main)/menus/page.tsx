@@ -8,48 +8,12 @@ import { IMainMenuProps } from '@/types/components/MenuType'
 
 // 입력 / 수정 필드 레이아웃 정의
 const fields: IFormFieldProps<IMainMenuProps>[] = [
-    {
-        key: 'menuId',
-        label: '메뉴ID',
-        colSpan: 6,
-        type: 'viewer',
-        required: false
-    },
-    {
-        key: 'upMenuId',
-        label: '상위메뉴ID',
-        colSpan: 6,
-        type: 'viewer',
-        required: false
-    },
-    {
-        key: 'menuNm',
-        label: '메뉴명',
-        colSpan: 6,
-        type: 'text',
-        required: true
-    },
-    {
-        key: 'linkUrl',
-        label: '링크URL',
-        colSpan: 6,
-        type: 'text',
-        required: false
-    },
-    {
-        key: 'iconCd',
-        label: '아이콘',
-        colSpan: 6,
-        type: 'text',
-        required: false
-    },
-    {
-        key: 'sortOrd',
-        label: '정렬순서',
-        colSpan: 6,
-        type: 'viewer',
-        required: false
-    },
+    { key: 'menuId', label: '메뉴ID', colSpan: 6, type: 'viewer', required: false, hasBorderTop: false },
+    { key: 'upMenuId', label: '상위메뉴ID', colSpan: 6, type: 'viewer', required: false },
+    { key: 'menuNm', label: '메뉴명', colSpan: 6, type: 'text', required: true },
+    { key: 'linkUrl', label: '링크URL', colSpan: 6, type: 'text', required: false },
+    { key: 'iconCd', label: '아이콘', colSpan: 6, type: 'text', required: false },
+    { key: 'sortOrd', label: '정렬순서', colSpan: 6, type: 'viewer', required: false },
     {
         key: 'useYn',
         label: '사용여부',
@@ -61,20 +25,8 @@ const fields: IFormFieldProps<IMainMenuProps>[] = [
             { value: 'N', label: '아니오' }
         ]
     },
-    {
-        key: 'insDt',
-        label: '입력일시',
-        colSpan: 6,
-        type: 'viewer',
-        required: false
-    },
-    {
-        key: 'updDt',
-        label: '수정일시',
-        colSpan: 6,
-        type: 'viewer',
-        required: false
-    }
+    { key: 'insDt', label: '입력일시', colSpan: 3, type: 'viewer', dataType: 'date', format: 'YYYY/MM/DD HH:mm:SS' },
+    { key: 'updDt', label: '수정일시', colSpan: 3, type: 'viewer', dataType: 'date', format: 'YYYY/MM/DD HH:mm:SS' }
 ]
 
 /**

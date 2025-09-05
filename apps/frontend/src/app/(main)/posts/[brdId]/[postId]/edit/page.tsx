@@ -2,7 +2,6 @@ import React from 'react'
 import { getBoard } from '@/services/server/BoardServerService'
 import { getPost } from '@/services/server/PostServerService'
 import { fetchAtchFile } from '@/services/server/FileServerService'
-
 import { Edit } from '@/app/posts/[brdId]/client'
 
 /**
@@ -43,15 +42,14 @@ export default async function EditViewer({ params }: { params: { brdId: string; 
     data.isAttachFiles = data.files?.attchFiles && data.files.attchFiles.length > 0 ? true : false
 
     return (
-        <form>
-            <div className="flex flex-1 flex-col gap-2 p-4">
-                <h1 className="mb-4 text-2xl font-bold">{board.brdNm} 수정</h1>
-                <Edit
-                    brdId={brdId}
-                    postId={postId}
-                    data={data}
-                />
-            </div>
-        </form>
+        <div className="flex flex-1 flex-col gap-2 p-4">
+            <h1 className="mb-4 text-2xl font-bold">{board.brdNm} 수정</h1>
+            <Edit
+                brdId={brdId}
+                postId={postId}
+                data={data}
+                board={board}
+            />
+        </div>
     )
 }

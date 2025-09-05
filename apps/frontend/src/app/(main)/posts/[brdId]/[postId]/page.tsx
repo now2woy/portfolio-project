@@ -50,11 +50,11 @@ export default async function DetailViewer({ params }: { params: { brdId: string
 
     // 필드 레이아웃 정의
     const fields: IStaticFieldProps<IPostProps>[] = [
-        { key: 'postTtl', label: '제목', colSpan: 6 },
-        { key: 'postCtt', label: '내용', colSpan: 6, hasBorderTop: true, render: value => <TiptapViewer content={(value as string) || ''} /> },
-        { key: 'isAttachFiles', label: '첨부파일', colSpan: 6, hasBorderTop: true, render: value => (value ? <FileViewer files={data.files?.attchFiles} /> : <span>첨부된 파일이 없습니다.</span>) },
-        { key: 'insDt', label: '입력일시', colSpan: 3, hasBorderTop: true, render: value => formatDate(value as string) },
-        { key: 'updDt', label: '수정일시', colSpan: 3, hasBorderTop: true, render: value => formatDate(value as string) }
+        { key: 'postTtl', label: '제목', colSpan: 6, hasBorderTop: false },
+        { key: 'postCtt', label: '내용', colSpan: 6, render: value => <TiptapViewer content={(value as string) || ''} /> },
+        { key: 'isAttachFiles', label: '첨부파일', colSpan: 6, render: value => (value ? <FileViewer files={data.files?.attchFiles} /> : <span>첨부된 파일이 없습니다.</span>), isVisibility: board.atchFileYn === 'Y' },
+        { key: 'insDt', label: '입력일시', colSpan: 3, render: value => formatDate(value as string) },
+        { key: 'updDt', label: '수정일시', colSpan: 3, render: value => formatDate(value as string) }
     ]
 
     return (

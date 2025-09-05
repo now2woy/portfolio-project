@@ -109,8 +109,7 @@ export const MenuViewer = ({ menuData, fields }: { menuData: IMainMenuProps[]; f
                         mutationFn={updateAllMenusViaBff}
                         variables={{ data: menuItems }}
                         queryKeyToInvalidate={[]}
-                        onSuccessCallback={handleCallback}
-                        onErrorCallback={handleCallback}>
+                        onSuccessCallback={handleCallback}>
                         변경사항저장
                     </MutationButton>
                 </div>

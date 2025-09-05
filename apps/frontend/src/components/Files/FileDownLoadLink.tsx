@@ -1,5 +1,7 @@
 'use client'
 
+import { Button } from '../ui/button'
+
 /**
  * 첨부파일 다운로드 링크를 생성한다.
  * @param param
@@ -12,5 +14,12 @@ export const FileDownLoadLink = ({ atchFileId, atchFileSeq, atchFileNm }: { atch
         window.location.href = url
     }
 
-    return <button onClick={handleClick}>{atchFileNm}</button>
+    return (
+        <Button
+            variant="link"
+            className="text-foreground cursor-pointer px-0"
+            onClick={handleClick}>
+            {atchFileNm}
+        </Button>
+    )
 }

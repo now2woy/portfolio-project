@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Input } from '@/components/ui/input'
@@ -20,6 +20,7 @@ export const LoginForm = ({ authentication }: { authentication: authenticationPr
         userId: '',
         pwd: ''
     })
+    const formRef = useRef(null)
     const router = useRouter()
 
     // 로그인 성공 처리 함수
@@ -40,7 +41,10 @@ export const LoginForm = ({ authentication }: { authentication: authenticationPr
     }
 
     return (
-        <form className="flex flex-col gap-6">
+        <form
+            className="flex flex-col gap-6"
+            ref={formRef}
+            onSubmit={e => e.preventDefault()}>
             <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Login to your account</h1>
                 <p className="text-muted-foreground text-sm text-balance">
@@ -78,8 +82,7 @@ export const LoginForm = ({ authentication }: { authentication: authenticationPr
                     variables={{ authentication, data: formData }}
                     queryKeyToInvalidate={['ALL']}
                     onSuccessCallback={handleSuccessCallback}
-                    onErrorCallback={handleErrorCallback}
-                    isSubmit={true}>
+                    formRef={formRef}>
                     Login
                 </MutationButton>
                 {/*

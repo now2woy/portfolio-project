@@ -40,51 +40,28 @@ export default async function DetailViewer({ params }: { params: { groupId: stri
 
     // 필드 레이아웃 정의
     const fields: IStaticFieldProps<ICdGroupProps>[] = [
-        { key: 'groupId', label: '코드그룹ID', colSpan: 3 },
-        { key: 'groupNm', label: '코드그룹명', colSpan: 3 },
+        { key: 'groupId', label: '코드그룹ID', colSpan: 3, hasBorderTop: false },
+        { key: 'groupNm', label: '코드그룹명', colSpan: 3, hasBorderTop: false },
         { key: 'dataTyCd', label: '데이터타입', colSpan: 3 },
         { key: 'lt', label: '최대길이', colSpan: 3 },
         {
             key: 'dc',
             label: '설명',
             colSpan: 6,
-            hasBorderTop: true,
             render: value => <TiptapViewer content={(value as string) || ''} />
         },
         { key: 'useYn', label: '사용여부', colSpan: 3 },
         { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3 },
-        {
-            key: 'insDt',
-            label: '입력일시',
-            colSpan: 3,
-            hasBorderTop: true,
-            render: value => formatDate(value as string)
-        },
-        {
-            key: 'updDt',
-            label: '수정일시',
-            colSpan: 3,
-            hasBorderTop: true,
-            render: value => formatDate(value as string)
-        }
+        { key: 'insDt', label: '입력일시', colSpan: 3, render: value => formatDate(value as string) },
+        { key: 'updDt', label: '수정일시', colSpan: 3, render: value => formatDate(value as string) }
     ]
 
     // 하단 테이블 컬럼 정보 정의
     const columns: IStaticColumnProps<ICdProps>[] = [
         { key: 'cdId', label: '코드', className: 'w-[100px]' },
-        {
-            key: 'cdNm',
-            label: '코드명',
-            className: 'w-[200px]',
-            linkUrl: '/cds/',
-            linkKeys: ['groupId', 'cdId']
-        },
+        { key: 'cdNm', label: '코드명', className: 'w-[200px]', linkUrl: '/cds/', linkKeys: ['groupId', 'cdId'] },
         { key: 'rm', label: '비고' },
-        {
-            key: 'sortOrdr',
-            label: '정렬순서',
-            className: 'text-left w-[100px]'
-        },
+        { key: 'sortOrdr', label: '정렬순서', className: 'text-left w-[100px]' },
         { key: 'useYn', label: '사용여부', className: 'text-left w-[100px]' }
     ]
 

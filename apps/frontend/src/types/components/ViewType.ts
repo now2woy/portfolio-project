@@ -32,6 +32,10 @@ export interface IStaticFieldProps<T> {
      * 값을 커스텀 렌더링할 함수 (선택 사항)
      */
     render?: (value: T[keyof T], item: T) => React.ReactNode
+    /**
+     * 보기 여부
+     */
+    isVisibility?: boolean
 }
 
 /**
@@ -66,21 +70,28 @@ export interface IFormFieldProps<T> {
      */
     hasBorderTop?: boolean
     /**
-     * 값을 커스텀 렌더링할 함수 (선택 사항).
-     * 폼 입력 컴포넌트를 렌더링하거나, 뷰 전용 필드를 렌더링할 때 사용합니다.
-     */
-    render?: (value: T[keyof T], item: T, onFieldChange?: (key: keyof T, newValue: unknown) => void) => React.ReactNode
-    /**
      * 폼 필드의 타입 (예: 'text', 'textarea', 'select', 'viewer' 등)
      * 'viewer'는 뷰 전용 필드를 나타냅니다.
      */
-    type?: 'text' | 'textarea' | 'viewer' | 'select' | 'file'
+    type?: 'text' | 'textarea' | 'viewer' | 'select' | 'file' | 'tiptap'
+    /**
+     * 데이터 타입
+     */
+    dataType?: 'string' | 'number' | 'date'
     /**
      * 필드의 필수 여부
      */
     required?: boolean
     /**
+     * 필드의 포멧
+     */
+    format?: string
+    /**
      * 폼 타입이 select일 경우 옵션 값들
      */
     options?: { value: string; label: string }[]
+    /**
+     * 보기 여부
+     */
+    isVisibility?: boolean
 }

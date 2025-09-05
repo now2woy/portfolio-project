@@ -31,7 +31,7 @@ async function getTokensFromCookies(): Promise<string> {
  * @param param1
  * @returns
  */
-export async function apiFetch<T>(path: string, { method = 'GET', headers = {}, body, next, cache = 'no-store', timeoutMs = 8000, withAuth = true }: ApiOptions = {}): Promise<T> {
+export async function apiFetch<T>(path: string, { method = 'GET', headers = {}, body, next = { revalidate: 0 }, cache = 'no-store', timeoutMs = 8000, withAuth = true }: ApiOptions = {}): Promise<T> {
     const res = await apiFetchResponse(path, {
         method,
         headers,
@@ -66,7 +66,7 @@ export async function apiFetch<T>(path: string, { method = 'GET', headers = {}, 
  * @param param1
  * @returns
  */
-export async function apiFetchResponse<T>(path: string, { method = 'GET', headers = {}, body, next, cache = 'no-store', timeoutMs = 8000, withAuth = true }: ApiOptions = {}): Promise<Response> {
+export async function apiFetchResponse<T>(path: string, { method = 'GET', headers = {}, body, next = { revalidate: 0 }, cache = 'no-store', timeoutMs = 8000, withAuth = true }: ApiOptions = {}): Promise<Response> {
     const controller = new AbortController()
     const t = setTimeout(() => controller.abort(), timeoutMs)
     const url = path.startsWith('http') ? path : `${BASE}${path}`

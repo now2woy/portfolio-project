@@ -33,14 +33,12 @@ export default async function EditViewer({ params }: { params: { groupId: string
     const cds = await fetchCds({ groupId })
 
     return (
-        <form>
-            <div className="flex flex-1 flex-col gap-2 p-4">
-                <h1 className="mb-4 text-2xl font-bold">{`코드 그룹 ( ${cdGroup.groupNm}) 수정`}</h1>
-                <Edit
-                    groupId={groupId}
-                    data={{ ...cdGroup, cds: cds }}
-                />
-            </div>
-        </form>
+        <div className="flex flex-1 flex-col gap-2 p-4">
+            <h1 className="mb-4 text-2xl font-bold">{`코드 그룹 ( ${cdGroup.groupNm}) 수정`}</h1>
+            <Edit
+                groupId={groupId}
+                data={{ ...cdGroup, cds: cds }}
+            />
+        </div>
     )
 }
