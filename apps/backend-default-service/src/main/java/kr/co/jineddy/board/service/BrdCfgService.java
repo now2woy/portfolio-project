@@ -17,6 +17,7 @@ import kr.co.jineddy.board.entity.BrdCfgMst;
 import kr.co.jineddy.board.mapper.BrdCfgMapper;
 import kr.co.jineddy.board.repository.BrdCfgMstRepository;
 import kr.co.jineddy.board.service.dto.BrdCfgInternalDto;
+import kr.co.jineddy.common.util.CommonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,17 +81,20 @@ public class BrdCfgService {
 	public BrdCfgResponseDto insert(BrdCfgRequestDto requestDto) {
 		// 현재일시
 		LocalDateTime now = LocalDateTime.now();
+		// 사용자ID 추출
+		String userId = CommonUtils.getUserId();
 		
 		// RequestDto to Entity
 		BrdCfgMst brdCfgMst = BrdCfgMst.builder()
 				.brdNm(requestDto.getBrdNm())
 				.brdTyCd(requestDto.getBrdTyCd())
 				.allowReplyYn(requestDto.getAllowReplyYn())
+				.atchFileYn(requestDto.getAtchFileYn())
 				.delYn("N")
 				.insDt(now)
-				.insId(requestDto.getInsId())
+				.insId(userId)
 				.updDt(now)
-				.updId(requestDto.getInsId())
+				.updId(userId)
 				.build();
 		
 		// 데이터 저장
@@ -107,15 +111,18 @@ public class BrdCfgService {
 	 */
 	public BrdCfgResponseDto update(int boardId, BrdCfgRequestDto requestDto) {
 		LocalDateTime now = LocalDateTime.now();
+		// 사용자ID 추출
+		String userId = CommonUtils.getUserId();
 		BrdCfgMst brdCfgMst = findBrdCfgMst(boardId);
 		
 		// 데이터 수정
 		brdCfgMst.setBrdNm(requestDto.getBrdNm());
 		brdCfgMst.setBrdTyCd(requestDto.getBrdTyCd());
 		brdCfgMst.setAllowReplyYn(requestDto.getAllowReplyYn());
+		brdCfgMst.setAtchFileYn(requestDto.getAtchFileYn());
 		brdCfgMst.setDelYn(requestDto.getDelYn());
 		brdCfgMst.setUpdDt(now);
-		brdCfgMst.setUpdId(requestDto.getUpdId());
+		brdCfgMst.setUpdId(userId);
 		
 		// 데이터 저장
 		brdCfgMstRepository.save(brdCfgMst);
@@ -129,10 +136,12 @@ public class BrdCfgService {
 	 * @return
 	 */
 	public BrdCfgResponseDto delete(int boardId) {
+		// 사용자ID 추출
+		String userId = CommonUtils.getUserId();
 		BrdCfgMst brdCfgMst = findBrdCfgMst(boardId);
 		
-		// TODO 수정 ID SET 필요
 		brdCfgMst.setUpdDt(LocalDateTime.now());
+		brdCfgMst.setUpdId(userId);
 		brdCfgMst.setDelYn("N");
 		
 		// 데이터 저장
@@ -162,6 +171,7 @@ public class BrdCfgService {
 				.brdNm(entity.getBrdNm())
 				.brdTyCd(entity.getBrdTyCd())
 				.allowReplyYn(entity.getAllowReplyYn())
+				.atchFileYn(entity.getAtchFileYn())
 				.delYn(entity.getDelYn())
 				.insDt(entity.getInsDt())
 				.insId(entity.getInsId())

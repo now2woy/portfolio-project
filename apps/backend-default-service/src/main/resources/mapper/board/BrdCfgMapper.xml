@@ -33,6 +33,7 @@
 				, A.brd_nm
 				, A.brd_ty_cd
 				, A.allow_reply_yn
+				, A.atch_file_yn
 				, A.del_yn
 				, A.ins_dt
 				, A.ins_id

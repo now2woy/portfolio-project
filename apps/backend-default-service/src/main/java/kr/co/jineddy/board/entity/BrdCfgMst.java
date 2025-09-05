@@ -44,6 +44,10 @@ public class BrdCfgMst implements Serializable {
 	 */
 	private String allowReplyYn;
 	/**
+	 * 첨부 파일 여부
+	 */
+	private String atchFileYn;
+	/**
 	 * 삭제 여부
 	 */
 	private String delYn;
