@@ -3,8 +3,15 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 
 import { postKeys, fetchCdGroups } from '@/queries/CdGroupQuery'
 import { ISearchData, ISearchField } from '@/types/components/SearchType'
-import { ICdListProps } from '@/types/apps/CdGroupType'
+import { ICdListProps, ICdProps } from '@/types/apps/CdGroupType'
 import { List } from '@/app/cd-groups/client'
+import { IDndColumnProps } from '@/types/components/GridType'
+import { IColumnConfig } from '@/types/ColumnDefType'
+
+/**
+ * CD GROUP API 기본 URL
+ */
+const BASE_MENU_URL = '/cd-groups'
 
 /**
  * 게시글 검색 조건 입력 방식 정의
@@ -21,6 +28,17 @@ const fields: ISearchField[] = [
             { value: 'N', label: '아니오' }
         ]
     }
+]
+
+// 목록 컬럼 정의
+const columnsConfig: IColumnConfig[] = [
+    { key: 'groupId', label: '코드그룹ID', type: 'text', size: 100 },
+    { key: 'groupNm', label: '코드그룹명', type: 'link', linkBaseUrl: BASE_MENU_URL, linkKeys: ['groupId'] },
+    { key: 'dataTyCd', label: '데이터타입', type: 'text', size: 100 },
+    { key: 'useYn', label: '사용여부', type: 'boolean', size: 70 },
+    { key: 'fixedLtYn', label: '고정길이여부', type: 'boolean', size: 140 },
+    { key: 'updDt', label: '수정일시', type: 'date', size: 140 },
+    { type: 'actions', label: 'Actions', linkBaseUrl: BASE_MENU_URL, linkKeys: ['groupId'], linkAddUrl: '/edit', menu: ['수정'], size: 60 }
 ]
 
 /**
@@ -67,6 +85,7 @@ export default async function ListViewer({ searchParams }: ICdListProps) {
                 <List
                     initialData={initialData}
                     fields={fields}
+                    columnsConfig={columnsConfig}
                 />
             </div>
         </HydrationBoundary>

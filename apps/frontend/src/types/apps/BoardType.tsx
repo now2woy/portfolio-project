@@ -17,6 +17,10 @@ export interface IBoardProps {
      */
     allowReplyYn: 'Y' | 'N'
     /**
+     * 첨부 파일 여부
+     */
+    atchFileYn: 'Y' | 'N'
+    /**
      * 삭제 여부
      */
     delYn: 'Y' | 'N'

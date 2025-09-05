@@ -1,5 +1,5 @@
 import { apiFetch } from '@/app/lib/apiClient'
-import { IBoardProps } from '@/types/BoardType'
+import { IBoardProps } from '@/types/apps/BoardType'
 
 const BASE_API_SERVICE_URL = '/api/board/v1/boards'
 

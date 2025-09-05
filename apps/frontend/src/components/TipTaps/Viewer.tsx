@@ -8,7 +8,7 @@ import { ITipTapViewerProps } from '@/types/TipTapType'
  */
 export const TiptapViewer: FC<ITipTapViewerProps> = ({ content }) => {
     return (
-        <div className="prose max-w-none">
+        <div className="prose min-h-[200px] max-w-none">
             <div dangerouslySetInnerHTML={{ __html: content }} />
         </div>
     )

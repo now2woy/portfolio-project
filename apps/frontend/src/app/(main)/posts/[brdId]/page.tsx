@@ -3,6 +3,12 @@ import { postKeys, fetchPosts } from '@/queries/PostQuery'
 import { getBoard } from '@/services/server/BoardServerService'
 import { ISearchData, ISearchField } from '@/types/components/SearchType'
 import { List } from '@/app/posts/[brdId]/client'
+import { IColumnConfig } from '@/types/ColumnDefType'
+
+/**
+ * 게시물 메뉴 기본 URL
+ */
+const BASE_MENU_URL = '/posts'
 
 /**
  * 게시글 목록 props 정의
@@ -28,6 +34,19 @@ const fields: ISearchField[] = [
 ]
 
 /**
+ * 게시글 목록 컬럼 정의
+ */
+const columnsConfig: IColumnConfig[] = [
+    { key: 'postId', label: '번호', type: 'text', size: 40, align: 'center' },
+    { key: 'postTtl', label: '제목', type: 'link', linkBaseUrl: BASE_MENU_URL, linkKeys: ['brdId', 'postId'] },
+    { key: 'writerId', label: '작성자ID', type: 'text', size: 100 },
+    { key: 'delYn', label: '삭제여부', type: 'boolean', size: 70 },
+    { key: 'insDt', label: '작성일시', type: 'date', size: 140 },
+    { key: 'updDt', label: '수정일시', type: 'date', size: 140 },
+    { type: 'actions', label: 'Actions', linkBaseUrl: BASE_MENU_URL, linkKeys: ['brdId', 'postId'], linkAddUrl: '/edit', menu: ['수정'], size: 60 }
+]
+
+/**
  * 메타 정보 생성
  * @param param
  * @returns
@@ -50,21 +69,13 @@ export async function generateMetadata({ params }: { params: { brdId: string } }
 export default async function ListViewer({ params, searchParams }: PostListProps) {
     const queryClient = new QueryClient()
     const { brdId } = await Promise.resolve(params)
-    const { postTtl, postCtt, writerId } = await Promise.resolve(searchParams)
+    const { postTtl = '', postCtt = '', writerId = '' } = await Promise.resolve(searchParams)
 
-    // 검색 조건을 query 파라미터로 생성
-    const query: string = new URLSearchParams({
-        postTtl: postTtl ?? '',
-        postCtt: postCtt ?? '',
-        writerId: writerId ?? ''
-    }).toString()
+    // 검색 조건을 쿼리 파라미터로 생성
+    const query: string = new URLSearchParams({ postTtl, postCtt, writerId }).toString()
 
     // 게시글 검색 조건 초기 데이터 생성
-    const initialData: ISearchData = {
-        postTtl: postTtl ?? '',
-        postCtt: postCtt ?? '',
-        writerId: writerId ?? ''
-    }
+    const initialData: ISearchData = { postTtl, postCtt, writerId }
 
     // prefetch
     await queryClient.prefetchQuery({
@@ -83,6 +94,7 @@ export default async function ListViewer({ params, searchParams }: PostListProps
                     brdId={brdId}
                     initialData={initialData}
                     fields={fields}
+                    columnsConfig={columnsConfig}
                 />
             </div>
         </HydrationBoundary>

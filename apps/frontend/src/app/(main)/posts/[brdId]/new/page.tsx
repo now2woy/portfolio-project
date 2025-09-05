@@ -31,14 +31,13 @@ export default async function NewViewer({ params }: { params: { brdId: string } 
     const board = await getBoard({ brdId })
 
     return (
-        <form>
-            <div className="flex flex-1 flex-col gap-2 p-4">
-                <h1 className="mb-4 text-2xl font-bold">{board.brdNm} 신규</h1>
-                <Edit
-                    brdId={brdId}
-                    postId=""
-                />
-            </div>
-        </form>
+        <div className="flex flex-1 flex-col gap-2 p-4">
+            <h1 className="mb-4 text-2xl font-bold">{board.brdNm} 신규</h1>
+            <Edit
+                brdId={brdId}
+                postId=""
+                board={board}
+            />
+        </div>
     )
 }

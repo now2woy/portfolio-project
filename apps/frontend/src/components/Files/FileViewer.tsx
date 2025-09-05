@@ -19,16 +19,14 @@ export const FileViewer = ({ files }: { files?: IAtchFileProps[] }) => {
                         className="flex items-center justify-between py-4 pr-5 pl-4 text-sm">
                         <div className="flex w-0 flex-1 items-center">
                             <IconPaperclip color="gray" />
-                            <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                                <span className="truncate font-medium text-gray-900">
-                                    <FileDownLoadLink
-                                        atchFileId={file.atchFileId}
-                                        atchFileSeq={file.atchFileSeq}
-                                        atchFileNm={file.atchFileNm}
-                                    />
-                                </span>
-                                <span className="shrink-0 text-gray-400">{(file.fileSize / 1024 / 1024).toFixed(1)} MB</span>
+                            <div className="ml-2 min-w-0 flex-1 gap-2">
+                                <FileDownLoadLink
+                                    atchFileId={file.atchFileId}
+                                    atchFileSeq={file.atchFileSeq}
+                                    atchFileNm={file.atchFileNm}
+                                />
                             </div>
+                            <span className="shrink-0 text-gray-400">{(file.fileSize / 1024 / 1024).toFixed(1)} MB</span>
                         </div>
                     </li>
                 ))}

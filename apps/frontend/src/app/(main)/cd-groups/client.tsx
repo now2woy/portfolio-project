@@ -1,6 +1,6 @@
 'use client'
 
-import { JSX, useState, useEffect } from 'react'
+import { JSX, useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useQuery } from '@tanstack/react-query'
@@ -12,7 +12,6 @@ import { FormViewer } from '@/components/Viewers/FormViewer'
 import { LinkButton, MutationButton } from '@/components/Buttons'
 import { DefaultSearch } from '@/components/Searchs'
 import { Grid } from '@/components/Grids'
-import { formatDate } from '@/utils/DateUtils'
 
 import { ISearchData, ISearchField } from '@/types/components/SearchType'
 import { IColumnConfig } from '@/types/ColumnDefType'
@@ -45,7 +44,7 @@ export const DndTable = dynamic(() => import('@/components/Grids/DndTable').then
  * @param param
  * @returns
  */
-export const List = ({ initialData, fields }: { initialData: ISearchData; fields: ISearchField[] }) => {
+export const List = ({ initialData, fields, columnsConfig }: { initialData: ISearchData; fields: ISearchField[]; columnsConfig: IColumnConfig[] }) => {
     const searchParams = useSearchParams()
     const query = searchParams?.toString() ?? ''
 
@@ -108,8 +107,8 @@ export const View = ({ groupId }: { groupId: string }) => {
                     mutationFn={deleteCdGroupAndCdsViaBff}
                     variables={{ groupId }}
                     queryKeyToInvalidate={['posts']}
-                    onSuccessCallback={handleCallback}
-                    onErrorCallback={handleCallback}>
+                    confirmMessage="삭제하시겠습니까?"
+                    onSuccessCallback={handleCallback}>
                     삭제
                 </MutationButton>
             </div>
@@ -125,6 +124,7 @@ export const View = ({ groupId }: { groupId: string }) => {
 export const Edit = ({ groupId, data }: { groupId?: string; data?: ICdGroupProps }) => {
     const [modifyData, setModifyData] = useState<ICdGroupProps>(data || { groupId: groupId || '', groupNm: '', useYn: 'Y' })
     const [cds, setCds] = useState<ICdProps[]>(modifyData.cds || [])
+    const formRef = useRef(null)
     const searchParams = useSearchParams()
     const router = useRouter()
     const query = new URLSearchParams(searchParams)
@@ -196,7 +196,9 @@ export const Edit = ({ groupId, data }: { groupId?: string; data?: ICdGroupProps
     }
 
     return (
-        <>
+        <form
+            ref={formRef}
+            onSubmit={e => e.preventDefault()}>
             <FormViewer
                 data={modifyData}
                 fields={fields}
@@ -229,9 +231,9 @@ export const Edit = ({ groupId, data }: { groupId?: string; data?: ICdGroupProps
                             mutationFn={insertCdGroupViaBff}
                             variables={{ data: modifyData }}
                             queryKeyToInvalidate={['cds']}
+                            confirmMessage="저장하시겠습니까?"
                             onSuccessCallback={handleCallback}
-                            onErrorCallback={handleCallback}
-                            isSubmit={true}>
+                            formRef={formRef}>
                             저장
                         </MutationButton>
                     )}
@@ -241,52 +243,29 @@ export const Edit = ({ groupId, data }: { groupId?: string; data?: ICdGroupProps
                             mutationFn={updateCdGroupAndCdsViaBff}
                             variables={{ groupId: groupId ?? '', data: modifyData }}
                             queryKeyToInvalidate={['cds']}
+                            confirmMessage="수정하시겠습니까?"
                             onSuccessCallback={handleCallback}
-                            onErrorCallback={handleCallback}
-                            isSubmit={true}>
+                            formRef={formRef}>
                             수정
                         </MutationButton>
                     )}
                 </div>
             </div>
-        </>
+        </form>
     )
 }
 
-// 목록 컬럼 정의
-const columnsConfig: IColumnConfig[] = [
-    { key: 'groupId', label: '코드그룹ID', type: 'text', size: 100 },
-    { key: 'groupNm', label: '코드그룹명', type: 'link', linkBaseUrl: BASE_MENU_URL, linkKeys: ['groupId'] },
-    { key: 'dataTyCd', label: '데이터타입', type: 'text', size: 100 },
-    { key: 'useYn', label: '사용여부', type: 'boolean', size: 70 },
-    { key: 'fixedLtYn', label: '고정길이여부', type: 'boolean', size: 140 },
-    { key: 'updDt', label: '수정일시', type: 'date', size: 140 },
-    { type: 'actions', label: 'Actions', linkBaseUrl: BASE_MENU_URL, linkKeys: ['groupId'], linkAddUrl: '/edit', menu: ['수정'], size: 60 }
-]
-
 // 입력 / 수정 필드 레이아웃 정의
 const fields: IFormFieldProps<ICdGroupProps>[] = [
-    { key: 'groupId', label: '코드그룹ID', colSpan: 3, type: 'text', required: true },
-    { key: 'groupNm', label: '코드그룹명', colSpan: 3, type: 'text', required: true },
-    { key: 'dataTyCd', label: '데이터타입', colSpan: 3, type: 'text', required: true, hasBorderTop: true },
-    { key: 'lt', label: '최대길이', colSpan: 3, type: 'text', hasBorderTop: true },
-    {
-        key: 'dc',
-        label: '설명',
-        colSpan: 6,
-        required: true,
-        hasBorderTop: true,
-        render: (value, item, onFieldChange) => (
-            <TiptapEditor
-                content={(value as string) || ''}
-                onUpdate={(content: string) => onFieldChange?.('dc', content)}
-            />
-        )
-    },
-    { key: 'useYn', label: '사용여부', colSpan: 3, type: 'text', required: true, hasBorderTop: true },
-    { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3, type: 'text', required: true, hasBorderTop: true },
-    { key: 'insDt', label: '입력일시', colSpan: 3, hasBorderTop: true, render: value => formatDate(value as string) },
-    { key: 'updDt', label: '수정일시', colSpan: 3, hasBorderTop: true, render: value => formatDate(value as string) }
+    { key: 'groupId', label: '코드그룹ID', colSpan: 3, type: 'text', required: true, hasBorderTop: false },
+    { key: 'groupNm', label: '코드그룹명', colSpan: 3, type: 'text', required: true, hasBorderTop: false },
+    { key: 'dataTyCd', label: '데이터타입', colSpan: 3, type: 'text', required: true },
+    { key: 'lt', label: '최대길이', colSpan: 3, type: 'text' },
+    { key: 'dc', label: '설명', colSpan: 6, type: 'tiptap', required: true },
+    { key: 'useYn', label: '사용여부', colSpan: 3, type: 'text', required: true },
+    { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3, type: 'text', required: true },
+    { label: '입력일시', key: 'insDt', colSpan: 3, type: 'viewer', dataType: 'date', format: 'YYYY/MM/DD HH:mm:SS' },
+    { label: '수정일시', key: 'updDt', colSpan: 3, type: 'viewer', dataType: 'date', format: 'YYYY/MM/DD HH:mm:SS' }
 ]
 
 // 입력 / 수정 하위 코드 목록 컬럼 정의

@@ -17,13 +17,11 @@ export const metadata: Metadata = {
  */
 export default async function NewViewer() {
     return (
-        <form>
-            <div className="flex flex-1 flex-col gap-2 p-4">
-                <h1 className="mb-4 text-2xl font-bold">코드 신규</h1>
-                <Suspense fallback={<div>로딩 중...</div>}>
-                    <Edit />
-                </Suspense>
-            </div>
-        </form>
+        <div className="flex flex-1 flex-col gap-2 p-4">
+            <h1 className="mb-4 text-2xl font-bold">코드 신규</h1>
+            <Suspense fallback={<div>로딩 중...</div>}>
+                <Edit />
+            </Suspense>
+        </div>
     )
 }

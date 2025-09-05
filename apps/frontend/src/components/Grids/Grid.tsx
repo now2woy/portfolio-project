@@ -108,7 +108,7 @@ export function Grid<T>({ data, columnsConfig, newUrl }: { data: IPageResponse<T
                                 <TableCell
                                     colSpan={columns.length}
                                     className="h-24 text-center">
-                                    No results.
+                                    조회된 자료가 없습니다.
                                 </TableCell>
                             </TableRow>
                         )}

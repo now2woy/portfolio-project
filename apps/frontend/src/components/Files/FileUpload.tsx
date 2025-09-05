@@ -1,8 +1,22 @@
 import { useState } from 'react'
 import { Trash2 } from 'lucide-react'
+import { IconPaperclip } from '@tabler/icons-react'
+
 import { IAtchFileProps, IFileComponentProps } from '@/types/components/FileType'
 
-export function FileUpload({ atchFiles, handleAtachFiles }: { atchFiles: IFileComponentProps; handleAtachFiles: (uploadFiles: File[], deleteFiles: IAtchFileProps[]) => void }) {
+export function FileUpload({
+    atchFiles,
+    handleAtachFiles,
+    allowedExtensions = ['.doc', '.docx', '.jar', '.png'],
+    maxFileSizeMB = 1,
+    maxTotalSizeMB = 2
+}: {
+    atchFiles: IFileComponentProps
+    handleAtachFiles: (uploadFiles: File[], deleteFiles: IAtchFileProps[]) => void
+    allowedExtensions?: string[]
+    maxFileSizeMB?: number
+    maxTotalSizeMB?: number
+}) {
     // 새로 추가되는 파일
     const [files, setFiles] = useState<File[]>(atchFiles?.uploadFiles || [])
     // 기존 서버 파일
@@ -11,22 +25,26 @@ export function FileUpload({ atchFiles, handleAtachFiles }: { atchFiles: IFileCo
     const [deletedServerFiles, setDeletedServerFiles] = useState<IAtchFileProps[]>(atchFiles?.deleteFiles || [])
 
     // 허용 확장자, 최대 용량
-    const allowedExtensions = ['doc', 'docx', 'jar', 'png']
-    const maxFileSizeMB = 1
     const maxFileSize = maxFileSizeMB * 1024 * 1024
-    const maxTotalSizeMB = 2
     const maxTotalSize = maxTotalSizeMB * 1024 * 1024
 
     const validateFile = (file: File) => {
         const ext = file.name.split('.').pop()?.toLowerCase()
-        if (!ext || !allowedExtensions.includes(ext)) {
+        if (!ext || !allowedExtensions.includes('.' + ext)) {
             alert(`허용되지 않는 파일 형식입니다: ${file.name}`)
             return false
         }
+
         if (files.some(f => f.name === file.name)) {
             alert(`이미 동일한 파일이 업로드되어 있습니다: ${file.name}`)
             return false
         }
+
+        if (file.size > maxFileSize) {
+            alert(`파일 당 업로드 용량이 초과됩니다. (최대 ${maxFileSize}MB 허용)`)
+            return false
+        }
+
         const currentTotal = [...files, ...serverFiles].reduce((acc, f) => acc + ('fileSize' in f ? f.fileSize : f.size), 0)
         if (currentTotal + file.size > maxTotalSize) {
             alert(`총 업로드 용량이 초과됩니다. (최대 ${maxTotalSizeMB}MB 허용)`)
@@ -124,10 +142,11 @@ export function FileUpload({ atchFiles, handleAtachFiles }: { atchFiles: IFileCo
                             <li
                                 key={`server-${file.atchFileSeq}`}
                                 className="flex items-center justify-between py-4 pr-5 pl-4 text-sm">
-                                <div className="flex w-0 flex-1 items-center">
+                                <IconPaperclip color="gray" />
+                                <div className="ml-2 flex w-0 flex-1 items-center">
                                     <span className="truncate font-medium text-gray-900">{file.atchFileNm}</span>
-                                    <span className="ml-2 shrink-0 text-gray-400">{(file.fileSize / 1024 / 1024).toFixed(1)} MB</span>
                                 </div>
+                                <span className="shrink-0 text-gray-400">{(file.fileSize / 1024 / 1024).toFixed(1)} MB</span>
                                 <button
                                     onClick={() => removeServerFile(file)}
                                     className="ml-4 shrink-0 text-gray-400 hover:text-red-500">

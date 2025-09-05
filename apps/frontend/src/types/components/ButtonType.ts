@@ -33,6 +33,10 @@ export interface MutationButtonProps<TData, TError, TVariables> {
      */
     variables: TVariables
     /**
+     * 컨펌 메시지
+     */
+    confirmMessage?: string
+    /**
      * 성공 시 표시할 메시지
      */
     successMessage?: string
@@ -51,17 +55,42 @@ export interface MutationButtonProps<TData, TError, TVariables> {
      */
     onSuccessCallback?: (data: TData) => void
     /**
-     * 실패 시 추가로 실행할 콜백
-     * @param error
-     * @returns
+     * 폼 객체
      */
-    onErrorCallback?: (error: TError) => void
-    /**
-     * 서브밋 버튼 여부
-     */
-    isSubmit?: boolean
+    formRef?: React.RefObject<HTMLFormElement | null>
     /**
      * 첨부파일 정보
      */
     files?: IFileComponentProps
+}
+
+export interface ButtionAreaProps {
+    /**
+     * 버튼 안에 들어갈 내용 (텍스트, 아이콘 등)
+     */
+    children?: ReactNode
+    /**
+     * 버튼 명
+     */
+    name?: string
+    /**
+     * 버튼 타입
+     */
+    type: 'link' | 'mutation'
+    /**
+     * 정렬
+     */
+    align: 'left' | 'right'
+    /**
+     * 보이기 여부
+     */
+    isVisibility: boolean
+    /**
+     * 버튼 variant 타입
+     */
+    variant?: buttonVariantType
+    /**
+     * 링크 타입의 URL
+     */
+    url?: string
 }
