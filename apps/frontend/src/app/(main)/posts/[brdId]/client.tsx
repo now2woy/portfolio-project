@@ -8,7 +8,6 @@ import { insertPostViaBff, updatePostViaBff, deletePostViaBff } from '@/services
 
 import { DefaultSearch } from '@/components/Searchs'
 import { Grid } from '@/components/Grids'
-import { LinkButton, MutationButton } from '@/components/Buttons'
 import { ButtionArea } from '@/components/Buttons/ButtionArea'
 import { FormViewer } from '@/components/Viewers/FormViewer'
 
@@ -18,6 +17,7 @@ import { IFormFieldProps } from '@/types/components/ViewType'
 import { IPostProps } from '@/types/apps/PostType'
 import { ButtionAreaProps } from '@/types/components/ButtonType'
 import { IBoardProps } from '@/types/apps/BoardType'
+import { ICdProps } from '@/types/apps/CdGroupType'
 
 /**
  * 게시물 메뉴 기본 URL
@@ -29,7 +29,7 @@ const BASE_MENU_URL = '/posts'
  * @param param
  * @returns
  */
-export const List = ({ brdId, initialData, fields, columnsConfig }: { brdId: string; initialData: ISearchData; fields: ISearchField[]; columnsConfig: IColumnConfig[] }) => {
+export const List = ({ brdId, initialData, fields, columnsConfig, codes }: { brdId: string; initialData: ISearchData; fields: ISearchField[]; columnsConfig: IColumnConfig[]; codes?: ICdProps[] }) => {
     const searchParams = useSearchParams()
     const query = searchParams?.toString() ?? ''
 
@@ -44,6 +44,7 @@ export const List = ({ brdId, initialData, fields, columnsConfig }: { brdId: str
             <DefaultSearch
                 initialData={initialData}
                 fields={fields}
+                codes={codes}
             />
             {data && (
                 <Grid
@@ -61,7 +62,7 @@ export const List = ({ brdId, initialData, fields, columnsConfig }: { brdId: str
  * @param param
  * @returns
  */
-export const Edit = ({ brdId, postId, data, board }: { brdId: string; postId: string; data?: IPostProps; board: IBoardProps }) => {
+export const Edit = ({ brdId, postId, data, board, codes }: { brdId: string; postId: string; data?: IPostProps; board: IBoardProps; codes?: ICdProps[] }) => {
     const [modifyData, setModifyData] = useState<IPostProps>(
         data || {
             brdId: brdId,
@@ -107,49 +108,34 @@ export const Edit = ({ brdId, postId, data, board }: { brdId: string; postId: st
     ]
 
     const buttons: ButtionAreaProps[] = [
+        { name: '목록', type: 'link', align: 'left', isVisibility: true, variant: 'outline', url: `${BASE_MENU_URL}/${brdId}?${query}` },
         {
-            name: '목록',
-            type: 'link',
-            align: 'left',
-            isVisibility: true,
-            variant: 'outline',
-            url: `/posts/${brdId}?${query}`
-        },
-        {
-            children: (
-                <MutationButton
-                    className="text-white"
-                    mutationFn={insertPostViaBff}
-                    variables={{ brdId, data: modifyData }}
-                    queryKeyToInvalidate={['posts']}
-                    confirmMessage="저장하시겠습니까?"
-                    onSuccessCallback={handleCallback}
-                    files={modifyData.files}
-                    formRef={formRef}>
-                    저장
-                </MutationButton>
-            ),
+            name: '저장',
             type: 'mutation',
             align: 'right',
-            isVisibility: isNew
+            isVisibility: isNew,
+            className: 'text-white',
+            mutationFn: insertPostViaBff,
+            variables: { brdId, data: modifyData },
+            queryKeyToInvalidate: ['posts'],
+            confirmMessage: '저장하시겠습니까?',
+            onSuccessCallback: handleCallback,
+            files: modifyData.files,
+            formRef
         },
         {
-            children: (
-                <MutationButton
-                    className="text-white"
-                    mutationFn={updatePostViaBff}
-                    variables={{ brdId, postId, data: modifyData }}
-                    queryKeyToInvalidate={['posts']}
-                    confirmMessage="수정하시겠습니까?"
-                    onSuccessCallback={handleCallback}
-                    files={modifyData.files}
-                    formRef={formRef}>
-                    수정
-                </MutationButton>
-            ),
+            name: '수정',
             type: 'mutation',
             align: 'right',
-            isVisibility: !isNew
+            isVisibility: !isNew,
+            className: 'text-white',
+            mutationFn: updatePostViaBff,
+            variables: { brdId, postId, data: modifyData },
+            queryKeyToInvalidate: ['posts'],
+            confirmMessage: '수정하시겠습니까?',
+            onSuccessCallback: handleCallback,
+            files: modifyData.files,
+            formRef
         }
     ]
 
@@ -160,6 +146,7 @@ export const Edit = ({ brdId, postId, data, board }: { brdId: string; postId: st
             <FormViewer<IPostProps>
                 data={modifyData}
                 fields={fields}
+                codes={codes}
                 onUpdate={setModifyData}
             />
             <ButtionArea buttons={buttons} />
@@ -176,38 +163,29 @@ export const View = ({ brdId, postId }: { brdId: string; postId: string }) => {
     const searchParams = useSearchParams()
     const router = useRouter()
     const query = new URLSearchParams(searchParams)
+    const listUrl = `${BASE_MENU_URL}/${brdId}?${query}`
 
     // 정상, 오류 콜백
     const handleCallback = () => {
         // 목록 화면으로 이동
-        router.push(`${BASE_MENU_URL}/${brdId}?${query}`)
+        router.push(listUrl)
     }
+    const buttons: ButtionAreaProps[] = [
+        { name: '목록', type: 'link', align: 'left', isVisibility: true, variant: 'outline', url: listUrl },
+        { name: '수정', type: 'link', align: 'right', isVisibility: true, className: 'text-white', url: `${BASE_MENU_URL}/${brdId}/${postId}/edit?${query}` },
+        {
+            name: '삭제',
+            type: 'mutation',
+            align: 'right',
+            isVisibility: true,
+            className: 'text-white',
+            mutationFn: deletePostViaBff,
+            variables: { brdId, postId },
+            queryKeyToInvalidate: ['posts'],
+            confirmMessage: '삭제하시겠습니까?',
+            onSuccessCallback: handleCallback
+        }
+    ]
 
-    return (
-        <div className="grid grid-cols-2 py-4">
-            <div className="flex items-center space-x-2">
-                <LinkButton
-                    name="목록"
-                    variant="outline"
-                    url={`${BASE_MENU_URL}/${brdId}?${query}`}
-                />
-            </div>
-            <div className="flex items-center justify-end space-x-2">
-                <LinkButton
-                    name="수정"
-                    className="text-white"
-                    url={`${BASE_MENU_URL}/${brdId}/${postId}/edit?${query}`}
-                />
-                <MutationButton
-                    className="text-white"
-                    mutationFn={deletePostViaBff}
-                    variables={{ brdId, postId }}
-                    queryKeyToInvalidate={['posts']}
-                    confirmMessage="삭제하시겠습니까?"
-                    onSuccessCallback={handleCallback}>
-                    삭제
-                </MutationButton>
-            </div>
-        </div>
-    )
+    return <ButtionArea buttons={buttons} />
 }

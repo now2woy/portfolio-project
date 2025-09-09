@@ -44,7 +44,7 @@ export const DndTable = dynamic(() => import('@/components/Grids/DndTable').then
  * @param param
  * @returns
  */
-export const List = ({ initialData, fields, columnsConfig }: { initialData: ISearchData; fields: ISearchField[]; columnsConfig: IColumnConfig[] }) => {
+export const List = ({ initialData, fields, columnsConfig, codes }: { initialData: ISearchData; fields: ISearchField[]; columnsConfig: IColumnConfig[]; codes: ICdProps[] }) => {
     const searchParams = useSearchParams()
     const query = searchParams?.toString() ?? ''
 
@@ -59,6 +59,7 @@ export const List = ({ initialData, fields, columnsConfig }: { initialData: ISea
             <DefaultSearch
                 initialData={initialData}
                 fields={fields}
+                codes={codes}
             />
             {data && (
                 <Grid
@@ -121,8 +122,8 @@ export const View = ({ groupId }: { groupId: string }) => {
  * @param param
  * @returns
  */
-export const Edit = ({ groupId, data }: { groupId?: string; data?: ICdGroupProps }) => {
-    const [modifyData, setModifyData] = useState<ICdGroupProps>(data || { groupId: groupId || '', groupNm: '', useYn: 'Y' })
+export const Edit = ({ groupId, data, codes }: { groupId?: string; data?: ICdGroupProps; codes?: ICdProps[] }) => {
+    const [modifyData, setModifyData] = useState<ICdGroupProps>(data || { groupId: groupId || '', groupNm: '', useYn: 'Y', fixedLtYn: 'N' })
     const [cds, setCds] = useState<ICdProps[]>(modifyData.cds || [])
     const formRef = useRef(null)
     const searchParams = useSearchParams()
@@ -202,6 +203,7 @@ export const Edit = ({ groupId, data }: { groupId?: string; data?: ICdGroupProps
             <FormViewer
                 data={modifyData}
                 fields={fields}
+                codes={codes}
                 onUpdate={handleFormUpdate}>
                 {cds && (
                     <DndTable
@@ -262,10 +264,10 @@ const fields: IFormFieldProps<ICdGroupProps>[] = [
     { key: 'dataTyCd', label: '데이터타입', colSpan: 3, type: 'text', required: true },
     { key: 'lt', label: '최대길이', colSpan: 3, type: 'text' },
     { key: 'dc', label: '설명', colSpan: 6, type: 'tiptap', required: true },
-    { key: 'useYn', label: '사용여부', colSpan: 3, type: 'text', required: true },
-    { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3, type: 'text', required: true },
-    { label: '입력일시', key: 'insDt', colSpan: 3, type: 'viewer', dataType: 'date', format: 'YYYY/MM/DD HH:mm:SS' },
-    { label: '수정일시', key: 'updDt', colSpan: 3, type: 'viewer', dataType: 'date', format: 'YYYY/MM/DD HH:mm:SS' }
+    { key: 'useYn', label: '사용여부', colSpan: 3, type: 'radio', required: true, options: { groupId: 'YN_CD' } },
+    { key: 'fixedLtYn', label: '고정길이여부', colSpan: 3, type: 'radio', required: true, options: { groupId: 'YN_CD' } },
+    { key: 'insDt', label: '입력일시', colSpan: 3, type: 'viewer', dataType: 'date', format: 'YYYY/MM/DD HH:mm:SS' },
+    { key: 'updDt', label: '수정일시', colSpan: 3, type: 'viewer', dataType: 'date', format: 'YYYY/MM/DD HH:mm:SS' }
 ]
 
 // 입력 / 수정 하위 코드 목록 컬럼 정의

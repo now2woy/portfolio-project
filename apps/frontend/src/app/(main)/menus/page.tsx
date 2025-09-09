@@ -5,6 +5,7 @@ import { fetchAllMenus } from '@/services/server/MenuServerService'
 
 import { IFormFieldProps } from '@/types/components/ViewType'
 import { IMainMenuProps } from '@/types/components/MenuType'
+import { ICdProps } from '@/types/apps/CdGroupType'
 
 // 입력 / 수정 필드 레이아웃 정의
 const fields: IFormFieldProps<IMainMenuProps>[] = [
@@ -14,19 +15,15 @@ const fields: IFormFieldProps<IMainMenuProps>[] = [
     { key: 'linkUrl', label: '링크URL', colSpan: 6, type: 'text', required: false },
     { key: 'iconCd', label: '아이콘', colSpan: 6, type: 'text', required: false },
     { key: 'sortOrd', label: '정렬순서', colSpan: 6, type: 'viewer', required: false },
-    {
-        key: 'useYn',
-        label: '사용여부',
-        colSpan: 6,
-        type: 'select',
-        required: true,
-        options: [
-            { value: 'Y', label: '예' },
-            { value: 'N', label: '아니오' }
-        ]
-    },
+    { key: 'useYn', label: '사용여부', colSpan: 6, type: 'select', required: true, options: { groupId: 'YN_CD' } },
     { key: 'insDt', label: '입력일시', colSpan: 3, type: 'viewer', dataType: 'date', format: 'YYYY/MM/DD HH:mm:SS' },
     { key: 'updDt', label: '수정일시', colSpan: 3, type: 'viewer', dataType: 'date', format: 'YYYY/MM/DD HH:mm:SS' }
+]
+
+// TODO 페이지에서 사용 하는 코드를 전체 조회해야 한다.
+const codes: ICdProps[] = [
+    { groupId: 'YN_CD', cdId: 'Y', cdNm: '예', useYn: 'Y', sortOrdr: 1 },
+    { groupId: 'YN_CD', cdId: 'N', cdNm: '아니오', useYn: 'Y', sortOrdr: 2 }
 ]
 
 /**
@@ -51,6 +48,7 @@ export default async function ListViewer() {
             <MenuViewer
                 menuData={menu}
                 fields={fields}
+                codes={codes}
             />
         </div>
     )

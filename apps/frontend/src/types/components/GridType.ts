@@ -1,3 +1,5 @@
+import { TFieldOptions } from '@/types/components/SearchType'
+
 /**
  * 정적 테이블 컬럼 정의 Props
  */
@@ -44,6 +46,10 @@ export interface IDndColumnProps<T> {
     linkKeys?: (keyof T)[]
     isDndColumn?: boolean
     inputType?: 'text' | 'readonly' | 'select' | 'checkbox'
+    /**
+     * 폼 타입이 select일 경우 옵션 값들
+     */
+    options?: TFieldOptions
 }
 
 /**

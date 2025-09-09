@@ -5,7 +5,6 @@ import { postKeys, fetchCdGroups } from '@/queries/CdGroupQuery'
 import { ISearchData, ISearchField } from '@/types/components/SearchType'
 import { ICdListProps, ICdProps } from '@/types/apps/CdGroupType'
 import { List } from '@/app/cd-groups/client'
-import { IDndColumnProps } from '@/types/components/GridType'
 import { IColumnConfig } from '@/types/ColumnDefType'
 
 /**
@@ -19,15 +18,13 @@ const BASE_MENU_URL = '/cd-groups'
 const fields: ISearchField[] = [
     { label: '코드그룹ID', key: 'groupId', type: 'text' },
     { label: '코드그룹명', key: 'groupNm', type: 'text' },
-    {
-        label: '사용여부',
-        key: 'useYn',
-        type: 'select',
-        options: [
-            { value: 'Y', label: '예' },
-            { value: 'N', label: '아니오' }
-        ]
-    }
+    { label: '사용여부', key: 'useYn', type: 'radio', options: { groupId: 'YN_CD', useYn: 'Y', firstItem: { label: '전체', value: '' } } }
+]
+
+// TODO 페이지에서 사용 하는 코드를 전체 조회해야 한다.
+const codes: ICdProps[] = [
+    { groupId: 'YN_CD', cdId: 'Y', cdNm: '예', useYn: 'Y', sortOrdr: 1 },
+    { groupId: 'YN_CD', cdId: 'N', cdNm: '아니오', useYn: 'Y', sortOrdr: 2 }
 ]
 
 // 목록 컬럼 정의
@@ -86,6 +83,7 @@ export default async function ListViewer({ searchParams }: ICdListProps) {
                     initialData={initialData}
                     fields={fields}
                     columnsConfig={columnsConfig}
+                    codes={codes}
                 />
             </div>
         </HydrationBoundary>

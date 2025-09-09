@@ -1,3 +1,6 @@
+import { TFieldOptions } from '@/types/components/SearchType'
+import { ICdProps } from '@/types/apps/CdGroupType'
+
 /**
  *
  */
@@ -44,6 +47,7 @@ export interface IStaticFieldProps<T> {
 export interface FormViewerProps<T> {
     data: T
     fields: IFormFieldProps<T>[]
+    codes?: ICdProps[]
     onUpdate: (updatedData: T) => void
     children?: React.ReactNode
 }
@@ -73,7 +77,7 @@ export interface IFormFieldProps<T> {
      * 폼 필드의 타입 (예: 'text', 'textarea', 'select', 'viewer' 등)
      * 'viewer'는 뷰 전용 필드를 나타냅니다.
      */
-    type?: 'text' | 'textarea' | 'viewer' | 'select' | 'file' | 'tiptap'
+    type?: 'text' | 'textarea' | 'viewer' | 'select' | 'radio' | 'file' | 'tiptap'
     /**
      * 데이터 타입
      */
@@ -89,7 +93,7 @@ export interface IFormFieldProps<T> {
     /**
      * 폼 타입이 select일 경우 옵션 값들
      */
-    options?: { value: string; label: string }[]
+    options?: TFieldOptions
     /**
      * 보기 여부
      */
