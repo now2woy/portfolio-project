@@ -64,7 +64,8 @@ export interface MutationButtonProps<TData, TError, TVariables> {
     files?: IFileComponentProps
 }
 
-export interface ButtionAreaProps<TData = any, TError = any, TVariables = any> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface ButtionAreaProps<TData = any, TVariables = any> {
     /**
      * 버튼 명
      */

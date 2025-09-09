@@ -174,7 +174,9 @@ export function FormViewer<T extends Record<string, unknown>>({ data, fields, co
                                             })
                                             .sort((a, b) => a.sortOrdr - b.sortOrdr)
                                             .map(cd => (
-                                                <div className="flex gap-3">
+                                                <div
+                                                    key={cd.cdId + 'div'}
+                                                    className="flex gap-3">
                                                     <RadioGroupItem
                                                         key={cd.cdId}
                                                         value={cd.cdId}

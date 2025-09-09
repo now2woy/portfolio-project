@@ -151,20 +151,6 @@ export function MutationButton<TData, TError, TVariables>({
                 open={isMainDialogOpen}
                 onOpenChange={open => {
                     setIsMainDialogOpen(open)
-                    // 엔터키 핸들링을 위해 열릴 때 이벤트 리스너 등록
-                    if (open) {
-                        const handleKeyDown = (e: KeyboardEvent) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault()
-                                handleClick(e as any) // 확인 버튼과 동일 동작 실행
-                            }
-                        }
-                        document.addEventListener('keydown', handleKeyDown)
-
-                        return () => {
-                            document.removeEventListener('keydown', handleKeyDown)
-                        }
-                    }
                 }}>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>

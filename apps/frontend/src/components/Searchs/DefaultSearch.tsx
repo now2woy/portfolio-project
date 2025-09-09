@@ -183,7 +183,9 @@ export const DefaultSearch = ({ initialData, fields, codes }: ISearchProps) => {
                                             })
                                             .sort((a, b) => a.sortOrdr - b.sortOrdr)
                                             .map(cd => (
-                                                <div className="flex gap-3">
+                                                <div
+                                                    key={cd.cdId + 'div'}
+                                                    className="flex gap-3">
                                                     <RadioGroupItem
                                                         key={cd.cdId}
                                                         value={cd.cdId}
