@@ -13,13 +13,14 @@ import { MutationButton } from '@/components/Buttons'
 import { updateAllMenusViaBff } from '@/services/client/MenuClientService'
 import { IMainMenuProps } from '@/types/components/MenuType'
 import { IFormFieldProps } from '@/types/components/ViewType'
+import { ICdProps } from '@/types/apps/CdGroupType'
 
 /**
  * 메뉴 뷰어
  * @param param
  * @returns
  */
-export const MenuViewer = ({ menuData, fields }: { menuData: IMainMenuProps[]; fields: IFormFieldProps<IMainMenuProps>[] }) => {
+export const MenuViewer = ({ menuData, fields, codes }: { menuData: IMainMenuProps[]; fields: IFormFieldProps<IMainMenuProps>[]; codes?: ICdProps[] }) => {
     const [menuItems, setMenuItems] = useState<IMainMenuProps[]>(menuData)
     const [selectedId, setSelectedId] = useState<string | null>(null)
     const router = useRouter()
@@ -97,6 +98,7 @@ export const MenuViewer = ({ menuData, fields }: { menuData: IMainMenuProps[]; f
                             }
                         }
                         fields={fields}
+                        codes={codes}
                         onUpdate={handleFormUpdate}
                     />
                 </div>

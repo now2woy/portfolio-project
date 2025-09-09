@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { RadioGroup, RadioGroupItem } from '@/components/Inputs/radio-group'
 import { RotateCcw } from 'lucide-react'
 import { ISearchProps, ISearchData } from '@/types/components/SearchType'
 
@@ -15,7 +16,7 @@ import { ISearchProps, ISearchData } from '@/types/components/SearchType'
  * @param param
  * @returns
  */
-export const DefaultSearch = ({ initialData, fields }: ISearchProps) => {
+export const DefaultSearch = ({ initialData, fields, codes }: ISearchProps) => {
     const searchParams = useSearchParams()
     const router = useRouter()
     const [filters, setFilters] = useState<ISearchData>(initialData)
@@ -98,28 +99,105 @@ export const DefaultSearch = ({ initialData, fields }: ISearchProps) => {
                                 /** 셀렉트 필드 일 경우 */
                                 field.type === 'select' && (
                                     <Select
-                                        defaultValue={filters[field.key as string]}
-                                        onValueChange={value =>
-                                            setFilters({
-                                                ...filters,
-                                                [field.key as string]: value
-                                            })
-                                        }>
+                                        value={filters[field.key as string]}
+                                        onValueChange={value => setFilters({ ...filters, [field.key as string]: value })}>
                                         <SelectTrigger
                                             id={field.key as string}
                                             className="w-full">
                                             <SelectValue placeholder="선택" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {field.options?.map(option => (
-                                                <SelectItem
-                                                    key={option.value}
-                                                    value={option.value}>
-                                                    {option.label}
-                                                </SelectItem>
-                                            ))}
+                                            {codes
+                                                ?.filter(cd => {
+                                                    // 1. groupId 매칭
+                                                    if (cd.groupId !== field.options?.groupId) return false
+
+                                                    // 2. useYn 로직
+                                                    if ((field.options?.useYn === undefined || field.options?.useYn === 'Y') && cd.useYn !== 'Y') return false
+                                                    // useYn === 'N' 인 경우 Y/N 둘 다 허용 → 조건 불필요
+                                                    // useYn이 없으면 전체 허용
+
+                                                    // 3. include / exclude 로직
+                                                    if (field.options?.include) {
+                                                        return field.options.include.includes(cd.cdId)
+                                                    }
+                                                    if (field.options?.exclude) {
+                                                        return !field.options.exclude.includes(cd.cdId)
+                                                    }
+
+                                                    return true
+                                                })
+                                                .sort((a, b) => a.sortOrdr - b.sortOrdr)
+                                                .map(cd => (
+                                                    <SelectItem
+                                                        key={cd.cdId}
+                                                        value={cd.cdId}>
+                                                        {cd.cdNm}
+                                                    </SelectItem>
+                                                ))}
                                         </SelectContent>
                                     </Select>
+                                )
+                            }
+                            {
+                                /** 라디오 필드 일 경우 */
+                                field.type === 'radio' && (
+                                    <RadioGroup
+                                        value={filters[field.key as string]}
+                                        onValueChange={value => setFilters({ ...filters, [field.key as string]: value })}>
+                                        {field.options?.firstItem && (
+                                            <div className="flex gap-3">
+                                                <RadioGroupItem
+                                                    key={field.options?.firstItem.label}
+                                                    value={field.options?.firstItem.value}
+                                                    id={field.key + 'ALL'}
+                                                    className="cursor-pointer"
+                                                />
+                                                <Label
+                                                    htmlFor={field.key + 'ALL'}
+                                                    className="cursor-pointer">
+                                                    {' '}
+                                                    {field.options?.firstItem.label}{' '}
+                                                </Label>
+                                            </div>
+                                        )}
+                                        {codes
+                                            ?.filter(cd => {
+                                                // 1. groupId 매칭
+                                                if (cd.groupId !== field.options?.groupId) return false
+
+                                                // 2. useYn 로직
+                                                if ((field.options?.useYn === undefined || field.options?.useYn === 'Y') && cd.useYn !== 'Y') return false
+                                                // useYn === 'N' 인 경우 Y/N 둘 다 허용 → 조건 불필요
+                                                // useYn이 없으면 전체 허용
+
+                                                // 3. include / exclude 로직
+                                                if (field.options?.include) {
+                                                    return field.options.include.includes(cd.cdId)
+                                                }
+                                                if (field.options?.exclude) {
+                                                    return !field.options.exclude.includes(cd.cdId)
+                                                }
+
+                                                return true
+                                            })
+                                            .sort((a, b) => a.sortOrdr - b.sortOrdr)
+                                            .map(cd => (
+                                                <div className="flex gap-3">
+                                                    <RadioGroupItem
+                                                        key={cd.cdId}
+                                                        value={cd.cdId}
+                                                        id={field.key + cd.cdId}
+                                                        className="cursor-pointer"
+                                                    />
+                                                    <Label
+                                                        htmlFor={field.key + cd.cdId}
+                                                        className="cursor-pointer">
+                                                        {cd.cdNm}
+                                                    </Label>
+                                                </div>
+                                            ))}
+                                    </RadioGroup>
                                 )
                             }
                         </dd>

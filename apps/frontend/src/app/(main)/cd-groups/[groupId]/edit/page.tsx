@@ -4,6 +4,8 @@ import { getCdGroup, fetchCds } from '@/services/server/CdGroupServerService'
 
 import { Edit } from '@/app/cd-groups/client'
 
+import { ICdProps } from '@/types/apps/CdGroupType'
+
 /**
  * 메타 정보 생성
  * @param param
@@ -19,6 +21,12 @@ export async function generateMetadata({ params }: { params: { groupId: string }
         description: `코드 그룹 (${cdGroup.groupNm}) 수정 조회하는 페이지 입니다.`
     }
 }
+
+// TODO 페이지에서 사용 하는 코드를 전체 조회해야 한다.
+const codes: ICdProps[] = [
+    { groupId: 'YN_CD', cdId: 'Y', cdNm: '예', useYn: 'Y', sortOrdr: 1 },
+    { groupId: 'YN_CD', cdId: 'N', cdNm: '아니오', useYn: 'Y', sortOrdr: 2 }
+]
 
 /**
  * 수정 컴포넌트
@@ -38,6 +46,7 @@ export default async function EditViewer({ params }: { params: { groupId: string
             <Edit
                 groupId={groupId}
                 data={{ ...cdGroup, cds: cds }}
+                codes={codes}
             />
         </div>
     )

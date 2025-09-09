@@ -149,18 +149,29 @@ export function MutationButton<TData, TError, TVariables>({
 
             <Dialog
                 open={isMainDialogOpen}
-                onOpenChange={setIsMainDialogOpen}>
+                onOpenChange={open => {
+                    setIsMainDialogOpen(open)
+                    // 엔터키 핸들링을 위해 열릴 때 이벤트 리스너 등록
+                    if (open) {
+                        const handleKeyDown = (e: KeyboardEvent) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault()
+                                handleClick(e as any) // 확인 버튼과 동일 동작 실행
+                            }
+                        }
+                        document.addEventListener('keydown', handleKeyDown)
+
+                        return () => {
+                            document.removeEventListener('keydown', handleKeyDown)
+                        }
+                    }
+                }}>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                         <DialogTitle>확인</DialogTitle>
                         <DialogDescription>{confirmMessage}</DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
-                        <Button
-                            variant="outline"
-                            onClick={() => setIsMainDialogOpen(false)}>
-                            취소
-                        </Button>
                         <Button
                             type={formRef ? 'submit' : 'button'}
                             variant={variant}
@@ -169,12 +180,23 @@ export function MutationButton<TData, TError, TVariables>({
                             disabled={isPending}>
                             확인
                         </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => setIsMainDialogOpen(false)}>
+                            취소
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
             <Dialog
                 open={isResultDialogOpen}
-                onOpenChange={setIsResultDialogOpen}>
+                onOpenChange={open => {
+                    setIsResultDialogOpen(open)
+                    // 닫힐 때 onClick(확인 버튼)과 동일 동작 실행
+                    if (!open) {
+                        handleResultOk()
+                    }
+                }}>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                         <DialogTitle>{hasError ? '오류' : '알림'}</DialogTitle>
