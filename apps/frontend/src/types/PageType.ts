@@ -1,4 +1,6 @@
-// 페이지 데이터 정의
+/**
+ * 페이지 요청 인터페이스
+ */
 export interface IPageable {
     pageNumber: number
     pageSize: number
@@ -7,7 +9,9 @@ export interface IPageable {
     unpaged: boolean
 }
 
-// 페이지형 데이터 정의
+/**
+ * 페이지 응답 인터페이스
+ */
 export interface IPageResponse<T> {
     content: T[]
     pageable: IPageable

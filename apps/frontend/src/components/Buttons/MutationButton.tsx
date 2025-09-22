@@ -40,9 +40,7 @@ export function MutationButton<TData, TError, TVariables>({
     const queryClient = useQueryClient()
 
     const { mutateAsync, isPending } = useMutation({
-        mutationFn: async () => {
-            let finalVariables = variables
-
+        mutationFn: async (mutationVariables: TVariables) => {
             if (files) {
                 try {
                     const atchFileId = await uploadAttachFiles(files)
@@ -50,8 +48,8 @@ export function MutationButton<TData, TError, TVariables>({
                     // 첨부파일ID가 0일 경우 처리할 필요 없음
                     if (atchFileId !== 0) {
                         // fileKeys를 variables에 추가
-                        finalVariables = {
-                            ...variables,
+                        mutationVariables = {
+                            ...mutationVariables,
                             atchFileId: atchFileId
                         }
                     }
@@ -61,17 +59,13 @@ export function MutationButton<TData, TError, TVariables>({
                     throw error
                 }
             }
-            // `mutationFn`에 variables를 인자로 전달하지 않으므로 직접 호출
-            return mutationFn(finalVariables)
+            return mutationFn(mutationVariables)
         },
         onSuccess: data => {
             if (queryKeyToInvalidate) {
                 if (queryKeyToInvalidate[0] === 'ALL') {
                     queryClient.invalidateQueries()
                 } else {
-                    queryClient.invalidateQueries({
-                        queryKey: queryKeyToInvalidate
-                    })
                 }
             }
             // 성공 시
@@ -101,7 +95,7 @@ export function MutationButton<TData, TError, TVariables>({
                 // 서브밋 이벤트 중단
                 e.preventDefault()
                 // 처리
-                await mutateAsync()
+                await mutateAsync(variables)
             } else {
                 // TODO 벨리데이션을 어떻게 할지 고민 해 보자
                 setHasError(true)
@@ -111,7 +105,7 @@ export function MutationButton<TData, TError, TVariables>({
             }
         } else {
             // 처리
-            await mutateAsync()
+            await mutateAsync(variables)
         }
     }
 
