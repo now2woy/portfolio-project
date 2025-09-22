@@ -60,4 +60,16 @@ public class OpenApiConfig {
 			.pathsToMatch("/api/board/**")
 			.build();
 	}
+	
+	/**
+	 * 게시판 그룹 분할
+	 * @return
+	 */
+	@Bean
+	GroupedOpenApi metasApi() {
+		return GroupedOpenApi.builder()
+			.group("meta")
+			.pathsToMatch("/api/meta/**")
+			.build();
+	}
 }
